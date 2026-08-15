@@ -3,7 +3,7 @@ import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
 import ProjectCard from "@/components/project-card"
 import FeaturedReviews from "@/components/featured-reviews"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 import CountUp from "@/components/ui/count-up"
 import { ArrowRight } from "lucide-react"
 

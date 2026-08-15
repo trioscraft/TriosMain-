@@ -1,7 +1,6 @@
 import "./globals.css"
 import type { ReactNode } from "react"
 import { Inter } from "next/font/google"
-import { MotionConfig } from "framer-motion"
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -52,13 +51,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.variable} bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased`}
       >
-        <MotionConfig reducedMotion="user">
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <Header />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        </MotionConfig>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

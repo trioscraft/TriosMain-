@@ -32,8 +32,8 @@ export default function ThemeToggle() {
             resolved === "light"
               ? "0%"
               : resolved === "dark"
-              ? "100%"
-              : "200%"
+                ? "100%"
+                : "200%"
           })`,
         }}
       />

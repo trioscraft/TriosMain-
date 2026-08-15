@@ -1,7 +1,9 @@
 import { services } from "@/lib/data"
 import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
+
+export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "Services — Trios Craft",

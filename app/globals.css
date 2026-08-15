@@ -4,51 +4,39 @@
 
 @layer base {
   :root {
-    --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    --gradient-primary: linear-gradient(135deg, #02bbd0 0%, #0e7490 100%);
-    --gradient-brand: linear-gradient(
-      90deg,
-      #02bbd0 0%,
-      #67e8f9 25%,
-      #ff7a00 55%,
-      #ff9f43 100%
-    );
-    --gradient-text: linear-gradient(
-      90deg,
-      #02bbd0,
-      #67e8f9,
-      #ff7a00,
-      #ff9f43,
-      #02bbd0
-    );
-    --shadow-inner-ring: 0 0 0 1px rgb(15 23 42 / 0.06);
+    --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   }
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 4rem;
   }
 
   body {
     @apply bg-white text-slate-900 antialiased;
     font-family: var(--font-family);
-    background-image: var(--shadow-inner-ring);
   }
 
   .dark body {
     @apply bg-slate-950 text-slate-200;
   }
 
+  /* Brand-colored text selection instead of the browser default */
   ::selection {
-    @apply bg-primary-500/20;
+    @apply bg-primary-500/25 text-primary-900;
   }
-
   .dark ::selection {
-    @apply bg-primary-400/25;
+    @apply bg-primary-400/30 text-primary-50;
   }
 
-  /* Custom scrollbar */
+  /* Consistent, premium focus ring across native interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-950;
+  }
+
+  /* Custom scrollbar for webkit */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -62,152 +50,40 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-400 dark:bg-slate-500;
   }
-
-  /* Reduced motion: disable all CSS animations/transitions */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
 }
 
 @layer components {
-  /* Gradient brand background */
   .gradient-bg {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #02bbd0 0%, #0e7490 100%);
   }
 
-  .gradient-brand {
-    background: var(--gradient-brand);
-  }
-
-  /* Animated gradient text (sweeping) */
-  .text-fade {
-    background: var(--gradient-text);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradient-x 6s ease-in-out infinite;
-  }
-
-  /* Premium card */
   .card {
-    @apply relative isolate bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl p-6 transition-all duration-300;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all duration-300;
   }
 
   .card-hover {
-    @apply relative isolate bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  }
-
-  /* Animated outline button (border sweep) */
-  .btn-outline {
-    @apply relative isolate inline-flex items-center justify-center rounded-lg border-2 border-primary-600 px-5 py-2.5 text-sm font-medium text-primary-600 overflow-hidden transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
-    --tw-shadow: theme("boxShadow.shadow-soft");
-  }
-  .btn-outline::before {
-    content: "";
-    @apply absolute inset-0 rounded-lg;
-    background: linear-gradient(135deg, #02bbd0, #ff7a00);
-    opacity: 0;
-    filter: blur(6px);
-    transition: opacity 0.3s ease;
-  }
-  .btn-outline:hover::before {
-    opacity: 0.35;
-  }
-  .btn-outline:focus-visible {
-    outline: 2px solid #02bbd0;
-    outline-offset: 2px;
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
   }
 
   .btn-primary {
-    @apply relative isolate inline-flex items-center justify-center rounded-lg text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none overflow-hidden;
-    background: var(--gradient-primary);
+    @apply inline-flex items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
   }
-  .btn-primary:hover {
-    filter: brightness(1.08);
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-lg border border-primary-600 px-5 py-2.5 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .rating-star {
     @apply text-amber-400;
   }
-
-  /* Focus-visible ring for interactive elements */
-  a:focus-visible,
-  button:focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-primary-500;
-  }
 }
 
 @layer utilities {
-  .text-fluid-hero {
-    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
-    line-height: 1.1;
-  }
-
-  .text-fluid-h2 {
-    font-size: clamp(1.75rem, 4.2vw, 2.5rem);
-    line-height: 1.2;
-  }
-
-  .text-fluid-h3 {
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    line-height: 1.25;
-  }
-
-  /* Shimmer placeholder */
-  .shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-  .shimmer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgb(226 232 240 / 0.6), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2.6s linear infinite;
-  }
-  .dark .shimmer::after {
-    background: linear-gradient(90deg, transparent, rgb(248 250 252 / 0.35), transparent);
-  }
-
-  /* Marquee */
-  .marquee {
-    display: flex;
-    width: max-content;
-    animation: marquee var(--marquee-duration, 14s) linear infinite;
-  }
-  .marquee:hover {
-    animation-play-state: paused;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Mesh/aura background */
-  .mesh-aura {
-    position: relative;
-    isolation: isolate;
-  }
-  .mesh-aura::before {
-    content: "";
-    position: absolute;
-    inset: -4rem;
-    background: radial(ellipse at 50% 0%, #67e8f9 0%, transparent 55%);
-    opacity: 0.5;
-    filter: blur(40px);
-    animation: float 16s ease-in-out infinite;
-  }
-  .dark .mesh-aura::before {
-    background: radial(ellipse at 50% 0%, #ffc991 0%, transparent 55%);
-    opacity: 0.35;
+  .text-fade {
+    background: linear-gradient(135deg, #02bbd0 0%, #0e7490 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .section {
@@ -218,14 +94,66 @@
     @apply mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8;
   }
 
-  /* Hide reduced-motion elements */
-  @media (prefers-reduced-motion: reduce) {
-    .motion-safe\\:animate-gradient-x,
-    .motion-safe\\:animate-float,
-    .motion-safe\\:animate-shimmer,
-    .motion-safe\\:animate-marquee,
-    .motion-safe\\:animate-spin-slow {
-      animation: none !important;
-    }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animated version of .text-fade — same gradient, slowly drifting.
+     Use on hero headings only; keep static .text-fade elsewhere for perf. */
+  .text-fade-animated {
+    background: linear-gradient(135deg, #02bbd0 0%, #f97316 50%, #0e7490 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    @apply animate-gradient-shift;
+  }
+
+  /* Soft blurred color-blob backdrop for hero/CTA sections */
+  .mesh-bg {
+    @apply pointer-events-none absolute inset-0 bg-mesh-gradient blur-3xl;
+  }
+
+  /* Frosted glass surface for headers, floating cards, overlays */
+  .glass-surface {
+    @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-slate-800/60;
+  }
+
+  /* Very low-opacity grain overlay for texture behind hero/CTA sections.
+     Apply to an absolutely-positioned full-bleed sibling, not the content itself. */
+  .noise-overlay {
+    @apply pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Shimmer sweep for loading skeletons — pair with a base bg-slate-200/800 block */
+  .skeleton-shimmer {
+    @apply relative overflow-hidden bg-slate-200 dark:bg-slate-800;
+  }
+  .skeleton-shimmer::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full bg-shimmer animate-shimmer;
+  }
+  .dark .skeleton-shimmer::after {
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.06) 50%, transparent 70%);
+  }
+
+  /* Track wrapper for an infinite marquee (e.g. tech stack list) —
+     duplicate the child content once in markup so the 50% loop is seamless */
+  .marquee-track {
+    @apply flex w-max animate-marquee;
+  }
+}
+
+/* Respect users who've asked for less motion: neutralize custom animations
+   and long transitions site-wide, but keep instant state changes (color, opacity). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

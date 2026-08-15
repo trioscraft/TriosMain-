@@ -4,7 +4,6 @@ import clsx from "clsx"
 import { cloneElement, isValidElement } from "react"
 import { motion } from "framer-motion"
 
-const MotionAnchor = motion.create("a")
 const MotionButton = motion.button
 
 const base =
@@ -44,15 +43,6 @@ export default function Button({
   const classes = clsx(base, variants[variant], sizes[size], className)
 
   if (asChild && isValidElement(children)) {
-    if (children.type === "a") {
-      return (
-        <MotionAnchor
-          {...children.props}
-          className={clsx(classes, children.props.className)}
-          {...hoverTap}
-        />
-      )
-    }
     return cloneElement(children, {
       className: clsx(classes, children.props.className),
     })

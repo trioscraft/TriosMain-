@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Github, Linkedin, Twitter, Mail } from "lucide-react"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 
 const links = [
   { href: "/", label: "Home" },

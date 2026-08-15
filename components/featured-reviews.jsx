@@ -1,6 +1,6 @@
 import { getApprovedReviews } from "@/lib/reviews"
 import ReviewCarousel from "@/components/review-carousel"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 import { Star } from "lucide-react"
 
 export default async function FeaturedReviews() {

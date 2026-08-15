@@ -9,6 +9,7 @@ export function ThemeProvider({ children, ...props }) {
       defaultTheme="light"
       enableSystem
       disableTransitionOnChange
+      suppressHydrationWarning
       {...props}
     >
       {children}

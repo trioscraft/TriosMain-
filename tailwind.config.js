@@ -7,21 +7,6 @@ module.exports = {
     "./pages/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    container: { center: true, padding: "1rem" },
-    fontSize: {
-      xs: "0.75rem",
-      sm: "0.875rem",
-      base: "1rem",
-      lg: "1.125rem",
-      xl: "1.25rem",
-      "2xl": "1.5rem",
-      "3xl": "1.875rem",
-      "4xl": "2.25rem",
-      "5xl": "3rem",
-      "6xl": "3.75rem",
-      "7xl": "4.5rem",
-      "8xl": "6.25rem",
-    },
     extend: {
       colors: {
         primary: {
@@ -36,31 +21,66 @@ module.exports = {
           800: "#155e75",
           900: "#164e63",
         },
-        secondary: {
-          50: "#fff8ed",
-          100: "#fff1e6",
-          200: "#ffe2cc",
-          300: "#ffc991",
-          400: "#ff9f43",
-          500: "#ff7a00",
-          600: "#e06300",
-          700: "#b34f00",
-          800: "#8a3d00",
-          900: "#6b2e00",
+        // Warm accent used sparingly for gradients, glows, and highlights
+        // so the palette doesn't read as flat single-hue cyan everywhere.
+        accent: {
+          50: "#fff7ed",
+          100: "#ffedd5",
+          200: "#fed7aa",
+          300: "#fdba74",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+          900: "#7c2d12",
         },
       },
+      fontFamily: {
+        sans: ["Inter", "ui-sans", "system-ui", "sans-serif"],
+        mono: ["Fira Code", "mono", "monospace"],
+      },
+      // Fluid, clamp()-based sizes so hero/section headings scale smoothly
+      // across the viewport instead of jumping at each Tailwind breakpoint.
+      fontSize: {
+        "fluid-sm": ["clamp(0.875rem, 0.8rem + 0.3vw, 1rem)", { lineHeight: "1.6" }],
+        "fluid-base": ["clamp(1rem, 0.95rem + 0.3vw, 1.125rem)", { lineHeight: "1.7" }],
+        "fluid-lg": ["clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem)", { lineHeight: "1.5" }],
+        "fluid-xl": ["clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem)", { lineHeight: "1.2" }],
+        "fluid-2xl": ["clamp(2.25rem, 1.7rem + 2.2vw, 3.5rem)", { lineHeight: "1.1" }],
+        "fluid-3xl": ["clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem)", { lineHeight: "1.05" }],
+      },
+      // Colored, low-opacity shadows instead of default flat gray —
+      // reach for these on cards/buttons instead of Tailwind's shadow-* defaults.
       boxShadow: {
-        "shadow-sm": "0 1px 2px 0 rgb(15 23 42 / 0.05)",
-        "shadow-soft":
-          "0 4px 6px -1px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.1)",
-        "shadow-md": "0 8px 20px 0 rgb(15 23 42 / 0.08)",
-        "shadow-lg":
-          "0 12px 28px 0 rgb(15 23 42 / 0.1), 0 4px 12px 0 rgb(15 23 42 / 0.08)",
-        "shadow-xl": "0 20px 40px 0 rgb(15 23 42 / 0.12)",
-        "shadow-2xl": "0 24px 50px 0 rgb(15 23 42 / 0.15)",
-        "shadow-glow": "0 0 20px -2px rgb(2 188 208 / 0.35)",
-        "shadow-glow-secondary": "0 0 20px -2px rgb(255 122 0 / 0.35)",
-        "shadow-premium": "0 12px 40px 0 rgb(15 23 42 / 0.12), 0 4px 16px 0 rgb(15 23 42 / 0.1)",
+        soft: "0 2px 8px -2px rgb(15 23 42 / 0.06), 0 8px 24px -8px rgb(15 23 42 / 0.08)",
+        "soft-dark": "0 2px 8px -2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.4)",
+        glow: "0 0 0 1px rgb(2 187 208 / 0.15), 0 8px 30px -6px rgb(2 187 208 / 0.35)",
+        "glow-accent": "0 0 0 1px rgb(249 115 22 / 0.15), 0 8px 30px -6px rgb(249 115 22 / 0.35)",
+        premium:
+          "0 1px 2px rgb(15 23 42 / 0.04), 0 12px 32px -8px rgb(15 23 42 / 0.12), 0 24px 64px -16px rgb(2 187 208 / 0.15)",
+      },
+      borderRadius: {
+        xl2: "1.25rem",
+      },
+      transitionTimingFunction: {
+        premium: "cubic-bezier(0.16, 1, 0.3, 1)",
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      },
+      backgroundImage: {
+        "mesh-gradient":
+          "radial-gradient(at 20% 20%, rgb(2 187 208 / 0.25) 0px, transparent 50%), radial-gradient(at 80% 0%, rgb(249 115 22 / 0.15) 0px, transparent 50%), radial-gradient(at 50% 80%, rgb(14 116 144 / 0.2) 0px, transparent 50%)",
+        shimmer: "linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%)",
+      },
+      animation: {
+        "fade-in": "fade-in 0.6s ease-out forwards",
+        "slide-up": "slide-up 0.6s ease-out forwards",
+        "pulse-slow": "pulse 3s infinite",
+        float: "float 8s ease-in-out infinite",
+        "float-delayed": "float 8s ease-in-out 2s infinite",
+        "gradient-shift": "gradient-shift 8s ease infinite",
+        shimmer: "shimmer 2s linear infinite",
+        marquee: "marquee 30s linear infinite",
       },
       keyframes: {
         "fade-in": {
@@ -71,19 +91,13 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "gradient-shift": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
-        },
-        "gradient-x": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
-        },
         float: {
-          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "50%": { transform: "translateY(-8px) rotate(1deg)" },
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "50%": { transform: "translate(2%, -4%) scale(1.05)" },
+        },
+        "gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
@@ -91,49 +105,8 @@ module.exports = {
         },
         marquee: {
           "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
-        "spin-slow": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
-      },
-      animation: {
-        "fade-in": "fade-in 0.6s ease-out forwards",
-        "slide-up": "slide-up 0.6s ease-out forwards",
-        "gradient-shift": "gradient-shift 8s ease-in-out infinite",
-        "gradient-x": "gradient-x 6s ease-in-out infinite",
-        "float": "float 7s ease-in-out infinite",
-        shimmer: "shimmer 2.6s linear infinite",
-        marquee: "marquee 14s linear infinite",
-        "pulse-slow": "pulse 3s infinite",
-        "spin-slow": "spin-slow 8s linear infinite",
-      },
-      borderRadius: {
-        DEFAULT: "0.75rem",
-        lg: "0.875rem",
-        xl: "1rem",
-        "2xl": "1.25rem",
-        "3xl": "1.75rem",
-        "4xl": "2rem",
-      },
-      transitionTimingFunction: {
-        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        "easing-out": "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        "easing-in-out": "cubic-bezier(0.4, 0, 0.2, 1)",
-      },
-      maxWidth: {
-        "8xl": "90rem",
-        "9xl": "100rem",
-      },
-      zIndex: {
-        60: "60",
-      },
-      backgroundImage: {
-        "mesh-primary":
-          "radial(ellipse at 50% 0%, theme(colors.primary.300) 0%, transparent 55%)",
-        "mesh-secondary":
-          "radial(ellipse at 50% 0%, theme(colors.secondary.300) 0%, transparent 55%)",
       },
     },
   },

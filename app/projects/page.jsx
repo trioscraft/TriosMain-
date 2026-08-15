@@ -1,7 +1,9 @@
 import { projects } from "@/lib/data"
 import Hero from "@/components/hero"
 import ProjectCard from "@/components/project-card"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
+
+export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "Projects — Trios Craft",

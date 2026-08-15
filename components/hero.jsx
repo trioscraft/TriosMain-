@@ -3,6 +3,25 @@
 import { motion } from "framer-motion"
 import Button from "@/components/ui/button"
 
+// Staggered entrance: heading, subtitle, and CTAs cascade in rather than
+// appearing all at once. `container` drives the stagger timing for its
+// `item` children below.
+const container = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+  },
+}
+
+const item = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
 export default function Hero({
   title,
   subtitle,
@@ -10,42 +29,42 @@ export default function Hero({
   secondaryCTA = { label: "See our work", href: "/projects" },
 }) {
   return (
-    <section className="container-width section mesh-aura">
+    <section className="container-width section relative overflow-hidden">
+      {/* Animated mesh-gradient backdrop — blurred color blobs that drift
+          slowly via the `float` keyframes defined in tailwind.config.js.
+          Purely decorative: aria-hidden, pointer-events disabled. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <div className="mesh-bg animate-gradient-shift bg-[length:200%_200%]" />
+        <div className="absolute left-1/4 top-0 h-72 w-72 rounded-full bg-primary-400/20 blur-3xl animate-float" />
+        <div className="absolute right-1/4 bottom-0 h-72 w-72 rounded-full bg-accent-400/20 blur-3xl animate-float-delayed" />
+        <div className="noise-overlay" />
+      </div>
+
       <motion.div
-        variants={{
-          show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
-        }}
-        initial="initial"
+        variants={container}
+        initial="hidden"
         animate="show"
-        className="mx-auto flex flex-col items-center text-center"
+        className="mx-auto max-w-4xl text-center"
       >
         <motion.h1
-          variants={{ initial: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-fluid-hero font-extrabold tracking-tight text-slate-900"
+          variants={item}
+          className="text-fluid-3xl font-extrabold tracking-tight text-slate-900 dark:text-white"
         >
-          {title}
+          <span className="block">{title}</span>
+          <span className="block text-fade-animated bg-[length:200%_200%]">
+            Trios Craft
+          </span>
         </motion.h1>
 
-        <motion.span
-          variants={{ initial: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mt-2 block text-4xl font-extrabold tracking-tight"
-        >
-          <span className="text-fade">Trios Craft</span>
-        </motion.span>
-
         <motion.p
-          variants={{ initial: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400"
+          variants={item}
+          className="mx-auto mt-6 max-w-2xl text-fluid-lg text-slate-600 dark:text-slate-400"
         >
           {subtitle}
         </motion.p>
 
         <motion.div
-          variants={{ initial: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+          variants={item}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Button asChild variant="primary" size="lg">

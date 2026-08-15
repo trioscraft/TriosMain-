@@ -1,7 +1,7 @@
 import Hero from "@/components/hero"
 import ReviewForm from "@/components/review-form"
 import ReviewList from "@/components/review-list"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 import { Star } from "lucide-react"
 
 export const metadata = {

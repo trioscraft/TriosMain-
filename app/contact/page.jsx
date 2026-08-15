@@ -1,7 +1,9 @@
 import Hero from "@/components/hero"
 import ContactForm from "@/components/contact-form"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
+
+export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "Contact — Trios Craft",

@@ -1,6 +1,6 @@
 import { getApprovedReviews } from "@/lib/reviews"
 import ReviewCard from "@/components/review-card"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 
 export default async function ReviewList() {
   const reviews = await getApprovedReviews()

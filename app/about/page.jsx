@@ -1,7 +1,9 @@
 import Hero from "@/components/hero"
 import TeamSection from "@/components/team-section"
-import Reveal from "@/components/ui/reveal"
+import { Reveal } from "@/components/ui/reveal"
 import { Award, Heart, Zap } from "lucide-react"
+
+export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "About — Trios Craft",
