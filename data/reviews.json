@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1786807316293",
+    "name": "sgsgsg",
+    "company": "fjjfjhf",
+    "rating": 5,
+    "comment": "ggjjggj",
+    "approved": true,
+    "createdAt": "2026-08-15T15:21:56.293Z"
+  },
+  {
+    "id": "1723665600000",
+    "name": "Priya Mehta",
+    "company": "GreenLeaf Organics",
+    "rating": 5,
+    "comment": "Trios Craft rebuilt our entire ordering platform. The site is blazing fast and our online orders tripled in the first month. These three know their craft!",
+    "approved": true,
+    "createdAt": "2024-08-18T10:00:00.000Z"
+  },
+  {
+    "id": "1723590000000",
+    "name": "Rohan Desai",
+    "company": "EduCore Academy",
+    "rating": 5,
+    "comment": "They delivered our student portal ahead of schedule. The mobile experience is gorgeous and the team was responsive throughout. Highly recommend!",
+    "approved": true,
+    "createdAt": "2024-08-17T10:00:00.000Z"
+  },
+  {
+    "id": "1723498000000",
+    "name": "Sneha Patil",
+    "company": "StyleNest",
+    "rating": 4,
+    "comment": "Working with Trios Craft was a breath of fresh air. They turned our chaotic ideas into a clean, functional e-commerce store. Great communication too.",
+    "approved": true,
+    "createdAt": "2024-08-16T10:00:00.000Z"
+  }
+]

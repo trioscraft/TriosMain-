@@ -1,0 +1,16 @@
+{
+  "name": "Trios Craft",
+  "short_name": "TriosCraft",
+  "description": "Trios Craft - web apps, mobile apps, and software by three CS graduates.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#02bbd0",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
