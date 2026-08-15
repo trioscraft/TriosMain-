@@ -3,7 +3,7 @@ import { addReview, getApprovedReviews } from "@/lib/reviews"
 
 export async function GET() {
   try {
-    const reviews = getApprovedReviews()
+    const reviews = await getApprovedReviews()
     return NextResponse.json({ reviews })
   } catch (error) {
     console.error("Failed to fetch reviews:", error)
@@ -26,7 +26,7 @@ export async function POST(request) {
       )
     }
 
-    const review = addReview({
+    const review = await addReview({
       name: String(name).trim(),
       company: company ? String(company).trim() : "",
       rating: Number(rating),

@@ -1,14 +1,13 @@
 import { services } from "@/lib/data"
 import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
+import Reveal from "@/components/ui/reveal"
 
 export const metadata = {
   title: "Services — Trios Craft",
   description:
     "Web applications, mobile apps, custom software, UI/UX design, and DevOps for clients who demand quality.",
 }
-
-const staggerBase = 0.05
 
 export default function ServicesPage() {
   return (
@@ -22,10 +21,7 @@ export default function ServicesPage() {
 
       <section className="section">
         <div className="container-width">
-          <div
-            className="text-center animate-fade-in"
-            style={{ animationDelay: "0.05s" }}
-          >
+          <Reveal delay={0.05} className="text-center">
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Everything we do
             </h2>
@@ -33,17 +29,13 @@ export default function ServicesPage() {
               We handle the full stack so you don&apos;t have to juggle multiple
               agencies.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, i) => (
-              <div
-                key={service.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${staggerBase * i}s` }}
-              >
+              <Reveal key={service.id} delay={0.1 + i * 0.08}>
                 <ServiceCard service={service} />
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

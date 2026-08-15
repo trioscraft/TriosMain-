@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { Send, CheckCircle, XCircle } from "lucide-react"
+import Button from "@/components/ui/button"
+import { FormField, inputVariants } from "@/components/ui/form-field"
 
 export default function ContactForm() {
   const [form, setForm] = useState({
@@ -62,13 +64,7 @@ export default function ContactForm() {
       )}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="name"
-            className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Name <span className="text-red-500">*</span>
-          </label>
+        <FormField label="Name" htmlFor="name" required>
           <input
             id="name"
             name="name"
@@ -76,16 +72,10 @@ export default function ContactForm() {
             value={form.name}
             onChange={handleChange}
             placeholder="Jane Doe"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className={inputVariants}
           />
-        </div>
-        <div>
-          <label
-            htmlFor="email"
-            className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Email <span className="text-red-500">*</span>
-          </label>
+        </FormField>
+        <FormField label="Email" htmlFor="email" required>
           <input
             id="email"
             name="email"
@@ -94,35 +84,23 @@ export default function ContactForm() {
             value={form.email}
             onChange={handleChange}
             placeholder="jane@example.com"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className={inputVariants}
           />
-        </div>
+        </FormField>
       </div>
 
-      <div>
-        <label
-          htmlFor="subject"
-          className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Subject
-        </label>
+      <FormField label="Subject" htmlFor="subject" required={false}>
         <input
           id="subject"
           name="subject"
           value={form.subject}
           onChange={handleChange}
           placeholder="Project inquiry"
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className={inputVariants}
         />
-      </div>
+      </FormField>
 
-      <div>
-        <label
-          htmlFor="message"
-          className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Message <span className="text-red-500">*</span>
-        </label>
+      <FormField label="Message" htmlFor="message" required>
         <textarea
           id="message"
           name="message"
@@ -131,14 +109,16 @@ export default function ContactForm() {
           value={form.message}
           onChange={handleChange}
           placeholder="Tell us about your project..."
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500 resize-y"
+          className={inputVariants}
         />
-      </div>
+      </FormField>
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="lg"
         disabled={submitting}
-        className="w-max rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-60"
+        className="w-max"
       >
         {submitting ? (
           <span className="flex items-center gap-2">
@@ -170,7 +150,7 @@ export default function ContactForm() {
             <span>Send message</span>
           </span>
         )}
-      </button>
+      </Button>
     </form>
   )
 }

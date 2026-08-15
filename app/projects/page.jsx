@@ -1,14 +1,13 @@
 import { projects } from "@/lib/data"
 import Hero from "@/components/hero"
 import ProjectCard from "@/components/project-card"
+import Reveal from "@/components/ui/reveal"
 
 export const metadata = {
   title: "Projects — Trios Craft",
   description:
     "A showcase of the web apps, mobile apps, and software we've built for clients.",
 }
-
-const staggerBase = 0.05
 
 export default function ProjectsPage() {
   return (
@@ -22,24 +21,17 @@ export default function ProjectsPage() {
 
       <section className="section">
         <div className="container-width">
-          <div
-            className="flex flex-col items-center justify-between gap-4 sm:flex-row animate-fade-in"
-            style={{ animationDelay: "0.05s" }}
-          >
+          <Reveal delay={0.05} className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Projects
             </h2>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, i) => (
-              <div
-                key={project.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${staggerBase * i}s` }}
-              >
+              <Reveal key={project.id} delay={0.1 + i * 0.08}>
                 <ProjectCard project={project} />
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

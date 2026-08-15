@@ -10,12 +10,14 @@ export default function ServiceCard({ service }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      whileHover={{
+        y: -6,
+        boxShadow: "0 20px 40px 0 rgb(15 23 42 / 0.12)",
+      }}
+      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
       className="card h-full flex flex-col"
     >
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100/60 text-3xl dark:bg-slate-800">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-100 to-secondary-100 text-3xl dark:from-slate-800 dark:to-slate-800">
         {icon}
       </div>
       <h3 className="mb-2 text-xl font-semibold text-slate-900 dark:text-slate-100">
@@ -32,7 +34,7 @@ export default function ServiceCard({ service }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="mb-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm"
           >
             {features.map((f) => (
@@ -40,6 +42,7 @@ export default function ServiceCard({ service }) {
                 key={f}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2 }}
                 className="flex items-center gap-2 text-slate-700 dark:text-slate-300"
               >
                 <span className="text-primary-600">✓</span>

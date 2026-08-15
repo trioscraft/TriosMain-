@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { motion } from "framer-motion"
 import { Github, ExternalLink } from "lucide-react"
 
 export default function ProjectCard({ project }) {
@@ -17,15 +18,28 @@ export default function ProjectCard({ project }) {
   } = project
 
   return (
-    <div className="group flex flex-col card-hover">
+    <motion.div
+      whileHover={{
+        y: -8,
+        boxShadow: "0 24px 50px 0 rgb(15 23 42 / 0.15)",
+      }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      className="card group flex flex-col overflow-hidden"
+    >
       <div className="relative mb-4 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
         {image ? (
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-          />
+          <motion.div
+            className="h-full w-full"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover object-center"
+            />
+          </motion.div>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-4xl">
             💼
@@ -59,28 +73,32 @@ export default function ProjectCard({ project }) {
 
       <div className="mt-auto flex items-center gap-3 pt-2">
         {demo && (
-          <Link
-            href={demo}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
-          >
-            <ExternalLink className="h-4 w-4" />
-            <span>Live Demo</span>
-          </Link>
+          <motion.div whileHover={{ x: 2 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href={demo}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span>Live Demo</span>
+            </Link>
+          </motion.div>
         )}
         {github && (
-          <Link
-            href={github}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
-          >
-            <Github className="h-4 w-4" />
-            <span>Source</span>
-          </Link>
+          <motion.div whileHover={{ x: 2 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href={github}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+            >
+              <Github className="h-4 w-4" />
+              <span>Source</span>
+            </Link>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }

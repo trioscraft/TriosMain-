@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import RatingInput from "@/components/rating-input"
 import { useSubmitReview } from "@/hooks/use-reviews"
 import { Send, CheckCircle, XCircle } from "lucide-react"
+import Button from "@/components/ui/button"
+import { FormField, inputVariants } from "@/components/ui/form-field"
 
 export default function ReviewForm() {
   const [name, setName] = useState("")
@@ -23,7 +25,6 @@ export default function ReviewForm() {
     }
   }
 
-  // After a successful submit, refresh so the new (server-rendered) review appears.
   useEffect(() => {
     if (status?.ok) {
       const t = setTimeout(() => window.location.reload(), 1500)
@@ -62,49 +63,31 @@ export default function ReviewForm() {
       )}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="name"
-            className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Name <span className="text-red-500">*</span>
-          </label>
+        <FormField label="Name" htmlFor="name" required>
           <input
             id="name"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Jane Doe"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className={inputVariants}
           />
-        </div>
+        </FormField>
 
-        <div>
-          <label
-            htmlFor="company"
-            className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Company (optional)
-          </label>
+        <FormField label="Company (optional)" htmlFor="company" required={false}>
           <input
             id="company"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Acme Inc."
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            className={inputVariants}
           />
-        </div>
+        </FormField>
       </div>
 
       <RatingInput value={rating} onChange={setRating} label="How was your experience?" />
 
-      <div>
-        <label
-          htmlFor="comment"
-          className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Your review <span className="text-red-500">*</span>
-        </label>
+      <FormField label="Your review" htmlFor="comment" required>
         <textarea
           id="comment"
           required
@@ -112,14 +95,16 @@ export default function ReviewForm() {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Tell us about your experience working with Trios Craft..."
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500 resize-y"
+          className={inputVariants}
         />
-      </div>
+      </FormField>
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="lg"
         disabled={submitting}
-        className="w-max rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-60"
+        className="w-max"
       >
         {submitting ? (
           <span className="flex items-center gap-2">
@@ -151,7 +136,7 @@ export default function ReviewForm() {
             <span>Submit Review</span>
           </span>
         )}
-      </button>
+      </Button>
     </form>
   )
 }

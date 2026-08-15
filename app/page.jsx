@@ -3,13 +3,11 @@ import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
 import ProjectCard from "@/components/project-card"
 import FeaturedReviews from "@/components/featured-reviews"
+import Reveal from "@/components/ui/reveal"
+import CountUp from "@/components/ui/count-up"
 import { ArrowRight } from "lucide-react"
 
-// Reviews are read from disk on each request so newly submitted reviews appear
-// immediately on reload.
 export const dynamic = "force-dynamic"
-
-const staggerBase = 0.05
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
@@ -26,7 +24,7 @@ export default function HomePage() {
       {/* Stats */}
       <section className="section border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
         <div className="container-width">
-          <div className="animate-fade-in" style={{ animationDelay: "0.05s" }}>
+          <Reveal delay={0.05} className="text-center">
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Crafted with care
             </h2>
@@ -34,13 +32,13 @@ export default function HomePage() {
               We blend engineering rigor with design thinking to ship products
               that people actually love to use.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid grid-cols-2 justify-items-center gap-4 text-center sm:grid-cols-4">
-            <Stat value="100+" label="Projects Delivered" delay={1} />
-            <Stat value="50+" label="Happy Clients" delay={2} />
-            <Stat value="3" label="Founders" delay={3} />
-            <Stat value="99%" label="Uptime" delay={4} />
+            <Stat number={100} suffix="+" label="Projects Delivered" delay={0} />
+            <Stat number={50} suffix="+" label="Happy Clients" delay={0.1} />
+            <Stat number={3} label="Founders" delay={0.2} />
+            <Stat number={99} suffix="%" label="Uptime" delay={0.3} />
           </div>
         </div>
       </section>
@@ -48,10 +46,7 @@ export default function HomePage() {
       {/* Services */}
       <section className="section">
         <div className="container-width">
-          <div
-            className="text-center animate-fade-in"
-            style={{ animationDelay: "0.1s" }}
-          >
+          <Reveal delay={0.05} className="text-center">
             <span className="text-sm font-semibold uppercase tracking-wider text-primary-700 dark:text-primary-300">
               What we do
             </span>
@@ -62,41 +57,31 @@ export default function HomePage() {
               From concept to deployment, we handle the full stack so you can
               focus on what matters most.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, i) => (
-              <div
-                key={service.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${staggerBase * i}s` }}
-              >
+              <Reveal key={service.id} delay={0.1 + i * 0.08}>
                 <ServiceCard service={service} />
-              </div>
+              </Reveal>
             ))}
           </div>
 
-          <div
-            className="mt-12 text-center animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
-          >
+          <Reveal delay={0.3} className="mt-12 text-center">
             <a
               href="/services"
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
             >
               View all services <ArrowRight className="h-4 w-4" />
             </a>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Featured Projects */}
       <section className="section bg-slate-50 dark:bg-slate-950">
         <div className="container-width">
-          <div
-            className="text-center animate-fade-in"
-            style={{ animationDelay: "0.1s" }}
-          >
+          <Reveal delay={0.05} className="text-center">
             <span className="text-sm font-semibold uppercase tracking-wider text-primary-700 dark:text-primary-300">
               Our work
             </span>
@@ -106,31 +91,24 @@ export default function HomePage() {
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               A few of the products we&apos;ve built for amazing clients.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {featuredProjects.map((project, i) => (
-              <div
-                key={project.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${staggerBase * i}s` }}
-              >
+              <Reveal key={project.id} delay={0.1 + i * 0.08}>
                 <ProjectCard project={project} />
-              </div>
+              </Reveal>
             ))}
           </div>
 
-          <div
-            className="mt-12 text-center animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
-          >
+          <Reveal delay={0.3} className="mt-12 text-center">
             <a
               href="/projects"
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
             >
               View all projects <ArrowRight className="h-4 w-4" />
             </a>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -140,9 +118,9 @@ export default function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-width">
-          <div
-            className="rounded-3xl gradient-bg py-14 text-center text-white animate-fade-in"
-            style={{ animationDelay: "0.1s" }}
+          <Reveal
+            delay={0.1}
+            className="rounded-3xl gradient-bg py-14 text-center text-white"
           >
             <h2 className="text-3xl font-extrabold sm:text-4xl">
               Ready to build something great?
@@ -156,21 +134,18 @@ export default function HomePage() {
             >
               Get in touch
             </a>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>
   )
 }
 
-function Stat({ value, label, delay }) {
+function Stat({ number, suffix = "", label, delay = 0 }) {
   return (
-    <div
-      className="animate-slide-up"
-      style={{ animationDelay: `${delay * 0.1}s` }}
-    >
+    <div className="text-center">
       <div className="text-3xl font-extrabold text-primary-700 dark:text-primary-300">
-        {value}
+        <CountUp value={number} suffix={suffix} duration={1.8} />
       </div>
       <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">{label}</div>
     </div>

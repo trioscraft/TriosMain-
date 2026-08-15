@@ -1,17 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import { Sun, Moon, Monitor } from "lucide-react"
 import { useTheme } from "next-themes"
 import clsx from "clsx"
 
+const emptySubscribe = () => () => {}
+
 export default function ThemeToggle() {
   const { theme, setTheme, systemTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   const resolved = !mounted
     ? "light"

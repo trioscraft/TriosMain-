@@ -1,4 +1,9 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import ThemeToggle from "@/components/theme-toggle"
 
 const navLinks = [
@@ -11,61 +16,138 @@ const navLinks = [
 ]
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  const bgClass = scrolled
+    ? "bg-white/80 dark:bg-slate-950/80 shadow-soft"
+    : "bg-white/40 dark:bg-slate-950/40"
+
+  const linkClass = (active) =>
+    active
+      ? "text-primary-700 dark:text-primary-300"
+      : "text-slate-700 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400"
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/70 backdrop-blur">
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className={`sticky top-0 z-40 w-full border-b border-slate-200/60 dark:border-slate-800 transition-all duration-300 ${bgClass} backdrop-blur`}
+    >
       <div className="container-width flex h-16 items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-fade">
-          TRIOS CRAFT
-        </Link>
+        <motion.div
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.05 }}
+        >
+          <Link href="/" className="text-xl font-bold text-fade">
+            TRIOS CRAFT
+          </Link>
+        </motion.div>
+
         <nav className="hidden md:flex items-center space-x-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link, i) => {
+            const active = pathname === link.href
+            return (
+              <motion.div
+                key={link.href}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 * i }}
+              >
+                <Link
+                  href={link.href}
+                  className={`relative px-3 py-2 text-sm font-medium transition-colors ${linkClass(active)}`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary-500 transition-all ${
+                      active ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                </Link>
+              </motion.div>
+            )
+          })}
         </nav>
+
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <MobileMenu navLinks={navLinks} />
-        </div>
-      </div>
-    </header>
-  )
-}
-
-function MobileMenu({ navLinks }) {
-  return (
-    <details className="group md:hidden">
-      <summary className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
-        <svg
-          className="h-5 w-5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </summary>
-      <div className="absolute top-16 right-4 z-30 hidden max-h-[calc(100vh-4rem)] w-56 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl group-open:block">
-        <div className="flex flex-col p-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-primary-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-primary-400"
+          <div className="md:hidden">
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
             >
-              {link.label}
-            </Link>
-          ))}
+              <motion.span
+                className="flex flex-col gap-1.5"
+                animate={menuOpen ? "open" : "closed"}
+                variants={{
+                  open: { rotate: 180 },
+                  closed: { rotate: 0 },
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.span
+                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  variants={{ open: { rotate: 45, y: 6 }, closed: { rotate: 0, y: 0 } }}
+                  transition={{ duration: 0.2 }}
+                />
+                <motion.span
+                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  variants={{ open: { opacity: 0 }, closed: { opacity: 1 } }}
+                  transition={{ duration: 0.2 }}
+                />
+                <motion.span
+                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  variants={{ open: { rotate: -45, y: -6 }, closed: { rotate: 0, y: 0 } }}
+                  transition={{ duration: 0.2 }}
+                />
+              </motion.span>
+              <span className="sr-only">Toggle menu</span>
+            </motion.button>
+          </div>
         </div>
       </div>
-    </details>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            className="md:hidden border-t border-slate-200/60 dark:border-slate-800 bg-white/70 dark:bg-slate-950/70 backdrop-blur"
+          >
+            <div className="container-width flex flex-col gap-1 py-2">
+              {navLinks.map((link) => {
+                const active = pathname === link.href
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${linkClass(active)}`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   )
 }

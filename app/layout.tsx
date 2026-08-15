@@ -1,6 +1,7 @@
 import "./globals.css"
 import type { ReactNode } from "react"
 import { Inter } from "next/font/google"
+import { MotionConfig } from "framer-motion"
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -39,8 +40,8 @@ export const metadata = {
     type: "website",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
   },
   manifest: "/manifest.json",
 }
@@ -51,11 +52,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.variable} bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <Header />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <MotionConfig reducedMotion="user">
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <Header />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </MotionConfig>
       </body>
     </html>
   )
