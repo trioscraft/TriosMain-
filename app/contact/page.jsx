@@ -32,9 +32,8 @@ export default function ContactPage() {
         <div className="container-width">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <Reveal delay={0.05} className="space-y-4">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-                Reach out
-              </h2>
+              <span className="eyebrow">Get in touch</span>
+              <h2 className="heading-xl mt-4 text-fluid-xl">Reach out</h2>
               <p className="text-slate-600 dark:text-slate-400">
                 We&apos;d love to hear about your project. Fill in the form and
                 we&apos;ll get back within 24-48 hours.
@@ -43,8 +42,8 @@ export default function ContactPage() {
               <div className="mt-8 space-y-4">
                 {contactInfo.map((info, i) => (
                   <Reveal key={info.title} delay={0.1 + i * 0.05}>
-                    <div className="flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 transition-transform hover:translate-x-1">
-                      <info.icon className="h-5 w-5 text-primary-600" />
+                    <div className="luxe-card flex items-center gap-4 px-4 py-3 transition-transform hover:translate-x-1">
+                      <info.icon className="h-5 w-5 text-luxe-400" />
                       <div>
                         <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                           {info.title}
@@ -83,10 +82,8 @@ export default function ContactPage() {
               </Reveal>
             </Reveal>
 
-            <Reveal delay={0.1} className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
-              <h2 className="mb-4 text-2xl font-bold text-slate-900 dark:text-slate-100">
-                Send a message
-              </h2>
+            <Reveal delay={0.1} className="luxe-card sm:p-8">
+              <h2 className="heading-xl mb-4 text-fluid-xl">Send a message</h2>
               <ContactForm />
             </Reveal>
           </div>

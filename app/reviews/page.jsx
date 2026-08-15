@@ -25,9 +25,8 @@ export default function ReviewsPage() {
       <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              What people say
-            </h2>
+            <span className="eyebrow">Testimonials</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">What people say</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               We appreciate your feedback! Reviews appear on the site once
               submitted. Thank you for sharing your experience.
@@ -42,7 +41,7 @@ export default function ReviewsPage() {
 
       <section
         id="write-review"
-        className="section bg-slate-50 dark:bg-slate-950 scroll-mt-20"
+        className="section scroll-mt-20"
       >
         <div className="container-width">
           <Reveal delay={0.05} className="mx-auto max-w-2xl text-center">
@@ -50,9 +49,7 @@ export default function ReviewsPage() {
               <Star className="h-5 w-5 fill-amber-400 animate-pulse-slow" />
               Share your experience
             </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Share your review
-            </h2>
+            <h2 className="heading-xl mt-2 text-fluid-2xl">Share your review</h2>
             <p className="mt-4 text-slate-600 dark:text-slate-400">
               Worked with us? Tell the world how it went.
             </p>

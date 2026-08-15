@@ -27,7 +27,7 @@ export default function TeamSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card flex flex-col text-center"
+              className="luxe-card flex flex-col text-center"
             >
               <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full border-2 border-slate-200 dark:border-slate-700">
                 {member.image ? (
@@ -44,10 +44,10 @@ export default function TeamSection() {
                   </div>
                 )}
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+              <h3 className="font-display text-xl font-semibold text-slate-900 dark:text-white">
                 {member.name}
               </h3>
-              <p className="mb-3 text-sm text-primary-700 dark:text-primary-300">
+              <p className="mb-3 text-sm text-luxe-600 dark:text-luxe-300">
                 {member.role}
               </p>
               <p className="flex-grow text-sm text-slate-600 dark:text-slate-400">

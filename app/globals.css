@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --font-display: "Sora", "Inter", system-ui, sans-serif;
   }
 
   html {
@@ -18,14 +19,22 @@
 
   .dark body {
     @apply bg-slate-950 text-slate-200;
+    /* Painted glow field — a near-black canvas with subtle cyan/violet/gold
+       light pooling from the corners so the dark theme reads as intentional
+       luxe rather than flat #020617. */
+    background-color: #05070c;
+    background-image:
+      radial-gradient(60rem 40rem at 12% -8%, rgb(2 187 208 / 0.10), transparent 60%),
+      radial-gradient(50rem 36rem at 100% 0%, rgb(99 102 241 / 0.10), transparent 55%),
+      radial-gradient(56rem 40rem at 50% 120%, rgb(201 149 55 / 0.06), transparent 55%);
+    background-attachment: fixed;
   }
 
-  /* Brand-colored text selection instead of the browser default */
   ::selection {
     @apply bg-primary-500/25 text-primary-900;
   }
   .dark ::selection {
-    @apply bg-primary-400/30 text-primary-50;
+    @apply bg-luxe-400/25 text-luxe-100;
   }
 
   /* Consistent, premium focus ring across native interactive elements */
@@ -33,7 +42,7 @@
   button:focus-visible,
   input:focus-visible,
   textarea:focus-visible {
-    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-950;
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#05070c];
   }
 
   /* Custom scrollbar for webkit */
@@ -42,73 +51,120 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100 dark:bg-slate-800;
+    @apply bg-slate-100 dark:bg-[#0a0d14];
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400 dark:bg-slate-500;
+    @apply bg-slate-400 dark:bg-slate-600;
   }
 }
 
 @layer components {
+  /* Signature dark-luxe gradient: cyan -> violet -> champagne gold */
   .gradient-bg {
-    background: linear-gradient(135deg, #02bbd0 0%, #0e7490 100%);
+    background: linear-gradient(135deg, #02bbd0 0%, #4f46e5 50%, #c99537 100%);
   }
 
-  .card {
-    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all duration-300;
-  }
-
-  .card-hover {
-    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center rounded-lg border border-primary-600 px-5 py-2.5 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
-  }
-
-  .rating-star {
-    @apply text-amber-400;
-  }
-}
-
-@layer utilities {
   .text-fade {
-    background: linear-gradient(135deg, #02bbd0 0%, #0e7490 100%);
+    background: linear-gradient(135deg, #22d3ee 0%, #818cf8 50%, #e9c988 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .section {
-    @apply py-16 md:py-24;
-  }
-
-  .container-width {
-    @apply mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
   /* Animated version of .text-fade — same gradient, slowly drifting.
      Use on hero headings only; keep static .text-fade elsewhere for perf. */
   .text-fade-animated {
-    background: linear-gradient(135deg, #02bbd0 0%, #f97316 50%, #0e7490 100%);
-    background-size: 200% 200%;
+    background: linear-gradient(110deg, #22d3ee 0%, #818cf8 45%, #e9c988 70%, #22d3ee 100%);
+    background-size: 220% 220%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     @apply animate-gradient-shift;
   }
 
+  /* ---- Glass luxe surfaces ---- */
+  .card {
+    @apply bg-white dark:bg-white/[0.035] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-soft dark:shadow-soft-dark transition-all duration-300 backdrop-blur-sm;
+  }
+
+  .card-hover {
+    @apply bg-white dark:bg-white/[0.035] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-soft dark:shadow-soft-dark transition-all duration-300 backdrop-blur-sm hover:shadow-glow dark:hover:border-primary-400/30 dark:hover:bg-white/[0.06];
+  }
+
+  /* Premium glass card with a faint top sheen + glow on hover */
+  .luxe-card {
+    @apply relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-soft backdrop-blur-xl transition-all duration-500 ease-premium dark:border-white/10 dark:bg-white/[0.04] dark:shadow-soft-dark;
+  }
+  .luxe-card:hover {
+    @apply border-primary-400/40 -translate-y-1 shadow-glow dark:border-primary-400/30 dark:bg-white/[0.07];
+  }
+  /* Animated gradient ring that appears on hover — the signature tech edge */
+  .luxe-card::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-2xl p-px opacity-0 transition-opacity duration-500;
+    background: linear-gradient(130deg, rgb(2 187 208), rgb(99 102 241), rgb(201 149 55), rgb(2 187 208));
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: gradient-shift 5s linear infinite;
+  }
+  .luxe-card:hover::after {
+    @apply opacity-100;
+  }
+  .luxe-card::before {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 shadow-soft hover:bg-primary-500 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  /* Diagonal light sweep that fires on hover for a "powered on" feel */
+  .btn-primary::after {
+    content: "";
+    @apply pointer-events-none absolute top-0 left-0 h-full w-1/3 -translate-x-[150%] skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent;
+  }
+  .btn-primary:hover::after {
+    @apply animate-shine;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-xl border border-primary-500/60 bg-white/40 px-5 py-2.5 text-sm font-medium text-primary-700 transition-all duration-300 hover:bg-primary-50 hover:border-primary-500 dark:text-primary-200 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-luxe-300/40 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .rating-star {
+    @apply text-amber-400;
+  }
+
+  /* Eyebrow / kicker label used above section headings */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:text-luxe-300;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-gradient-to-r from-transparent to-primary-500 dark:to-luxe-400;
+  }
+
+  /* Section heading with an intentional display face + tight tracking */
+  .heading-xl {
+    @apply font-display font-bold tracking-tight text-slate-900 dark:text-white;
+  }
+
+  /* Hairline divider that catches a soft glow at its center */
+  .divider-glow {
+    @apply relative h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-white/15;
+  }
+  .divider-glow::after {
+    content: "";
+    @apply absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-luxe-300 shadow-glow-luxe;
+  }
+}
+
+@layer utilities {
   /* Soft blurred color-blob backdrop for hero/CTA sections */
   .mesh-bg {
     @apply pointer-events-none absolute inset-0 bg-mesh-gradient blur-3xl;
@@ -116,7 +172,7 @@
 
   /* Frosted glass surface for headers, floating cards, overlays */
   .glass-surface {
-    @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-slate-800/60;
+    @apply bg-white/70 dark:bg-[#070a11]/70 backdrop-blur-xl border border-white/20 dark:border-white/10;
   }
 
   /* Very low-opacity grain overlay for texture behind hero/CTA sections.
@@ -124,6 +180,14 @@
   .noise-overlay {
     @apply pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Drifting aurora backdrop — pair with blurred, colored child blobs */
+  .aurora-bg {
+    @apply pointer-events-none absolute inset-0 overflow-hidden;
+  }
+  .aurora-blob {
+    @apply absolute rounded-full blur-3xl will-change-transform;
   }
 
   /* Shimmer sweep for loading skeletons — pair with a base bg-slate-200/800 block */
@@ -142,6 +206,58 @@
      duplicate the child content once in markup so the 50% loop is seamless */
   .marquee-track {
     @apply flex w-max animate-marquee;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Faint engineering grid that fades out toward the edges */
+  .tech-grid {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.18) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
+    mask-image: radial-gradient(ellipse at center, black 25%, transparent 78%);
+  }
+  .dark .tech-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  }
+
+  /* Vertical scanning line (HUD / radar sweep) — parent needs relative+overflow-hidden */
+  .scanline {
+    @apply pointer-events-none absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-400 to-transparent;
+  }
+
+  /* Tiny glowing node/particle for the tech backdrop */
+  .particle {
+    @apply absolute rounded-full bg-primary-400/70 blur-[1px];
+  }
+
+  /* Animated underline for inline links */
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 right-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary-400 to-luxe-400 transition-transform duration-300 ease-premium;
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    @apply scale-x-100;
+  }
+
+  /* Terminal-style blinking caret */
+  .caret {
+    @apply inline-block h-[1.05em] w-[2px] translate-y-[0.15em] bg-luxe-300 align-middle;
+  }
+
+  /* Paused-state helper for the marquee (hover to stop) */
+  .marquee-paused:hover .marquee-track {
+    animation-play-state: paused;
   }
 }
 

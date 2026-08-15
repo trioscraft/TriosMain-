@@ -1,7 +1,20 @@
 import Hero from "@/components/hero"
 import TeamSection from "@/components/team-section"
+import TechMarquee from "@/components/tech-marquee"
 import { Reveal } from "@/components/ui/reveal"
 import { Award, Heart, Zap } from "lucide-react"
+
+const aboutStack = [
+  "Next.js",
+  "React",
+  "React Native",
+  "Flutter",
+  "TypeScript",
+  "Tailwind CSS",
+  "AWS",
+  "Docker",
+  "PostgreSQL",
+]
 
 export const dynamic = "force-dynamic"
 
@@ -25,9 +38,8 @@ export default function AboutPage() {
       <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              How we work
-            </h2>
+            <span className="eyebrow">Our approach</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">How we work</h2>
             <p className="mt-5 text-slate-600 dark:text-slate-400">
               We keep teams small so every decision matters. We move fast,
               measure impact, and care about the details that make products
@@ -36,9 +48,9 @@ export default function AboutPage() {
 
             <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
               <Reveal delay={0.1}>
-                <div className="card text-center transition-transform hover:-translate-y-1">
-                  <Zap className="mx-auto mb-4 h-8 w-8 text-primary-600" />
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                <div className="luxe-card text-center">
+                  <Zap className="mx-auto mb-4 h-8 w-8 text-primary-500" />
+                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
                     Speed
                   </h3>
                   <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
@@ -47,9 +59,9 @@ export default function AboutPage() {
                 </div>
               </Reveal>
               <Reveal delay={0.18}>
-                <div className="card text-center transition-transform hover:-translate-y-1">
-                  <Award className="mx-auto mb-4 h-8 w-8 text-primary-600" />
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                <div className="luxe-card text-center">
+                  <Award className="mx-auto mb-4 h-8 w-8 text-luxe-400" />
+                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
                     Quality
                   </h3>
                   <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
@@ -58,9 +70,9 @@ export default function AboutPage() {
                 </div>
               </Reveal>
               <Reveal delay={0.26}>
-                <div className="card text-center transition-transform hover:-translate-y-1">
-                  <Heart className="mx-auto mb-4 h-8 w-8 text-primary-600" />
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                <div className="luxe-card text-center">
+                  <Heart className="mx-auto mb-4 h-8 w-8 text-secondary-400" />
+                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
                     Care
                   </h3>
                   <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
@@ -74,12 +86,11 @@ export default function AboutPage() {
       </section>
 
       {/* Tech stack */}
-      <section className="section bg-slate-50 dark:bg-slate-950">
+      <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="mx-auto max-w-4xl text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Tools we love
-            </h2>
+            <span className="eyebrow">Stack</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">Tools we love</h2>
             <p className="mt-4 text-slate-600 dark:text-slate-400">
               We pick the right tool for the job — not the shiniest one.
             </p>
@@ -97,6 +108,9 @@ export default function AboutPage() {
               <span className="text-slate-300">·</span>
               <span>Docker</span>
               <span>PostgreSQL</span>
+            </div>
+            <div className="mt-10">
+              <TechMarquee items={aboutStack} />
             </div>
           </Reveal>
         </div>

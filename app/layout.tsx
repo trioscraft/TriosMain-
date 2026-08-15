@@ -1,14 +1,23 @@
 import "./globals.css"
 import type { ReactNode } from "react"
-import { Inter } from "next/font/google"
+import { Inter, Sora } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import TechBackground from "@/components/tech-background"
+import ScrollProgress from "@/components/scroll-progress"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-family",
   display: "swap",
+})
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["600", "700", "800"],
 })
 
 export const metadata = {
@@ -49,9 +58,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-200 antialiased`}
+        className={`${inter.variable} ${sora.variable} bg-white text-slate-900 dark:bg-[#05070c] dark:text-slate-200 antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <TechBackground />
+          <ScrollProgress />
           <Header />
           {children}
           <Footer />

@@ -28,13 +28,13 @@ export default function Header() {
   }, [])
 
   const bgClass = scrolled
-    ? "bg-white/80 dark:bg-slate-950/80 shadow-soft"
-    : "bg-white/40 dark:bg-slate-950/40"
+    ? "glass-surface shadow-soft-dark"
+    : "bg-white/30 dark:bg-[#05070c]/30"
 
   const linkClass = (active) =>
     active
-      ? "text-primary-700 dark:text-primary-300"
-      : "text-slate-700 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400"
+      ? "text-primary-700 dark:text-luxe-200"
+      : "text-slate-700 hover:text-primary-600 dark:text-slate-300 dark:hover:text-white"
 
   return (
     <motion.header
@@ -48,7 +48,7 @@ export default function Header() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.05 }}
         >
-          <Link href="/" className="text-xl font-bold text-fade">
+          <Link href="/" className="font-display text-xl font-extrabold tracking-tight text-fade">
             TRIOS CRAFT
           </Link>
         </motion.div>
@@ -69,7 +69,7 @@ export default function Header() {
                 >
                   {link.label}
                   <span
-                    className={`absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-primary-500 transition-all ${
+                    className={`absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-primary-500 via-secondary-400 to-luxe-400 transition-all ${
                       active ? "scale-x-100" : "scale-x-0"
                     }`}
                   />
@@ -128,7 +128,7 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="md:hidden border-t border-slate-200/60 dark:border-slate-800 bg-white/70 dark:bg-slate-950/70 backdrop-blur"
+            className="md:hidden border-t border-white/10 bg-white/60 dark:bg-[#05070c]/70 backdrop-blur-xl"
           >
             <div className="container-width flex flex-col gap-1 py-2">
               {navLinks.map((link) => {

@@ -24,9 +24,10 @@ export default function ProjectsPage() {
       <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Projects
-            </h2>
+            <div>
+              <span className="eyebrow">Portfolio</span>
+              <h2 className="heading-xl mt-4 text-fluid-2xl">Projects</h2>
+            </div>
           </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">

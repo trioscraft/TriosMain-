@@ -20,13 +20,16 @@ const social = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+    <footer className="relative mt-12 border-t border-white/10 bg-[#070a11]/60">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-luxe-400/50 to-transparent" />
       <div className="container-width section">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <Reveal delay={0}>
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold text-fade">TRIOS CRAFT</span>
+                <span className="font-display text-2xl font-extrabold tracking-tight text-fade">
+                  TRIOS CRAFT
+                </span>
               </div>
               <p className="max-w-xs text-sm text-slate-600 dark:text-slate-400">
                 Three CS graduates crafting digital experiences that are fast,
@@ -39,7 +42,7 @@ export default function Footer() {
                     href={s.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:text-primary-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-primary-400"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:text-luxe-300 hover:bg-white/5 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-luxe-300"
                     aria-label={s.label}
                   >
                     <s.icon size={18} />
@@ -59,7 +62,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400"
+                      className="link-underline text-sm text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-luxe-300"
                     >
                       {link.label}
                     </Link>
@@ -98,7 +101,7 @@ export default function Footer() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.4} className="mt-10 border-t border-slate-200 dark:border-slate-800 pt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+        <Reveal delay={0.4} className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-slate-600 dark:text-slate-400">
           <p>
             &copy; {new Date().getFullYear()} Trios Craft. All rights reserved.
           </p>

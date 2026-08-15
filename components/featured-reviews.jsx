@@ -7,17 +7,17 @@ export default async function FeaturedReviews() {
   const reviews = await getApprovedReviews()
 
   return (
-    <section className="section bg-slate-50 dark:bg-slate-950">
+    <section className="section">
       <div className="container-width">
-        <Reveal delay={0.05} className="mx-auto mb-4 flex max-w-3xl items-center justify-center gap-3 text-primary-600">
+        <Reveal delay={0.05} className="mx-auto mb-4 flex max-w-3xl items-center justify-center gap-3 text-luxe-500 dark:text-luxe-300">
           <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-          <span className="text-sm font-semibold uppercase tracking-wider">
+          <span className="eyebrow !text-luxe-500 dark:!text-luxe-300">
             Client Stories
           </span>
         </Reveal>
 
         <Reveal delay={0.15} className="mx-auto mb-4 max-w-3xl text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+          <h2 className="heading-xl text-fluid-2xl">
             What our clients say
           </h2>
         </Reveal>
@@ -42,7 +42,7 @@ export default async function FeaturedReviews() {
         <Reveal delay={0.4} className="mt-12 text-center">
           <a
             href="/reviews"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
+            className="link-underline inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
           >
             See all reviews <span>&rarr;</span>
           </a>

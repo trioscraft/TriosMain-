@@ -3,9 +3,28 @@ import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
 import ProjectCard from "@/components/project-card"
 import FeaturedReviews from "@/components/featured-reviews"
+import TechMarquee from "@/components/tech-marquee"
+import SectionDivider from "@/components/section-divider"
 import { Reveal } from "@/components/ui/reveal"
 import CountUp from "@/components/ui/count-up"
 import { ArrowRight } from "lucide-react"
+
+const techStack = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "Node.js",
+  "Python",
+  "AI / LLMs",
+  "AWS",
+  "Docker",
+  "PostgreSQL",
+  "Flutter",
+  "GraphQL",
+  "Redis",
+  "Kubernetes",
+]
 
 export const dynamic = "force-dynamic"
 
@@ -22,12 +41,11 @@ export default function HomePage() {
       />
 
       {/* Stats */}
-      <section className="section border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+      <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Crafted with care
-            </h2>
+            <span className="eyebrow">Why Trios Craft</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">Crafted with care</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               We blend engineering rigor with design thinking to ship products
               that people actually love to use.
@@ -43,16 +61,14 @@ export default function HomePage() {
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* Services */}
       <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="text-center">
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary-700 dark:text-primary-300">
-              What we do
-            </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Services
-            </h2>
+            <span className="eyebrow">What we do</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">Services</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               From concept to deployment, we handle the full stack so you can
               focus on what matters most.
@@ -70,7 +86,7 @@ export default function HomePage() {
           <Reveal delay={0.3} className="mt-12 text-center">
             <a
               href="/services"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
+              className="link-underline inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
             >
               View all services <ArrowRight className="h-4 w-4" />
             </a>
@@ -78,16 +94,14 @@ export default function HomePage() {
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* Featured Projects */}
-      <section className="section bg-slate-50 dark:bg-slate-950">
+      <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="text-center">
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary-700 dark:text-primary-300">
-              Our work
-            </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Featured projects
-            </h2>
+            <span className="eyebrow">Our work</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">Featured projects</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               A few of the products we&apos;ve built for amazing clients.
             </p>
@@ -104,7 +118,7 @@ export default function HomePage() {
           <Reveal delay={0.3} className="mt-12 text-center">
             <a
               href="/projects"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-primary-300"
+              className="link-underline inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
             >
               View all projects <ArrowRight className="h-4 w-4" />
             </a>
@@ -112,28 +126,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      <SectionDivider />
+
+      {/* Tech stack marquee */}
+      <section className="section !py-12">
+        <div className="container-width">
+          <Reveal delay={0.05} className="mb-8 text-center">
+            <span className="eyebrow">Our stack</span>
+            <h2 className="heading-xl mt-4 text-fluid-xl">Powered by modern tech</h2>
+          </Reveal>
+          <TechMarquee items={techStack} />
+        </div>
+      </section>
+
+      <SectionDivider />
+
       {/* Featured Reviews (server-rendered, reads fresh reviews per request) */}
       <FeaturedReviews />
 
       {/* CTA */}
       <section className="section">
         <div className="container-width">
-          <Reveal
-            delay={0.1}
-            className="rounded-3xl gradient-bg py-14 text-center text-white"
-          >
-            <h2 className="text-3xl font-extrabold sm:text-4xl">
-              Ready to build something great?
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg opacity-90">
-              Let us chat about your next project.
-            </p>
-            <a
-              href="/contact"
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-primary-700 transition-transform hover:scale-105 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700"
-            >
-              Get in touch
-            </a>
+          <Reveal delay={0.1} className="relative overflow-hidden rounded-3xl gradient-bg py-16 text-center text-white shadow-glow-luxe">
+            <div aria-hidden="true" className="noise-overlay" />
+            <div className="relative">
+              <h2 className="font-display text-fluid-2xl font-extrabold">
+                Ready to build something great?
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/90">
+                Let us chat about your next project.
+              </p>
+              <a
+                href="/contact"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-transform hover:scale-105 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700"
+              >
+                Get in touch
+              </a>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -144,7 +173,7 @@ export default function HomePage() {
 function Stat({ number, suffix = "", label, delay = 0 }) {
   return (
     <div className="text-center">
-      <div className="text-3xl font-extrabold text-primary-700 dark:text-primary-300">
+      <div className="text-3xl font-extrabold text-primary-700 dark:text-luxe-300">
         <CountUp value={number} suffix={suffix} duration={1.8} />
       </div>
       <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">{label}</div>

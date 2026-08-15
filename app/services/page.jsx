@@ -24,9 +24,8 @@ export default function ServicesPage() {
       <section className="section">
         <div className="container-width">
           <Reveal delay={0.05} className="text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Everything we do
-            </h2>
+            <span className="eyebrow">Capabilities</span>
+            <h2 className="heading-xl mt-4 text-fluid-2xl">Everything we do</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
               We handle the full stack so you don&apos;t have to juggle multiple
               agencies.
