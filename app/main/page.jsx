@@ -85,7 +85,7 @@ export default function HomePage() {
 
           <Reveal delay={0.3} className="mt-12 text-center">
             <a
-              href="/services"
+              href="/main/services"
               className="link-underline inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
             >
               View all services <ArrowRight className="h-4 w-4" />
@@ -117,7 +117,7 @@ export default function HomePage() {
 
           <Reveal delay={0.3} className="mt-12 text-center">
             <a
-              href="/projects"
+              href="/main/projects"
               className="link-underline inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
             >
               View all projects <ArrowRight className="h-4 w-4" />
@@ -157,7 +157,7 @@ export default function HomePage() {
                 Let us chat about your next project.
               </p>
               <a
-                href="/contact"
+                href="/main/contact"
                 className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-transform hover:scale-105 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700"
               >
                 Get in touch
