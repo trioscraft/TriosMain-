@@ -37,12 +37,12 @@ export default function ForgotPasswordPage() {
           maxWidth: 440, width: "100%", padding: "48px 44px 40px",
           background: "rgba(14,20,32,0.82)", backdropFilter: "blur(28px) saturate(1.4)",
           WebkitBackdropFilter: "blur(28px) saturate(1.4)", borderRadius: 28,
-          border: "1px solid rgba(99,179,237,0.12)",
+          border: "1px solid rgba(216,167,92,0.12)",
           boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
         }}>
           <div style={{
             position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(99,179,237,0.45), rgba(183,148,244,0.35), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(216,167,92,0.45), rgba(183,148,244,0.35), transparent)",
             backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite",
           }} />
           <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 24, marginBottom: 16, color: "var(--text-primary)" }}>
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
           </p>
           <button onClick={() => router.push("/admin/login")} style={{
             marginTop: 24, width: "100%", padding: "12px 24px",
-            background: "linear-gradient(135deg, #63b3ed 0%, #4a9bd4 50%, #3a86c0 100%)",
+            background: "linear-gradient(135deg, #d8a75c 0%, #c68f47 50%, #b8823c 100%)",
             border: "none", borderRadius: 12, cursor: "pointer",
             color: "#051628", fontFamily: "var(--font-body)", fontSize: 14,
             fontWeight: 700,
@@ -71,12 +71,12 @@ export default function ForgotPasswordPage() {
         maxWidth: 440, width: "100%", padding: "48px 44px 40px",
         background: "rgba(14,20,32,0.82)", backdropFilter: "blur(28px) saturate(1.4)",
         WebkitBackdropFilter: "blur(28px) saturate(1.4)", borderRadius: 28,
-        border: "1px solid rgba(99,179,237,0.12)",
+        border: "1px solid rgba(216,167,92,0.12)",
         boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
       }}>
         <div style={{
           position: "absolute", top: 0, left: 0, right: 0, height: 1,
-          background: "linear-gradient(90deg, transparent, rgba(99,179,237,0.45), rgba(183,148,244,0.35), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(216,167,92,0.45), rgba(183,148,244,0.35), transparent)",
           backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite",
         }} />
         <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 24, marginBottom: 8, color: "var(--text-primary)" }}>
@@ -121,8 +121,8 @@ export default function ForgotPasswordPage() {
             style={{
               marginTop: 6, width: "100%", padding: "14px 24px",
               background: loading
-                ? "rgba(99,179,237,0.3)"
-                : "linear-gradient(135deg, #63b3ed 0%, #4a9bd4 50%, #3a86c0 100%)",
+                ? "rgba(216,167,92,0.3)"
+                : "linear-gradient(135deg, #d8a75c 0%, #c68f47 50%, #b8823c 100%)",
               border: "none", borderRadius: 12, cursor: loading ? "not-allowed" : "pointer",
               color: "#051628", fontFamily: "var(--font-body)", fontSize: 15,
               fontWeight: 700, opacity: !email && !loading ? 0.45 : 1,
