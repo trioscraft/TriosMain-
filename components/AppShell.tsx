@@ -37,8 +37,9 @@ export default function AppShell({
               position: "sticky",
               top: 0,
               zIndex: 10,
-              background: "rgba(0, 0, 0, 0.88)",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(10, 13, 20, 0.85)",
+              backdropFilter: "blur(10px)",
+              borderBottom: "1px solid var(--border)",
             }}
           >
             <NotificationBell />

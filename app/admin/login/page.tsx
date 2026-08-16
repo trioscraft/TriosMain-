@@ -53,7 +53,7 @@ export default function LoginPage() {
         if (p.y > canvas!.height) p.y = 0;
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(99,179,237,${p.opacity})`;
+        ctx!.fillStyle = `rgba(216,167,92,${p.opacity})`;
         ctx!.fill();
       }
       animId = requestAnimationFrame(draw);
@@ -128,7 +128,7 @@ export default function LoginPage() {
       100% { background-position:  200% center; }
     }
     @keyframes pulseRing {
-      0%   { box-shadow: 0 0 0 0 rgba(99,179,237,0.4); }
+      0%   { box-shadow: 0 0 0 0 rgba(216,167,92,0.4); }
       70%  { box-shadow: 0 0 0 10px transparent; }
       100% { box-shadow: 0 0 0 0 transparent; }
     }
@@ -149,12 +149,12 @@ export default function LoginPage() {
     }
     .login-btn:not(:disabled):hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(99,179,237,0.35);
+      box-shadow: 0 8px 30px rgba(216,167,92,0.35);
     }
     .login-btn:not(:disabled):active {
       transform: translateY(0) scale(0.98);
     }
-    .login-input:hover { border-color: rgba(99,179,237,0.35) !important; }
+    .login-input:hover { border-color: rgba(216,167,92,0.35) !important; }
   `;
 
   if (loading) {
@@ -166,12 +166,12 @@ export default function LoginPage() {
           background: "var(--bg-base)", flexDirection: "column", gap: 16,
         }}>
           <div style={{
-            width: 36, height: 36, border: "2px solid rgba(99,179,237,0.15)",
-            borderTopColor: "#63b3ed", borderRadius: "50%",
+            width: 36, height: 36, border: "2px solid rgba(216,167,92,0.15)",
+            borderTopColor: "#d8a75c", borderRadius: "50%",
             animation: "spin 0.8s linear infinite",
           }} />
           <p style={{ color: "var(--text-tertiary)", fontSize: 14, fontFamily: "var(--font-body)" }}>
-            Checking authentication�
+            Checking authentication…
           </p>
         </div>
       </>
@@ -198,7 +198,7 @@ export default function LoginPage() {
         {/* Ambient orbs */}
         <div style={{
           position: "absolute", width: 600, height: 600, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(99,179,237,0.07) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(216,167,92,0.07) 0%, transparent 70%)",
           top: "10%", left: "55%", transform: "translate(-50%,-50%)",
           animation: "orb1 14s ease-in-out infinite", zIndex: 0, pointerEvents: "none",
         }} />
@@ -214,7 +214,7 @@ export default function LoginPage() {
           xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="grid" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
-              <path d="M 64 0 L 0 64" stroke="#63b3ed" strokeWidth="0.5" fill="none" />
+              <path d="M 64 0 L 0 64" stroke="#d8a75c" strokeWidth="0.5" fill="none" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -228,8 +228,8 @@ export default function LoginPage() {
           backdropFilter: "blur(28px) saturate(1.4)",
           WebkitBackdropFilter: "blur(28px) saturate(1.4)",
           borderRadius: 28,
-          border: "1px solid rgba(99,179,237,0.12)",
-          boxShadow: "0 40px 100px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(99,179,237,0.08) inset, 0 1px 0 rgba(255,255,255,0.05) inset",
+          border: "1px solid rgba(216,167,92,0.12)",
+          boxShadow: "0 40px 100px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(216,167,92,0.08) inset, 0 1px 0 rgba(255,255,255,0.05) inset",
           padding: "48px 44px 40px",
           overflow: "hidden",
         }}>
@@ -237,7 +237,7 @@ export default function LoginPage() {
           {/* Top shimmer line */}
           <div style={{
             position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(99,179,237,0.45), rgba(183,148,244,0.35), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(216,167,92,0.45), rgba(183,148,244,0.35), transparent)",
             backgroundSize: "200% 100%",
             animation: "shimmer 3s linear infinite",
           }} />
@@ -247,20 +247,20 @@ export default function LoginPage() {
             <div style={{
               display: "inline-flex", alignItems: "center", justifyContent: "center",
               width: 56, height: 56, borderRadius: 18,
-              background: "linear-gradient(135deg, rgba(99,179,237,0.2) 0%, rgba(183,148,244,0.15) 100%)",
-              border: "1px solid rgba(99,179,237,0.25)",
+              background: "linear-gradient(135deg, rgba(216,167,92,0.2) 0%, rgba(183,148,244,0.15) 100%)",
+              border: "1px solid rgba(216,167,92,0.25)",
               marginBottom: 20, fontSize: 26,
               animation: "logoFloat 4s ease-in-out infinite",
-              boxShadow: "0 8px 24px rgba(99,179,237,0.15), 0 0 0 0 rgba(99,179,237,0.3)",
+              boxShadow: "0 8px 24px rgba(216,167,92,0.15), 0 0 0 0 rgba(216,167,92,0.3)",
             }}>
-              ??
+              ⬥
             </div>
 
             <div style={{ marginBottom: 6 }}>
               <span style={{
                 fontFamily: "var(--font-display)", fontWeight: 800,
                 fontSize: 28, letterSpacing: "-0.04em",
-                background: "linear-gradient(135deg, #fff 30%, rgba(99,179,237,0.85) 100%)",
+                background: "linear-gradient(135deg, #fff 30%, rgba(216,167,92,0.85) 100%)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}>
@@ -273,7 +273,7 @@ export default function LoginPage() {
               fontFamily: "var(--font-body)", letterSpacing: "0.06em",
               textTransform: "uppercase",
             }}>
-              Workflow OS � Sign in to continue
+              Workflow OS · Sign in to continue
             </p>
           </div>
 
@@ -307,17 +307,17 @@ export default function LoginPage() {
                     width: "100%", boxSizing: "border-box",
                     padding: "13px 16px 13px 42px",
                     background: "rgba(26,34,53,0.7)",
-                    border: `1px solid ${emailFocused ? "rgba(99,179,237,0.5)" : "var(--border)"}`,
+                    border: `1px solid ${emailFocused ? "rgba(216,167,92,0.5)" : "var(--border)"}`,
                     borderRadius: 12, color: "var(--text-primary)",
                     fontFamily: "var(--font-body)", fontSize: 14,
                     outline: "none", transition: "all 0.2s ease",
-                    boxShadow: emailFocused ? "0 0 0 3px rgba(99,179,237,0.12)" : "none",
+                    boxShadow: emailFocused ? "0 0 0 3px rgba(216,167,92,0.12)" : "none",
                   }}
                 />
                 <svg style={{
                   position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
                   opacity: emailFocused ? 0.9 : 0.4, transition: "opacity 0.2s ease",
-                }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#63b3ed" strokeWidth="2">
+                }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d8a75c" strokeWidth="2">
                   <rect x="2" y="4" width="20" height="16" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
@@ -338,7 +338,7 @@ export default function LoginPage() {
                 <input
                   className="login-input"
                   type="password"
-                  placeholder="����������"
+                  placeholder="••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setPassFocused(true)}
@@ -348,17 +348,17 @@ export default function LoginPage() {
                     width: "100%", boxSizing: "border-box",
                     padding: "13px 16px 13px 42px",
                     background: "rgba(26,34,53,0.7)",
-                    border: `1px solid ${passFocused ? "rgba(99,179,237,0.5)" : "var(--border)"}`,
+                    border: `1px solid ${passFocused ? "rgba(216,167,92,0.5)" : "var(--border)"}`,
                     borderRadius: 12, color: "var(--text-primary)",
                     fontFamily: "var(--font-body)", fontSize: 14,
                     outline: "none", transition: "all 0.2s ease",
-                    boxShadow: passFocused ? "0 0 0 3px rgba(99,179,237,0.12)" : "none",
+                    boxShadow: passFocused ? "0 0 0 3px rgba(216,167,92,0.12)" : "none",
                   }}
                 />
                 <svg style={{
                   position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
                   opacity: passFocused ? 0.9 : 0.4, transition: "opacity 0.2s ease",
-                }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#63b3ed" strokeWidth="2">
+                }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d8a75c" strokeWidth="2">
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
@@ -374,8 +374,8 @@ export default function LoginPage() {
                 marginTop: 6,
                 width: "100%", padding: "14px 24px",
                 background: submitting
-                  ? "rgba(99,179,237,0.3)"
-                  : "linear-gradient(135deg, #63b3ed 0%, #4a9bd4 50%, #3a86c0 100%)",
+                  ? "rgba(216,167,92,0.3)"
+                  : "linear-gradient(135deg, #d8a75c 0%, #c68f47 50%, #b8823c 100%)",
                 border: "none", borderRadius: 12, cursor: submitting ? "not-allowed" : "pointer",
                 color: "#051628", fontFamily: "var(--font-body)", fontSize: 15,
                 fontWeight: 700, letterSpacing: "0.01em",
@@ -392,7 +392,7 @@ export default function LoginPage() {
                     borderTopColor: "#051628", borderRadius: "50%",
                     animation: "spin 0.7s linear infinite",
                   }} />
-                  Signing in�
+                  Signing in…
                 </>
               ) : (
                 <>
@@ -436,7 +436,7 @@ export default function LoginPage() {
           <div style={{
             position: "absolute", bottom: -60, right: -60,
             width: 160, height: 160, borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(99,179,237,0.06) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(216,167,92,0.06) 0%, transparent 70%)",
             pointerEvents: "none",
           }} />
         </div>
@@ -451,7 +451,7 @@ export default function LoginPage() {
             color: "var(--text-tertiary)", fontSize: 12,
             fontFamily: "var(--font-body)", letterSpacing: "0.04em",
           }}>
-            TriosFlow � Secure Workspace � {new Date().getFullYear()}
+            TriosFlow · Secure Workspace · {new Date().getFullYear()}
           </p>
         </div>
       </div>

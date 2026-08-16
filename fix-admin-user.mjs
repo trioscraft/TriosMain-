@@ -23,8 +23,9 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-const ADMIN_EMAIL = "rahulx122003@gmail.com";
+const ADMIN_EMAIL = "trioscraft2025@gmail.com";
 const ADMIN_PASSWORD = "QWERTY"; // change this after logging in once
+const OLD_ADMIN_EMAIL = "rahulx122003@gmail.com";
 
 const url = process.env.SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -45,7 +46,9 @@ async function main() {
   const { data: existingUsers, error: listErr } = await supabase.auth.admin.listUsers();
   if (listErr) throw listErr;
 
-  const broken = existingUsers.users.find((u) => u.email === ADMIN_EMAIL);
+  const broken = existingUsers.users.find(
+    (u) => u.email === ADMIN_EMAIL || u.email === OLD_ADMIN_EMAIL
+  );
   if (broken) {
     console.log(`Found existing (likely broken) user ${broken.id} — deleting...`);
     // Deleting via the Admin API correctly cleans up auth.identities too,

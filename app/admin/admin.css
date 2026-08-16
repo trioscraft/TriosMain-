@@ -1,49 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   TriosFlow Admin — design tokens
+   Warm ink control room, brass wayfinding, ledger-mono numerals.
+   ============================================================ */
 
 .admin-shell {
-  --bg-base: #080b11;
-  --bg-surface: #0e1420;
-  --bg-card: #111827;
-  --bg-card-hover: #161f30;
-  --bg-elevated: #1a2235;
+  --bg-base: #0a0d14;
+  --bg-surface: #0e1219;
+  --bg-card: #12161f;
+  --bg-card-hover: #161b26;
+  --bg-elevated: #171c27;
 
   --border: rgba(255, 255, 255, 0.07);
   --border-hover: rgba(255, 255, 255, 0.14);
-  --border-accent: rgba(99, 179, 237, 0.35);
+  --border-accent: rgba(216, 167, 92, 0.35);
 
-  --accent: #63b3ed;
-  --accent-dim: rgba(99, 179, 237, 0.12);
-  --accent-glow: rgba(99, 179, 237, 0.25);
+  /* Brass — primary accent, replaces generic cyan */
+  --accent: #d8a75c;
+  --accent-dim: rgba(216, 167, 92, 0.12);
+  --accent-glow: rgba(216, 167, 92, 0.28);
 
-  --green: #68d391;
-  --green-dim: rgba(104, 211, 145, 0.12);
+  --green: #7fbf8f;
+  --green-dim: rgba(127, 191, 143, 0.12);
 
-  --amber: #f6ad55;
-  --amber-dim: rgba(246, 173, 85, 0.12);
+  --amber: #e0b168;
+  --amber-dim: rgba(224, 177, 104, 0.12);
 
-  --red: #fc8181;
-  --red-dim: rgba(252, 129, 129, 0.12);
+  --red: #e08585;
+  --red-dim: rgba(224, 133, 133, 0.12);
 
-  --purple: #b794f4;
-  --purple-dim: rgba(183, 148, 244, 0.12);
+  --purple: #a99bd1;
+  --purple-dim: rgba(169, 155, 209, 0.12);
+
+  /* Slate-blue — secondary/info, quieter than the old bright blue */
+  --info: #8fa8d6;
+  --info-dim: rgba(143, 168, 214, 0.12);
 
   --text-primary: rgba(255, 255, 255, 0.92);
-  --text-secondary: rgba(255, 255, 255, 0.52);
-  --text-tertiary: rgba(255, 255, 255, 0.28);
+  --text-secondary: rgba(255, 255, 255, 0.54);
+  --text-tertiary: rgba(255, 255, 255, 0.30);
 
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-xl: 18px;
 
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
   background: var(--bg-base);
+  background-image:
+    radial-gradient(1200px 480px at 10% -10%, rgba(216, 167, 92, 0.05), transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, rgba(143, 168, 214, 0.045), transparent 55%);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
   min-height: 100vh;
@@ -83,6 +98,14 @@
   border-radius: var(--radius-sm);
 }
 
+/* ---- Numerals: currency, percentages, counts ride the ledger mono face ---- */
+.admin-shell .num,
+.admin-shell .stat-value {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: -0.01em;
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -96,7 +119,7 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1); }
 }
 @keyframes shimmer {
@@ -123,15 +146,30 @@
 .admin-shell .delay-4 { animation-delay: 240ms; }
 .admin-shell .delay-5 { animation-delay: 300ms; }
 
+/* ---- Card: instrument-panel surface with a brass hairline on hover ---- */
 .admin-shell .card {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   transition: border-color var(--transition-base), background var(--transition-base), transform var(--transition-fast);
 }
+.admin-shell .card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 14px; right: 14px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
 .admin-shell .card:hover {
   border-color: var(--border-hover);
   background: var(--bg-card-hover);
+}
+.admin-shell .card:hover::before {
+  opacity: 1;
 }
 .admin-shell .card-interactive { cursor: pointer; }
 .admin-shell .card-interactive:hover { transform: translateY(-2px); }
@@ -166,10 +204,10 @@
 .admin-shell .btn:hover::after { opacity: 0.04; }
 .admin-shell .btn:active { transform: scale(0.97); }
 
-.admin-shell .btn-primary { background: var(--accent); border-color: var(--accent); color: #0a1628; font-weight: 600; }
-.admin-shell .btn-primary:hover { background: #90cdf4; border-color: #90cdf4; }
-.admin-shell .btn-success { background: var(--green); border-color: var(--green); color: #0a1f14; font-weight: 600; }
-.admin-shell .btn-danger  { background: var(--red);   border-color: var(--red);   color: #1a0a0a; font-weight: 600; }
+.admin-shell .btn-primary { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 600; }
+.admin-shell .btn-primary:hover { background: #e3b876; border-color: #e3b876; }
+.admin-shell .btn-success { background: var(--green); border-color: var(--green); color: #0e1f14; font-weight: 600; }
+.admin-shell .btn-danger  { background: var(--red);   border-color: var(--red);   color: #22100f; font-weight: 600; }
 
 .admin-shell .input {
   width: 100%;
@@ -187,24 +225,36 @@
 .admin-shell .input:hover { border-color: var(--border-hover); }
 .admin-shell .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 
+.admin-shell .label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
 .admin-shell .badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 3px 10px;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  border-radius: 99px;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
   border: 1px solid;
 }
-.admin-shell .badge-blue   { background: var(--accent-dim);  color: var(--accent);  border-color: rgba(99,179,237,0.2); }
-.admin-shell .badge-green  { background: var(--green-dim);   color: var(--green);   border-color: rgba(104,211,145,0.2); }
-.admin-shell .badge-amber  { background: var(--amber-dim);   color: var(--amber);   border-color: rgba(246,173,85,0.2); }
-.admin-shell .badge-red    { background: var(--red-dim);     color: var(--red);     border-color: rgba(252,129,129,0.2); }
-.admin-shell .badge-purple { background: var(--purple-dim);  color: var(--purple);  border-color: rgba(183,148,244,0.2); }
+.admin-shell .badge-blue   { background: var(--info-dim);   color: var(--info);   border-color: rgba(143,168,214,0.22); }
+.admin-shell .badge-green  { background: var(--green-dim);  color: var(--green);  border-color: rgba(127,191,143,0.22); }
+.admin-shell .badge-amber  { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(224,177,104,0.22); }
+.admin-shell .badge-red    { background: var(--red-dim);    color: var(--red);    border-color: rgba(224,133,133,0.22); }
+.admin-shell .badge-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(169,155,209,0.22); }
 
 .admin-shell .progress-track { height: 4px; background: var(--bg-elevated); border-radius: 99px; overflow: hidden; }
-.admin-shell .progress-fill  { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+.admin-shell .progress-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), #e8c98a); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
 
 .admin-shell .skeleton {
   background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
@@ -216,19 +266,27 @@
 .admin-shell .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
 .admin-shell .section-label {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--accent);
+  opacity: 0.85;
 }
 
 .admin-shell .stat-value {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
+}
+
+/* Headings default to the display face; keep it restrained (not the whole page) */
+.admin-shell h1,
+.admin-shell h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }

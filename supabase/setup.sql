@@ -1479,7 +1479,7 @@ CREATE TRIGGER update_project_wiki_pages_updated_at
 
 
 -- ============================================================
--- BOOTSTRAP ADMIN USER: rahulx122003@gmail.com / QWERTY
+-- BOOTSTRAP ADMIN USER: trioscraft2025@gmail.com / QWERTY
 -- Inserts the auth user (bcrypt password) and promotes the
 -- auto-created profile to role='admin'.
 -- email_confirmed_at is set so no email confirmation is required.
@@ -1491,7 +1491,7 @@ do $$
 declare
   admin_id uuid;
 begin
-  select id into admin_id from auth.users where email = 'rahulx122003@gmail.com';
+  select id into admin_id from auth.users where email = 'trioscraft2025@gmail.com';
   if admin_id is null then
     insert into auth.users (
       instance_id, id, aud, role, email, encrypted_password,
@@ -1502,7 +1502,7 @@ begin
       gen_random_uuid(),
       'authenticated',
       'authenticated',
-      'rahulx122003@gmail.com',
+      'trioscraft2025@gmail.com',
       crypt('QWERTY', gen_salt('bf')),
       now(), now(), now()
     )
@@ -1510,10 +1510,10 @@ begin
   end if;
 
   insert into public.profiles (id, email, name, role)
-  values (admin_id, 'rahulx122003@gmail.com', 'Admin', 'admin')
+  values (admin_id, 'trioscraft2025@gmail.com', 'Admin', 'admin')
   on conflict (id) do update set role = 'admin', email = excluded.email;
 end $$;
 
 -- Re-promote anytime (safe no-op if already admin):
--- UPDATE public.profiles SET role='admin' WHERE email='rahulx122003@gmail.com';
+-- UPDATE public.profiles SET role='admin' WHERE email='trioscraft2025@gmail.com';
 

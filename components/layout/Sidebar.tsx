@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import LogoutButton from "../LogoutButton";
 import { supabase } from "@/lib/supabase";
 import { UserRole } from "@/lib/getCurrentUserRole";
@@ -12,42 +12,43 @@ type NavItem = {
 };
 
 const adminNavigation: NavItem[] = [
-  { href: "/admin", icon: "??", label: "Dashboard" },
-  { href: "/admin/calendar", icon: "??", label: "Calendar" },
-  { href: "/admin/clients", icon: "??", label: "Clients" },
-  { href: "/admin/projects", icon: "??", label: "Projects" },
-  { href: "/admin/team", icon: "??", label: "Team" },
-  { href: "/admin/earnings", icon: "??", label: "Earnings" },
-  { href: "/admin/notifications", icon: "??", label: "Notifications" },
-  { href: "/admin/calendar", icon: "??", label: "Calendar" },
-  { href: "/admin/timer", icon: "?", label: "Timer" },
-  { href: "/admin/my-tasks", icon: "?", label: "My Tasks" },
-  { href: "/admin/settings", icon: "??", label: "Settings" },
+  { href: "/admin", icon: "◆", label: "Dashboard" },
+  { href: "/admin/calendar", icon: "◷", label: "Calendar" },
+  { href: "/admin/clients", icon: "◎", label: "Clients" },
+  { href: "/admin/projects", icon: "▣", label: "Projects" },
+  { href: "/admin/team", icon: "◍", label: "Team" },
+  { href: "/admin/earnings", icon: "▲", label: "Earnings" },
+  { href: "/admin/notifications", icon: "●", label: "Notifications" },
+  { href: "/admin/invoices", icon: "▤", label: "Invoices" },
+  { href: "/admin/timer", icon: "◷", label: "Timer" },
+  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
+  { href: "/admin/settings", icon: "⚙", label: "Settings" },
 ];
 
 const memberNavigation: NavItem[] = [
-  { href: "/admin/calendar", icon: "??", label: "Calendar" },
-  { href: "/admin/notifications", icon: "??", label: "Notifications" },
-  { href: "/admin/my-tasks", icon: "?", label: "My Tasks" },
-  { href: "/admin/timer", icon: "?", label: "Timer" },
-  { href: "/admin/my-earnings", icon: "??", label: "My Earnings" },
-  { href: "/admin/profile", icon: "??", label: "Profile" },
+  { href: "/admin/calendar", icon: "◷", label: "Calendar" },
+  { href: "/admin/notifications", icon: "●", label: "Notifications" },
+  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
+  { href: "/admin/timer", icon: "◷", label: "Timer" },
+  { href: "/admin/my-earnings", icon: "▲", label: "My Earnings" },
+  { href: "/admin/profile", icon: "◍", label: "Profile" },
 ];
 
 const clientNavigation: NavItem[] = [
-  { href: "/admin/client", icon: "??", label: "Dashboard" },
-  { href: "/admin/client/projects", icon: "??", label: "Projects" },
-  { href: "/admin/client/invoices", icon: "??", label: "Invoices" },
-  { href: "/admin/client/reports", icon: "??", label: "Reports" },
-  { href: "/admin/client/messages", icon: "??", label: "Messages" },
+  { href: "/admin/client", icon: "◆", label: "Dashboard" },
+  { href: "/admin/client/projects", icon: "▣", label: "Projects" },
+  { href: "/admin/client/invoices", icon: "▤", label: "Invoices" },
+  { href: "/admin/client/reports", icon: "▤", label: "Reports" },
+  { href: "/admin/client/messages", icon: "◌", label: "Messages" },
 ];
 
 const genericNavigation: NavItem[] = [
-  { href: "/admin/timer", icon: "?", label: "Timer" },
-  { href: "/admin/my-tasks", icon: "?", label: "My Tasks" },
+  { href: "/admin/timer", icon: "◷", label: "Timer" },
+  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
 ];
 
 export default function Sidebar() {
+  const pathname = usePathname();
   const [role, setRole] = useState<UserRole | null>(null);
   const [profileName, setProfileName] = useState("Team Member");
   const [profileTitle, setProfileTitle] = useState("Member");
@@ -96,7 +97,7 @@ export default function Sidebar() {
         minHeight: "100vh",
         background: "var(--bg-surface)",
         borderRight: "1px solid var(--border)",
-        padding: "28px 16px",
+        padding: "28px 14px",
         display: "flex",
         flexDirection: "column",
         gap: "8px",
@@ -110,7 +111,7 @@ export default function Sidebar() {
         style={{
           padding: "4px 12px 24px",
           borderBottom: "1px solid var(--border)",
-          marginBottom: "8px",
+          marginBottom: "10px",
         }}
       >
         <div
@@ -125,16 +126,18 @@ export default function Sidebar() {
               width: "32px",
               height: "32px",
               borderRadius: "8px",
-              background: "var(--accent)",
+              background: "linear-gradient(135deg, var(--accent), #b8823c)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "16px",
+              fontSize: "15px",
+              color: "#1a1206",
+              fontWeight: 700,
               flexShrink: 0,
-              animation: "float 3s ease-in-out infinite",
+              boxShadow: "0 0 0 1px rgba(216,167,92,0.25), 0 6px 18px rgba(216,167,92,0.18)",
             }}
           >
-            ??
+            TF
           </div>
 
           <div>
@@ -152,7 +155,10 @@ export default function Sidebar() {
 
             <div
               style={{
-                fontSize: "11px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
                 color: "var(--text-tertiary)",
               }}
             >
@@ -169,38 +175,59 @@ export default function Sidebar() {
           gap: "2px",
         }}
       >
-        {navigation.map(({ href, icon, label }, i) => (
-          <Link
-            key={`${href}-${i}`}
-            href={href}
-
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "9px 12px",
-              borderRadius: "var(--radius-md)",
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              fontSize: "14px",
-              fontWeight: 450,
-              transition: "all var(--transition-fast)",
-              animation: `fadeUp 0.4s ease both`,
-              animationDelay: `${60 + i * 50}ms`,
-            }}
-            className="nav-link"
-          >
-            <span
+        {navigation.map(({ href, icon, label }, i) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={`${href}-${i}`}
+              href={href}
+              className="nav-link"
               style={{
-                fontSize: "16px",
-                lineHeight: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "9px 12px 9px 14px",
+                borderRadius: "var(--radius-md)",
+                color: active ? "var(--text-primary)" : "var(--text-secondary)",
+                textDecoration: "none",
+                fontSize: "14px",
+                fontWeight: active ? 600 : 450,
+                position: "relative",
+                background: active ? "rgba(216,167,92,0.08)" : "transparent",
+                transition: "all var(--transition-fast)",
+                animation: `fadeUp 0.4s ease both`,
+                animationDelay: `${60 + i * 40}ms`,
               }}
             >
-              {icon}
-            </span>
-            {label}
-          </Link>
-        ))}
+              {active && (
+                <span
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: "18%",
+                    bottom: "18%",
+                    width: "3px",
+                    borderRadius: "0 4px 4px 0",
+                    background: "var(--accent)",
+                    boxShadow: "0 0 8px var(--accent-glow)",
+                  }}
+                />
+              )}
+              <span
+                style={{
+                  fontSize: "14px",
+                  lineHeight: 1,
+                  color: active ? "var(--accent)" : "var(--text-tertiary)",
+                  width: "16px",
+                  textAlign: "center",
+                }}
+              >
+                {icon}
+              </span>
+              {label}
+            </Link>
+          );
+        })}
       </nav>
 
       <div
@@ -242,12 +269,15 @@ export default function Sidebar() {
             {profileName.charAt(0).toUpperCase()}
           </div>
 
-          <div>
+          <div style={{ minWidth: 0 }}>
             <div
               style={{
                 fontSize: "13px",
                 fontWeight: 500,
                 color: "var(--text-primary)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               {profileName}
@@ -271,7 +301,6 @@ export default function Sidebar() {
         .nav-link:hover {
           background: var(--bg-card);
           color: var(--text-primary);
-          border-radius: var(--radius-md);
         }
       `}</style>
     </aside>
