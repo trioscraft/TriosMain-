@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+.admin-shell {
+  --bg-base: #080b11;
+  --bg-surface: #0e1420;
+  --bg-card: #111827;
+  --bg-card-hover: #161f30;
+  --bg-elevated: #1a2235;
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.14);
+  --border-accent: rgba(99, 179, 237, 0.35);
+
+  --accent: #63b3ed;
+  --accent-dim: rgba(99, 179, 237, 0.12);
+  --accent-glow: rgba(99, 179, 237, 0.25);
+
+  --green: #68d391;
+  --green-dim: rgba(104, 211, 145, 0.12);
+
+  --amber: #f6ad55;
+  --amber-dim: rgba(246, 173, 85, 0.12);
+
+  --red: #fc8181;
+  --red-dim: rgba(252, 129, 129, 0.12);
+
+  --purple: #b794f4;
+  --purple-dim: rgba(183, 148, 244, 0.12);
+
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.52);
+  --text-tertiary: rgba(255, 255, 255, 0.28);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+.admin-shell *,
+.admin-shell *::before,
+.admin-shell *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-shell ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.admin-shell ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-shell ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+}
+.admin-shell ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.admin-shell ::selection {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.admin-shell :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 var(--accent-glow); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.admin-shell .animate-fade-up  { animation: fadeUp 0.5s ease both; }
+.admin-shell .animate-fade-in  { animation: fadeIn 0.4s ease both; }
+.admin-shell .animate-scale-in { animation: scaleIn 0.35s ease both; }
+
+.admin-shell .delay-1 { animation-delay: 60ms; }
+.admin-shell .delay-2 { animation-delay: 120ms; }
+.admin-shell .delay-3 { animation-delay: 180ms; }
+.admin-shell .delay-4 { animation-delay: 240ms; }
+.admin-shell .delay-5 { animation-delay: 300ms; }
+
+.admin-shell .card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-base), background var(--transition-base), transform var(--transition-fast);
+}
+.admin-shell .card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+.admin-shell .card-interactive { cursor: pointer; }
+.admin-shell .card-interactive:hover { transform: translateY(-2px); }
+.admin-shell .card-interactive:active { transform: translateY(0); }
+
+.admin-shell .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  background: transparent;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+.admin-shell .btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.admin-shell .btn:hover::after { opacity: 0.04; }
+.admin-shell .btn:active { transform: scale(0.97); }
+
+.admin-shell .btn-primary { background: var(--accent); border-color: var(--accent); color: #0a1628; font-weight: 600; }
+.admin-shell .btn-primary:hover { background: #90cdf4; border-color: #90cdf4; }
+.admin-shell .btn-success { background: var(--green); border-color: var(--green); color: #0a1f14; font-weight: 600; }
+.admin-shell .btn-danger  { background: var(--red);   border-color: var(--red);   color: #1a0a0a; font-weight: 600; }
+
+.admin-shell .input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+.admin-shell .input::placeholder { color: var(--text-tertiary); }
+.admin-shell .input:hover { border-color: var(--border-hover); }
+.admin-shell .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+
+.admin-shell .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 99px;
+  border: 1px solid;
+}
+.admin-shell .badge-blue   { background: var(--accent-dim);  color: var(--accent);  border-color: rgba(99,179,237,0.2); }
+.admin-shell .badge-green  { background: var(--green-dim);   color: var(--green);   border-color: rgba(104,211,145,0.2); }
+.admin-shell .badge-amber  { background: var(--amber-dim);   color: var(--amber);   border-color: rgba(246,173,85,0.2); }
+.admin-shell .badge-red    { background: var(--red-dim);     color: var(--red);     border-color: rgba(252,129,129,0.2); }
+.admin-shell .badge-purple { background: var(--purple-dim);  color: var(--purple);  border-color: rgba(183,148,244,0.2); }
+
+.admin-shell .progress-track { height: 4px; background: var(--bg-elevated); border-radius: 99px; overflow: hidden; }
+.admin-shell .progress-fill  { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+
+.admin-shell .skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+.admin-shell .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+.admin-shell .section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.admin-shell .stat-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}

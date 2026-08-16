@@ -73,11 +73,11 @@ export default function Hero({
         <div className="noise-overlay" />
       </div>
 
-      {/* Floating tech chips — desktop only */}
+      {/* Floating tech chips — large screens only (avoid tablet/phone overlap) */}
       {chips.map((c) => (
         <div
           key={c.label}
-          className={`absolute z-0 hidden items-center gap-1.5 rounded-full glass-surface px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 ${c.pos} ${c.anim}`}
+          className={`absolute z-0 hidden items-center gap-1.5 rounded-full glass-surface px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 lg:flex ${c.pos} ${c.anim}`}
         >
           <c.icon className="h-3.5 w-3.5 text-luxe-400" />
           {c.label}
@@ -90,16 +90,16 @@ export default function Hero({
         animate="show"
         className="relative z-10 mx-auto max-w-4xl text-center"
       >
-        <motion.div variants={item} className="mb-6 flex justify-center">
-          <span className="glass-surface inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200">
-            <Cpu className="h-3.5 w-3.5 text-primary-400" />
+        <motion.div variants={item} className="mb-6 flex justify-center px-4">
+          <span className="glass-surface inline-flex max-w-[90vw] items-center gap-2 rounded-full px-4 py-1.5 text-center text-xs font-medium text-slate-700 dark:text-slate-200">
+            <Cpu className="h-3.5 w-3.5 shrink-0 text-primary-400" />
             AI-native studio · Built by 3 CS grads
           </span>
         </motion.div>
 
         <motion.h1
           variants={item}
-          className="font-display text-fluid-3xl font-extrabold leading-[1.05] tracking-tight text-slate-900 dark:text-white"
+          className="font-display break-words text-fluid-3xl font-extrabold leading-[1.05] tracking-tight text-slate-900 dark:text-white"
         >
           <span className="block">{title}</span>
           <span className="block text-fade-animated bg-[length:220%_220%]">
