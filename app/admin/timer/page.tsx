@@ -139,7 +139,7 @@ export default function TimerPage() {
     <RoleGuard allowedRoles={["member"]}>
       <div style={{ maxWidth: "600px", animation: "fadeUp 0.5s ease both" }}>
       {/* Header */}
-      <div style={{ marginBottom: "36px" }}>
+      <div style={{ marginBottom: "30px" }}>
         <div className="section-label" style={{ marginBottom: "8px" }}>
           Time tracking
         </div>
@@ -153,6 +153,9 @@ export default function TimerPage() {
         >
           Work Timer
         </h1>
+        <p style={{ color: "var(--text-secondary)", marginTop: 4, fontSize: 14 }}>
+          Track how long you spend on each project.
+        </p>
       </div>
 
       {/* Timer card */}

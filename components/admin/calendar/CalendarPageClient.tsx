@@ -102,7 +102,7 @@ export default function CalendarPageClient() {
 
       if (!mounted) return;
       if (error) {
-        console.error(error);
+        console.error("tasks load failed:", error?.message, "code:", error?.code, error);
         setEvents([]);
         setLoading(false);
         return;

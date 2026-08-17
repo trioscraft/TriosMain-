@@ -2,9 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { supabase } from "@/lib/supabase";
 import type { InvoiceWithRelations } from "@/lib/types/invoice";
+import StatusChip from "@/components/StatusChip";
+import { ArrowLeft, ReceiptText, Printer, IndianRupee } from "lucide-react";
+
+function formatINR(amount: number) {
+  return `\u20B9${Number(amount || 0).toLocaleString("en-IN")}`;
+}
 
 export default function ClientInvoiceDetailPage() {
   const { id } = useParams();
@@ -23,12 +30,7 @@ export default function ClientInvoiceDetailPage() {
 
       const { data, error } = await supabase
         .from("invoices")
-        .select(`
-          *,
-          client(id, company_name),
-          project(id, name),
-          invoice_items(*)
-        `)
+        .select("*, client(id, company_name), project(id, name), invoice_items(*)")
         .eq("id", id)
         .eq("client_id", currentClient.client_id)
         .single();
@@ -47,82 +49,170 @@ export default function ClientInvoiceDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <div className="bg-slate-900 p-8 rounded-xl">Loading invoice…</div>
+      <div className="cp-loading">
+        <div className="cp-loading-spinner" />
+        Loading invoice...
       </div>
     );
   }
 
   if (!invoice) {
     return (
-      <div className="card" style={{ padding: "30px", color: "var(--text-tertiary)" }}>
-        Invoice not found or you do not have permission to view it.
+      <div className="cp-card" style={{ padding: 30 }}>
+        <div className="cp-empty">
+          <div className="cp-empty-icon">
+            <ReceiptText size={24} />
+          </div>
+          Invoice not found or you do not have permission to view it.
+        </div>
       </div>
     );
   }
 
+  const items = invoice.invoice_items || [];
+
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
-      <div style={{ marginBottom: "20px" }}>
-        <div className="section-label">Invoice detail</div>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "30px", fontWeight: 700 }}>{invoice.invoice_number}</h1>
+      <Link
+        href="/admin/client/invoices"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          fontSize: 13.5,
+          fontWeight: 600,
+          color: "var(--text-secondary)",
+          textDecoration: "none",
+          marginBottom: 18,
+        }}
+      >
+        <ArrowLeft size={15} /> Back to invoices
+      </Link>
+
+      <div className="cp-header" style={{ marginBottom: 22 }}>
+        <div>
+          <div className="section-label" style={{ marginBottom: 8 }}>
+            Invoice detail
+          </div>
+          <h1>{invoice.invoice_number}</h1>
+          <div style={{ marginTop: 10 }}>
+            <StatusChip status={invoice.status} />
+          </div>
+        </div>
+        <button onClick={() => window.print()} className="btn btn-primary" style={{ padding: "12px 20px" }}>
+          <Printer size={15} /> Download Invoice PDF
+        </button>
       </div>
 
-      <div className="card" style={{ padding: "24px", marginBottom: "20px" }}>
-        <div style={{ display: "grid", gap: "18px", gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
+      <div className="cp-card" style={{ marginBottom: 20 }}>
+        <div className="cp-meta-grid">
           <div>
-            <div style={{ color: "var(--text-tertiary)", fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>
-              Project
+            <div className="cp-meta-label">Billed to</div>
+            <div className="cp-meta-value" style={{ fontWeight: 600 }}>
+              {invoice.client?.company_name || "Client"}
             </div>
-            <div>{invoice.project?.name || "Unassigned"}</div>
           </div>
           <div>
-            <div style={{ color: "var(--text-tertiary)", fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>
-              Status
-            </div>
-            <div>{invoice.status}</div>
+            <div className="cp-meta-label">Project</div>
+            <div className="cp-meta-value">{invoice.project?.name || "Unassigned"}</div>
           </div>
           <div>
-            <div style={{ color: "var(--text-tertiary)", fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>
-              Due date
-            </div>
-            <div>{invoice.due_date || "Not set"}</div>
+            <div className="cp-meta-label">Due date</div>
+            <div className="cp-meta-value">{invoice.due_date || "Not set"}</div>
           </div>
           <div>
-            <div style={{ color: "var(--text-tertiary)", fontSize: "12px", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>
-              Total
-            </div>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 700 }}>₹{Number(invoice.total_amount || 0).toLocaleString("en-IN")}</div>
+            <div className="cp-meta-label">Total</div>
+            <div className="cp-meta-value big">{formatINR(invoice.total_amount)}</div>
           </div>
         </div>
       </div>
 
-      <div className="card" style={{ padding: "24px", marginBottom: "20px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+      <div className="cp-card">
+        <div className="cp-card-head">
           <div>
-            <div style={{ fontSize: "16px", fontWeight: 700 }}>Invoice items</div>
-            <div style={{ color: "var(--text-secondary)", marginTop: "6px" }}>
-              Review the charges included in this invoice.
-            </div>
+            <div className="cp-card-title">Invoice items</div>
+            <div className="cp-card-subtitle">Review the charges included in this invoice.</div>
           </div>
-          <button onClick={() => window.print()} className="btn btn-primary" style={{ padding: "12px 20px" }}>
-            Download Invoice PDF
-          </button>
         </div>
 
-        <div style={{ display: "grid", gap: "10px" }}>
-          {(invoice.invoice_items || []).map((item) => (
-            <div key={item.id} style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: "12px", padding: "12px 0", borderBottom: "1px solid var(--border)" }}>
-              <div>
-                <div style={{ fontWeight: 600 }}>{item.title}</div>
-                <div style={{ color: "var(--text-tertiary)", fontSize: "13px" }}>{item.description || ""}</div>
+        {items.length === 0 ? (
+          <div className="cp-empty">
+            <div className="cp-empty-icon">
+              <IndianRupee size={24} />
+            </div>
+            No line items were added to this invoice.
+          </div>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table className="cp-table">
+              <thead>
+                <tr>
+                  <th style={{ width: "46%" }}>Description</th>
+                  <th>Qty</th>
+                  <th>Unit price</th>
+                  <th style={{ textAlign: "right" }}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div style={{ fontWeight: 600 }}>{item.title}</div>
+                      {item.description ? (
+                        <div style={{ color: "var(--text-tertiary)", fontSize: 13, marginTop: 3 }}>
+                          {item.description}
+                        </div>
+                      ) : null}
+                    </td>
+                    <td style={{ color: "var(--text-secondary)" }}>{item.quantity}</td>
+                    <td style={{ color: "var(--text-secondary)" }}>{formatINR(item.unit_price)}</td>
+                    <td style={{ textAlign: "right", fontWeight: 700 }}>{formatINR(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: 18,
+                paddingTop: 16,
+                borderTop: "1px solid var(--glass-border)",
+              }}
+            >
+              <div style={{ minWidth: 240, display: "grid", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", fontSize: 13.5 }}>
+                  <span>Subtotal</span>
+                  <span>{formatINR(invoice.amount || 0)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", fontSize: 13.5 }}>
+                  <span>Tax</span>
+                  <span>{formatINR(invoice.tax_amount || 0)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", fontSize: 13.5 }}>
+                  <span>Discount</span>
+                  <span>- {formatINR(invoice.discount_amount || 0)}</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontFamily: "var(--font-display)",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    paddingTop: 10,
+                    borderTop: "1px solid var(--glass-border)",
+                    color: "var(--accent)",
+                  }}
+                >
+                  <span>Total</span>
+                  <span>{formatINR(invoice.total_amount)}</span>
+                </div>
               </div>
-              <div>Qty {item.quantity}</div>
-              <div>₹{Number(item.unit_price || 0).toLocaleString("en-IN")}</div>
-              <div style={{ fontWeight: 700 }}>₹{Number(item.total || 0).toLocaleString("en-IN")}</div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

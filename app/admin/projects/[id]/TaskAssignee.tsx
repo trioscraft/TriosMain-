@@ -122,8 +122,8 @@ export default function TaskAssignee({
           width: "100%",
           padding: "10px",
           borderRadius: "8px",
-          background: "var(--bg-elevated)",
-          color: "white",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
           border: "1px solid var(--border)",
         }}
       >

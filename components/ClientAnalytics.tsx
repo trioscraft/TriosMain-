@@ -1,41 +1,28 @@
+import { Building2 } from "lucide-react";
 import type { ClientAnalyticsPoint } from "@/lib/types/analytics";
+import { ChartCard } from "@/components/admin/ui/Card";
 
-export default function ClientAnalytics({
-  clients,
-}: {
-  clients: ClientAnalyticsPoint[];
-}) {
+export default function ClientAnalytics({ clients }: { clients: ClientAnalyticsPoint[] }) {
   return (
-    <div className="card" style={{ padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
-        <div>
-          <div className="section-label">Client Analytics</div>
-          <h2 style={{ margin: "10px 0 0", fontSize: "22px" }}>Revenue by client</h2>
-        </div>
-        <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
-          Compare top clients by revenue, profit and invoice activity.
-        </div>
-      </div>
-
-      <div style={{ marginTop: "24px", display: "grid", gap: "14px" }}>
+    <ChartCard
+      icon={<Building2 size={19} />}
+      label="Client Analytics"
+      title="Revenue by client"
+      description="Top clients by revenue, profit and invoice activity."
+    >
+      <div style={{ display: "grid", gap: 12 }}>
         {clients.slice(0, 6).map((client) => (
-          <div
-            key={client.clientId}
-            className="card"
-            style={{ padding: "18px", border: "1px solid rgba(255,255,255,0.08)" }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center" }}>
+          <div key={client.clientId} className="card" style={{ padding: 18, border: "1px solid var(--glass-border)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700 }}>{client.label}</div>
-                <div style={{ color: "var(--text-secondary)", fontSize: "13px", marginTop: "4px" }}>
+                <div style={{ fontSize: 15.5, fontWeight: 700 }}>{client.label}</div>
+                <div style={{ color: "var(--text-secondary)", fontSize: 12.5, marginTop: 4 }}>
                   Projects: {client.projects} • Invoices: {client.invoices}
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--accent)" }}>
-                  ₹{client.revenue.toLocaleString("en-IN")}
-                </div>
-                <div style={{ color: client.profit >= 0 ? "var(--green)" : "var(--red)", fontSize: "13px", marginTop: "4px" }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: "var(--accent)", fontFamily: "var(--font-mono)" }}>₹{client.revenue.toLocaleString("en-IN")}</div>
+                <div style={{ color: client.profit >= 0 ? "var(--green)" : "var(--red)", fontSize: 13, marginTop: 4 }}>
                   Profit ₹{client.profit.toLocaleString("en-IN")}
                 </div>
               </div>
@@ -43,6 +30,6 @@ export default function ClientAnalytics({
           </div>
         ))}
       </div>
-    </div>
+    </ChartCard>
   );
 }

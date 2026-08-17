@@ -54,6 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${inter.variable} ${sora.variable} bg-white text-slate-900 dark:bg-[#05070c] dark:text-slate-200 antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>

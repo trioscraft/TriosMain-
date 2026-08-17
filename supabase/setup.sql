@@ -132,6 +132,7 @@ create table if not exists public.tasks (
   title text not null,
   description text,
   status text not null default 'todo',
+  priority text not null default 'medium' check (priority in ('low','medium','high','urgent')),
   progress numeric not null default 0,
   assigned_to uuid references public.profiles(id) on delete set null,
   due_date date,

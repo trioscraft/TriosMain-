@@ -1,0 +1,512 @@
+/* ============================================================
+   TriosFlow Client Portal - Warm Premium Studio
+   Extends the admin design system (admin.css) with a refined,
+   client-facing toolkit: hero banners, icon stat cards, status
+   chips, progress blocks, chat bubbles and polished tables.
+   ============================================================ */
+
+.client-portal {
+  /* Portal surfaces - slightly softer than admin */
+  --portal-glow: var(--accent-glow);
+  --portal-border: rgba(70, 55, 40, 0.10);
+}
+
+/* ---- Page header ------------------------------------------------- */
+.client-portal .cp-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.client-portal .cp-header h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-top: 8px;
+}
+.client-portal .cp-header p {
+  color: var(--text-secondary);
+  margin-top: 6px;
+  font-size: 14px;
+  max-width: 560px;
+}
+
+/* ---- Hero greeting ------------------------------------------------ */
+.client-portal .cp-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 32px;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(135deg, rgba(194, 91, 47, 0.10), rgba(91, 125, 158, 0.08));
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  margin-bottom: 26px;
+  backdrop-filter: blur(14px);
+  animation: fadeUp 0.5s ease both;
+}
+.client-portal .cp-hero::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -6%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--portal-glow), transparent 68%);
+  pointer-events: none;
+}
+.client-portal .cp-hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.client-portal .cp-hero h1 {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-top: 12px;
+  line-height: 1.12;
+}
+.client-portal .cp-hero h1 span { color: var(--accent); }
+.client-portal .cp-hero p {
+  color: var(--text-secondary);
+  margin-top: 10px;
+  font-size: 14.5px;
+  max-width: 620px;
+  line-height: 1.7;
+}
+.client-portal .cp-hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ---- Stat cards ---------------------------------------------------- */
+.client-portal .cp-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+.client-portal .cp-stat {
+  position: relative;
+  padding: 20px 22px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-base), border-color var(--transition-base);
+  animation: fadeUp 0.5s ease both;
+}
+.client-portal .cp-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow), 0 20px 46px -22px rgba(70, 55, 40, 0.32);
+}
+.client-portal .cp-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+}
+.client-portal .cp-stat-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.client-portal .cp-stat-value {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.client-portal .cp-stat-value.colored { color: var(--accent); }
+
+/* ---- Cards & sections --------------------------------------------- */
+.client-portal .cp-card {
+  position: relative;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-fast);
+}
+.client-portal .cp-card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.client-portal .cp-card-subtitle {
+  color: var(--text-secondary);
+  margin-top: 6px;
+  font-size: 13.5px;
+}
+.client-portal .cp-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+/* ---- Status chips --------------------------------------------------- */
+.client-portal .cp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.client-portal .cp-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+.client-portal .cp-chip--active    { background: var(--green-dim);  color: var(--green);  border-color: rgba(78, 125, 94, 0.30); }
+.client-portal .cp-chip--completed { background: var(--info-dim);   color: var(--info);   border-color: rgba(91, 125, 158, 0.30); }
+.client-portal .cp-chip--onhold    { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(201, 134, 43, 0.30); }
+.client-portal .cp-chip--overdue   { background: var(--red-dim);    color: var(--red);    border-color: rgba(189, 86, 70, 0.30); }
+.client-portal .cp-chip--paid      { background: var(--green-dim);  color: var(--green);  border-color: rgba(78, 125, 94, 0.30); }
+.client-portal .cp-chip--pending   { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(201, 134, 43, 0.30); }
+.client-portal .cp-chip--sent      { background: var(--info-dim);   color: var(--info);   border-color: rgba(91, 125, 158, 0.30); }
+.client-portal .cp-chip--draft     { background: var(--purple-dim); color: var(--purple); border-color: rgba(139, 111, 168, 0.30); }
+.client-portal .cp-chip--rejected  { background: var(--red-dim);    color: var(--red);    border-color: rgba(189, 86, 70, 0.30); }
+.client-portal .cp-chip--cancelled { background: var(--red-dim);    color: var(--red);    border-color: rgba(189, 86, 70, 0.30); }
+.client-portal .cp-chip--approved  { background: var(--green-dim);  color: var(--green);  border-color: rgba(78, 125, 94, 0.30); }
+.client-portal .cp-chip--neutral   { background: var(--info-dim);   color: var(--info);   border-color: rgba(91, 125, 158, 0.30); }
+
+/* ---- Project cards -------------------------------------------------- */
+.client-portal .cp-project-card {
+  position: relative;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-base), border-color var(--transition-base);
+  animation: fadeUp 0.5s ease both;
+}
+.client-portal .cp-project-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow), 0 22px 50px -22px rgba(70, 55, 40, 0.32);
+}
+.client-portal .cp-project-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.client-portal .cp-progress {
+  height: 8px;
+  background: rgba(70, 55, 40, 0.10);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+.client-portal .cp-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  box-shadow: 0 0 12px -2px var(--accent-glow);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.client-portal .cp-progress-fill.done {
+  background: linear-gradient(90deg, var(--green), #6f9c7f);
+  box-shadow: 0 0 12px -2px var(--green-glow);
+}
+
+/* ---- Invoice / quotation rows --------------------------------------- */
+.client-portal .cp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  text-decoration: none;
+  color: inherit;
+}
+.client-portal .cp-row:hover {
+  border-color: var(--glass-border-hover);
+  background: var(--bg-card-hover);
+  transform: translateX(4px);
+}
+.client-portal .cp-amount {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+/* ---- Empty states ----------------------------------------------------- */
+.client-portal .cp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 44px 24px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+.client-portal .cp-empty-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  color: var(--accent);
+}
+
+/* ---- Detail meta grid ------------------------------------------------ */
+.client-portal .cp-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.client-portal .cp-meta-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+.client-portal .cp-meta-value {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.client-portal .cp-meta-value.big {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ---- Table ------------------------------------------------------------ */
+.client-portal .cp-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.client-portal .cp-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.client-portal .cp-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--glass-border);
+  font-size: 14px;
+  vertical-align: top;
+}
+.client-portal .cp-table tbody tr:last-child td { border-bottom: none; }
+.client-portal .cp-table tbody tr:hover td { background: rgba(70, 55, 40, 0.03); }
+
+/* ---- Chat -------------------------------------------------------------- */
+.client-portal .cp-chat-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 4px 4px 8px;
+}
+.client-portal .cp-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.client-portal .cp-bubble-row.sent { justify-content: flex-end; }
+.client-portal .cp-bubble {
+  max-width: 74%;
+  padding: 13px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  line-height: 1.65;
+  box-shadow: 0 4px 14px -6px rgba(70, 55, 40, 0.18);
+  animation: fadeUp 0.35s ease both;
+}
+.client-portal .cp-bubble.sent {
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  color: #fff7ee;
+  border-bottom-right-radius: 4px;
+}
+.client-portal .cp-bubble.received {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+.client-portal .cp-bubble-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.client-portal .cp-bubble-avatar.client {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+}
+.client-portal .cp-bubble-avatar.team {
+  background: var(--info-dim);
+  color: var(--info);
+  border: 1px solid rgba(91, 125, 158, 0.30);
+}
+.client-portal .cp-bubble-time {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+}
+.client-portal .cp-bubble-row.sent .cp-bubble-time { text-align: right; }
+.client-portal .cp-composer textarea {
+  width: 100%;
+  min-height: 110px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  padding: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.client-portal .cp-composer textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 0 22px -8px var(--accent-glow);
+}
+.client-portal .cp-composer textarea::placeholder { color: var(--text-tertiary); }
+
+/* ---- Report cards ------------------------------------------------------- */
+.client-portal .cp-report-card {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-base), border-color var(--transition-base);
+  animation: fadeUp 0.5s ease both;
+}
+.client-portal .cp-report-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow), 0 22px 50px -22px rgba(70, 55, 40, 0.32);
+}
+.client-portal .cp-report-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ---- Loading ------------------------------------------------------------ */
+.client-portal .cp-loading {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+.client-portal .cp-loading-spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+
+/* ---- Skeleton rows ------------------------------------------------------- */
+.client-portal .cp-skeleton-list { display: grid; gap: 14px; }
+.client-portal .cp-skeleton-card {
+  height: 96px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, rgba(70, 55, 40, 0.07) 25%, rgba(255, 255, 255, 0.65) 50%, rgba(70, 55, 40, 0.07) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ---- Responsive ------------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .client-portal .cp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .client-portal .cp-meta-grid { grid-template-columns: 1fr; }
+  .client-portal .cp-bubble { max-width: 88%; }
+  .client-portal .cp-hero h1 { font-size: 28px; }
+}

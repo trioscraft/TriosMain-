@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   TriosFlow Member — Warm Premium Studio
+   Same cream & sand palette as the admin shell (see admin.css),
+   scoped for member pages. Keeps the shared toolkit
+   (.card/.btn/.input/.badge …) consistent across roles.
+   ============================================================ */
+
+.member-shell {
+  /* Surfaces (warm paper) */
+  --bg-base: #f4eee3;
+  --bg-surface: #efe7d7;
+  --bg-card: rgba(255, 253, 249, 0.92);
+  --bg-card-hover: #ffffff;
+  --bg-elevated: #ffffff;
+
+  /* Glass primitives */
+  --glass-bg: rgba(255, 253, 249, 0.72);
+  --glass-bg-strong: rgba(255, 253, 249, 0.94);
+  --glass-border: rgba(70, 55, 40, 0.10);
+  --glass-border-hover: rgba(70, 55, 40, 0.20);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --glass-blur: 22px;
+  --glass-shadow: 0 1px 2px rgba(70, 55, 40, 0.06),
+                   0 18px 42px -18px rgba(70, 55, 40, 0.22),
+                   inset 0 1px 0 0 var(--glass-highlight);
+
+  --border: rgba(70, 55, 40, 0.10);
+  --border-hover: rgba(70, 55, 40, 0.20);
+  --border-accent: rgba(194, 91, 47, 0.32);
+
+  /* Terracotta — primary accent */
+  --accent: #c25b2e;
+  --accent-bright: #d97b3d;
+  --accent-dim: rgba(194, 91, 47, 0.10);
+  --accent-glow: rgba(194, 91, 47, 0.20);
+  --accent-soft: rgba(194, 91, 47, 0.06);
+
+  --green: #4e7d5e;
+  --green-dim: rgba(78, 125, 94, 0.12);
+  --green-glow: rgba(78, 125, 94, 0.22);
+
+  --amber: #c9862b;
+  --amber-dim: rgba(201, 134, 43, 0.12);
+
+  --red: #bd5646;
+  --red-dim: rgba(189, 86, 70, 0.12);
+  --red-glow: rgba(189, 86, 70, 0.22);
+
+  --purple: #8b6fa8;
+  --purple-dim: rgba(139, 111, 168, 0.12);
+
+  --info: #5b7d9e;
+  --info-dim: rgba(91, 125, 158, 0.12);
+  --info-glow: rgba(91, 125, 158, 0.20);
+
+  --text-primary: #2b251e;
+  --text-secondary: #6b5f52;
+  --text-tertiary: #9c8f7e;
+
+  --font-display: 'Fraunces', 'DM Sans', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 460ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --topbar-bg: rgba(244, 238, 227, 0.72);
+
+  background: var(--bg-base);
+  background-image:
+    radial-gradient(1100px 520px at 8% -12%, rgba(194, 91, 47, 0.09), transparent 60%),
+    radial-gradient(900px 480px at 102% 4%, rgba(91, 125, 158, 0.08), transparent 58%),
+    radial-gradient(820px 560px at 50% 120%, rgba(201, 134, 43, 0.06), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+/* ---- Glass -------------------------------------------------- */
+.member-shell .glass {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.member-shell .glass::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), transparent 45%);
+}
+.member-shell .glass-accent {
+  border-color: var(--border-accent);
+  box-shadow: var(--glass-shadow), 0 0 32px -12px var(--accent-glow);
+}
+
+/* ---- Card --------------------------------------------------- */
+.member-shell .card {
+  background: var(--bg-card);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.member-shell .card::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), transparent 45%);
+}
+.member-shell .card:hover {
+  border-color: var(--glass-border-hover);
+  background: var(--bg-card-hover);
+  box-shadow: var(--glass-shadow), 0 22px 50px -22px rgba(70, 55, 40, 0.3);
+}
+
+/* ---- Buttons ------------------------------------------------ */
+.member-shell .btn {
+  background: var(--bg-card);
+  border-color: var(--glass-border);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(70, 55, 40, 0.06);
+}
+.member-shell .btn::after {
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), transparent 60%);
+}
+.member-shell .btn:hover { border-color: var(--glass-border-hover); }
+
+.member-shell .btn-primary {
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  border-color: transparent;
+  color: #fff7ee;
+  box-shadow: 0 10px 26px -10px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.member-shell .btn-primary:hover {
+  background: linear-gradient(135deg, #e68a4b, var(--accent-bright));
+}
+.member-shell .btn-success {
+  background: linear-gradient(135deg, #6f9c7f, var(--green));
+  color: #f4faf5;
+  box-shadow: 0 10px 26px -10px var(--green-glow);
+}
+.member-shell .btn-danger {
+  background: linear-gradient(135deg, #cf7263, var(--red));
+  color: #fff5f2;
+  box-shadow: 0 10px 26px -10px var(--red-glow);
+}
+.member-shell .btn-secondary {
+  background: var(--bg-elevated);
+  border-color: var(--glass-border);
+  color: var(--text-primary);
+}
+.member-shell .btn-ghost:hover { background: var(--glass-bg); }
+
+/* ---- Inputs ------------------------------------------------ */
+.member-shell .input {
+  background: var(--bg-card);
+  border-color: var(--glass-border);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(70, 55, 40, 0.04);
+}
+.member-shell .input:hover { border-color: var(--glass-border-hover); }
+.member-shell .input:focus {
+  border-color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 0 22px -8px var(--accent-glow);
+}
+
+/* ---- Badges ------------------------------------------------ */
+.member-shell .badge-blue   { background: var(--info-dim);   color: var(--info);   border-color: rgba(91,125,158,0.28); }
+.member-shell .badge-green  { background: var(--green-dim);  color: var(--green);  border-color: rgba(78,125,94,0.28); }
+.member-shell .badge-amber  { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(201,134,43,0.28); }
+.member-shell .badge-red    { background: var(--red-dim);    color: var(--red);    border-color: rgba(189,86,70,0.28); }
+.member-shell .badge-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(139,111,168,0.28); }
+.member-shell .badge-brass  { background: var(--accent-dim); color: var(--accent); border-color: var(--border-accent); }
+
+/* ---- Progress ---------------------------------------------- */
+.member-shell .progress-track { background: rgba(70, 55, 40, 0.10); }
+.member-shell .progress-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  box-shadow: 0 0 12px -2px var(--accent-glow);
+}
+
+/* ---- Skeleton & dividers ----------------------------------- */
+.member-shell .skeleton {
+  background: linear-gradient(90deg, rgba(70, 55, 40, 0.07) 25%, rgba(255, 255, 255, 0.65) 50%, rgba(70, 55, 40, 0.07) 75%);
+}
+.member-shell .divider { background: var(--border); }
+
+/* ---- Stat card --------------------------------------------- */
+.member-shell .stat-card {
+  background: var(--bg-card);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.member-shell .stat-card::after {
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+}
+.member-shell .stat-card:hover { border-color: var(--glass-border-hover); }
+
+/* ---- Empty state ------------------------------------------- */
+.member-shell .empty-state {
+  border-color: var(--glass-border-hover);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+.member-shell .empty-state-icon {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border);
+  color: var(--accent);
+}
+
+/* ---- Modal ------------------------------------------------- */
+.member-shell .modal {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 30px 80px -20px rgba(60, 48, 35, 0.5), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.member-shell .modal-overlay { background: rgba(60, 48, 35, 0.35); }
+
+/* ---- Avatar ------------------------------------------------ */
+.member-shell .avatar {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--border-accent);
+}
+
+/* ---- Scrollbar & selection --------------------------------- */
+.member-shell ::-webkit-scrollbar-thumb { background: rgba(70, 55, 40, 0.18); }
+.member-shell ::-webkit-scrollbar-thumb:hover { background: rgba(70, 55, 40, 0.32); }
+.member-shell ::selection { background: var(--accent-dim); color: var(--accent); }
+.member-shell :focus-visible { outline-color: var(--accent); }
+
+/* ============================================================
+   Member-specific building blocks (new pages use these)
+   ============================================================ */
+.member-shell .m-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: 26px 28px;
+  background: linear-gradient(135deg, rgba(194,91,47,0.10), rgba(91,125,158,0.06) 55%, rgba(201,134,43,0.05));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.5s ease both;
+}
+.member-shell .m-hero::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -8%;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  pointer-events: none;
+}
+
+.member-shell .m-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 99px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+}
+
+.member-shell .m-section {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.member-shell .m-metric {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1.05;
+}
+.member-shell .m-metric-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}

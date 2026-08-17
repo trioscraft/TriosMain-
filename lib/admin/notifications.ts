@@ -65,7 +65,7 @@ export async function createNotificationForAdmins({
     .insert(notifications);
 
   if (insertError) {
-    console.error("Failed to create notifications for admins:", insertError);
+    console.error("Failed to create notifications for admins:", insertError.message, insertError);
   }
 }
 

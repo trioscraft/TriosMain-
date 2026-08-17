@@ -1,50 +1,74 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LogoutButton from "../LogoutButton";
+import {
+  LayoutDashboard,
+  Calendar,
+  Users,
+  FolderKanban,
+  Users2,
+  TrendingUp,
+  Bell,
+  ReceiptText,
+  Timer,
+  ListTodo,
+  Settings,
+  BarChart3,
+  MessageSquare,
+  CircleUser,
+  type LucideIcon,
+} from "lucide-react";
+import LogoutButton from "@/components/LogoutButton";
 import { supabase } from "@/lib/supabase";
 import { UserRole } from "@/lib/getCurrentUserRole";
 
 type NavItem = {
   href: string;
-  icon: string;
+  icon: LucideIcon;
   label: string;
+  match?: (path: string) => boolean;
 };
 
+const iconFor = (Icon: LucideIcon, active: boolean, size = 18) => (
+  <Icon size={size} strokeWidth={2} style={{ color: active ? "var(--accent)" : "var(--text-tertiary)" }} />
+);
+
 const adminNavigation: NavItem[] = [
-  { href: "/admin", icon: "◆", label: "Dashboard" },
-  { href: "/admin/calendar", icon: "◷", label: "Calendar" },
-  { href: "/admin/clients", icon: "◎", label: "Clients" },
-  { href: "/admin/projects", icon: "▣", label: "Projects" },
-  { href: "/admin/team", icon: "◍", label: "Team" },
-  { href: "/admin/earnings", icon: "▲", label: "Earnings" },
-  { href: "/admin/notifications", icon: "●", label: "Notifications" },
-  { href: "/admin/invoices", icon: "▤", label: "Invoices" },
-  { href: "/admin/timer", icon: "◷", label: "Timer" },
-  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
-  { href: "/admin/settings", icon: "⚙", label: "Settings" },
+  { href: "/admin", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/admin" },
+  { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
+  { href: "/admin/clients", icon: Users, label: "Clients" },
+  { href: "/admin/projects", icon: FolderKanban, label: "Projects" },
+  { href: "/admin/team", icon: Users2, label: "Team" },
+  { href: "/admin/earnings", icon: TrendingUp, label: "Earnings" },
+  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+  { href: "/admin/invoices", icon: ReceiptText, label: "Invoices" },
+  { href: "/admin/timer", icon: Timer, label: "Timer" },
+  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
+  { href: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
 const memberNavigation: NavItem[] = [
-  { href: "/admin/calendar", icon: "◷", label: "Calendar" },
-  { href: "/admin/notifications", icon: "●", label: "Notifications" },
-  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
-  { href: "/admin/timer", icon: "◷", label: "Timer" },
-  { href: "/admin/my-earnings", icon: "▲", label: "My Earnings" },
-  { href: "/admin/profile", icon: "◍", label: "Profile" },
+  { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
+  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
+  { href: "/admin/timer", icon: Timer, label: "Timer" },
+  { href: "/admin/my-earnings", icon: TrendingUp, label: "My Earnings" },
+  { href: "/admin/profile", icon: CircleUser, label: "Profile" },
 ];
 
 const clientNavigation: NavItem[] = [
-  { href: "/admin/client", icon: "◆", label: "Dashboard" },
-  { href: "/admin/client/projects", icon: "▣", label: "Projects" },
-  { href: "/admin/client/invoices", icon: "▤", label: "Invoices" },
-  { href: "/admin/client/reports", icon: "▤", label: "Reports" },
-  { href: "/admin/client/messages", icon: "◌", label: "Messages" },
+  { href: "/admin/client", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/admin/client" },
+  { href: "/admin/client/projects", icon: FolderKanban, label: "Projects" },
+  { href: "/admin/client/invoices", icon: ReceiptText, label: "Invoices" },
+  { href: "/admin/client/reports", icon: BarChart3, label: "Reports" },
+  { href: "/admin/client/messages", icon: MessageSquare, label: "Messages" },
 ];
 
 const genericNavigation: NavItem[] = [
-  { href: "/admin/timer", icon: "◷", label: "Timer" },
-  { href: "/admin/my-tasks", icon: "✓", label: "My Tasks" },
+  { href: "/admin/timer", icon: Timer, label: "Timer" },
+  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
 ];
 
 export default function Sidebar() {
@@ -55,17 +79,14 @@ export default function Sidebar() {
 
   useEffect(() => {
     void (async () => {
-      const role = await import("@/lib/getCurrentUserRole").then((mod) =>
-        mod.getCurrentUserRole()
-      );
+      const roleMod = await import("@/lib/getCurrentUserRole");
+      const role = await roleMod.getCurrentUserRole();
 
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (user?.email) {
-        setProfileName(user.email);
-      }
+      if (user?.email) setProfileName(user.email);
 
       if (role === "admin") {
         setProfileTitle("Administrator");
@@ -91,55 +112,50 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="sidebar"
+      className="glass"
       style={{
-        width: "240px",
+        width: "248px",
         minHeight: "100vh",
-        background: "var(--bg-surface)",
-        borderRight: "1px solid var(--border)",
-        padding: "28px 14px",
+        margin: "14px 0 14px 14px",
+        borderRadius: "var(--radius-xl)",
+        border: "1px solid var(--glass-border)",
+        padding: "22px 14px",
         display: "flex",
         flexDirection: "column",
-        gap: "8px",
+        gap: "6px",
         position: "sticky",
-        top: 0,
-        height: "100vh",
-        animation: "slideInLeft 0.4s ease both",
+        top: 14,
+        height: "calc(100vh - 28px)",
+        animation: "slideInLeft 0.45s ease both",
+        flexShrink: 0,
       }}
     >
       <div
         style={{
-          padding: "4px 12px 24px",
+          padding: "6px 12px 20px",
           borderBottom: "1px solid var(--border)",
-          marginBottom: "10px",
+          marginBottom: "8px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: "11px" }}>
           <div
             style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, var(--accent), #b8823c)",
+              width: "38px",
+              height: "38px",
+              borderRadius: "var(--radius-md)",
+              background: "linear-gradient(135deg, var(--accent-bright), var(--accent))",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "15px",
-              color: "#1a1206",
+              color: "#fff7ee",
               fontWeight: 700,
               flexShrink: 0,
-              boxShadow: "0 0 0 1px rgba(216,167,92,0.25), 0 6px 18px rgba(216,167,92,0.18)",
+              boxShadow: "0 0 0 1px rgba(194,91,47,0.3), 0 8px 22px -6px var(--accent-glow)",
             }}
           >
             TF
           </div>
-
           <div>
             <div
               style={{
@@ -148,16 +164,16 @@ export default function Sidebar() {
                 fontSize: "17px",
                 letterSpacing: "-0.02em",
                 color: "var(--text-primary)",
+                lineHeight: 1.1,
               }}
             >
               TriosFlow
             </div>
-
             <div
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "10px",
-                letterSpacing: "0.1em",
+                letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 color: "var(--text-tertiary)",
               }}
@@ -168,99 +184,82 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "2px",
-        }}
-      >
-        {navigation.map(({ href, icon, label }, i) => {
-          const active = pathname === href;
+      <nav style={{ display: "flex", flexDirection: "column", gap: "3px", overflowY: "auto", flex: 1 }}>
+        {navigation.map(({ href, icon, label, match }, i) => {
+          const active = match ? match(pathname) : pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
               key={`${href}-${i}`}
               href={href}
-              className="nav-link"
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
-                padding: "9px 12px 9px 14px",
+                gap: "11px",
+                padding: "10px 12px",
                 borderRadius: "var(--radius-md)",
                 color: active ? "var(--text-primary)" : "var(--text-secondary)",
                 textDecoration: "none",
                 fontSize: "14px",
                 fontWeight: active ? 600 : 450,
                 position: "relative",
-                background: active ? "rgba(216,167,92,0.08)" : "transparent",
+                background: active ? "var(--accent-soft)" : "transparent",
+                border: active ? "1px solid var(--border-accent)" : "1px solid transparent",
+                boxShadow: active ? "0 0 22px -8px var(--accent-glow)" : "none",
                 transition: "all var(--transition-fast)",
                 animation: `fadeUp 0.4s ease both`,
-                animationDelay: `${60 + i * 40}ms`,
+                animationDelay: `${60 + i * 35}ms`,
+              }}
+              onMouseEnter={(e) => {
+                if (!active) e.currentTarget.style.background = "var(--glass-bg)";
+              }}
+              onMouseLeave={(e) => {
+                if (!active) e.currentTarget.style.background = "transparent";
               }}
             >
+              {iconFor(icon, active)}
+              {label}
               {active && (
                 <span
                   style={{
                     position: "absolute",
-                    left: 0,
-                    top: "18%",
-                    bottom: "18%",
-                    width: "3px",
-                    borderRadius: "0 4px 4px 0",
+                    right: 12,
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
                     background: "var(--accent)",
                     boxShadow: "0 0 8px var(--accent-glow)",
                   }}
                 />
               )}
-              <span
-                style={{
-                  fontSize: "14px",
-                  lineHeight: 1,
-                  color: active ? "var(--accent)" : "var(--text-tertiary)",
-                  width: "16px",
-                  textAlign: "center",
-                }}
-              >
-                {icon}
-              </span>
-              {label}
             </Link>
           );
         })}
       </nav>
 
-      <div
-        style={{
-          marginTop: "auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-        }}
-      >
+      <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" }}>
         <div
           style={{
-            padding: "10px 12px",
-            background: "var(--bg-card)",
+            padding: "11px 12px",
+            background: "var(--glass-bg)",
             borderRadius: "var(--radius-md)",
-            border: "1px solid var(--border)",
+            border: "1px solid var(--glass-border)",
             display: "flex",
             alignItems: "center",
             gap: "10px",
-            animation: "fadeUp 0.4s 0.35s ease both",
+            backdropFilter: "blur(10px)",
           }}
         >
           <div
             style={{
-              width: "28px",
-              height: "28px",
+              width: "32px",
+              height: "32px",
               borderRadius: "50%",
-              background: "var(--accent-dim)",
+              background: "var(--accent-soft)",
               border: "1px solid var(--border-accent)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "12px",
+              fontSize: "13px",
               fontWeight: 600,
               color: "var(--accent)",
               flexShrink: 0,
@@ -268,7 +267,6 @@ export default function Sidebar() {
           >
             {profileName.charAt(0).toUpperCase()}
           </div>
-
           <div style={{ minWidth: 0 }}>
             <div
               style={{
@@ -282,27 +280,11 @@ export default function Sidebar() {
             >
               {profileName}
             </div>
-
-            <div
-              style={{
-                fontSize: "11px",
-                color: "var(--text-tertiary)",
-              }}
-            >
-              {profileTitle}
-            </div>
+            <div style={{ fontSize: "11px", color: "var(--text-tertiary)" }}>{profileTitle}</div>
           </div>
         </div>
-
         <LogoutButton />
       </div>
-
-      <style>{`
-        .nav-link:hover {
-          background: var(--bg-card);
-          color: var(--text-primary);
-        }
-      `}</style>
     </aside>
   );
 }

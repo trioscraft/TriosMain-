@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { supabase } from "@/lib/supabase";
+import StatusChip from "@/components/StatusChip";
+import { FolderKanban, ReceiptText, Printer, FileDown, CalendarDays } from "lucide-react";
 
 type ReportProject = {
   id: string;
@@ -19,6 +21,10 @@ type ReportInvoice = {
   due_date: string | null;
   total_amount: number;
 };
+
+function formatINR(amount: number) {
+  return `\u20B9${Number(amount || 0).toLocaleString("en-IN")}`;
+}
 
 export default function ClientReportsPage() {
   const [projects, setProjects] = useState<ReportProject[]>([]);
@@ -62,50 +68,87 @@ export default function ClientReportsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <div className="bg-slate-900 p-8 rounded-xl">Loading reports…</div>
+      <div className="cp-loading">
+        <div className="cp-loading-spinner" />
+        Loading reports...
       </div>
     );
   }
 
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
-      <div style={{ marginBottom: "20px" }}>
-        <div className="section-label">Reports</div>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "30px", fontWeight: 700 }}>
-          Download your client reports
-        </h1>
-        <p style={{ color: "var(--text-secondary)", marginTop: "8px" }}>
-          Generate quick project and invoice summaries optimized for printing or PDF export.
-        </p>
+      <div className="cp-header">
+        <div>
+          <div className="section-label" style={{ marginBottom: 8 }}>
+            Reports
+          </div>
+          <h1>Download your client reports</h1>
+          <p>
+            Generate quick project and invoice summaries optimized for printing or PDF export.
+          </p>
+        </div>
       </div>
 
-      <div style={{ display: "grid", gap: "18px" }}>
-        <div className="card" style={{ padding: "24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "20px", fontWeight: 700 }}>Project reports</h2>
-              <p style={{ color: "var(--text-secondary)", marginTop: "6px" }}>
-                Download printable summaries for your open projects.
-              </p>
+      <div style={{ display: "grid", gap: "20px" }}>
+        {/* Project reports */}
+        <div className="cp-report-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div className="cp-report-icon" style={{ marginBottom: 0 }}>
+                <FolderKanban size={20} />
+              </div>
+              <div>
+                <div className="cp-card-title">Project reports</div>
+                <div className="cp-card-subtitle">
+                  Download printable summaries for your open projects.
+                </div>
+              </div>
             </div>
             <button onClick={() => window.print()} className="btn btn-primary" style={{ padding: "12px 20px" }}>
-              Download PDF
+              <Printer size={15} /> Download PDF
             </button>
           </div>
 
           {projects.length === 0 ? (
-            <div style={{ color: "var(--text-tertiary)" }}>No project reports are available yet.</div>
+            <div className="cp-empty">
+              <div className="cp-empty-icon">
+                <FolderKanban size={24} />
+              </div>
+              No project reports are available yet.
+            </div>
           ) : (
-            <div style={{ display: "grid", gap: "12px" }}>
+            <div style={{ display: "grid", gap: "10px" }}>
               {projects.map((project) => (
-                <div key={project.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "14px 0", borderBottom: "1px solid var(--border)" }}>
-                  <div>
+                <div
+                  key={project.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "14px 16px",
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--glass-border)",
+                  }}
+                >
+                  <div style={{ minWidth: 0 }}>
                     <div style={{ fontWeight: 600 }}>{project.name}</div>
-                    <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>{project.status}</div>
+                    <div style={{ marginTop: 5 }}>
+                      <StatusChip status={project.status} />
+                    </div>
                   </div>
-                  <div style={{ color: "var(--text-tertiary)", fontSize: "13px" }}>
-                    Due {project.due_date || "TBD"}
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text-tertiary)", fontSize: 13 }}>
+                      <CalendarDays size={14} /> Due {project.due_date || "TBD"}
+                    </div>
+                    <button
+                      onClick={() => window.print()}
+                      className="btn"
+                      style={{ padding: "8px 14px", fontSize: 13 }}
+                    >
+                      <FileDown size={14} /> Export
+                    </button>
                   </div>
                 </div>
               ))}
@@ -113,31 +156,65 @@ export default function ClientReportsPage() {
           )}
         </div>
 
-        <div className="card" style={{ padding: "24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "20px", fontWeight: 700 }}>Invoice reports</h2>
-              <p style={{ color: "var(--text-secondary)", marginTop: "6px" }}>
-                Export a PDF-ready invoice summary for billing and payment tracking.
-              </p>
+        {/* Invoice reports */}
+        <div className="cp-report-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div className="cp-report-icon" style={{ marginBottom: 0 }}>
+                <ReceiptText size={20} />
+              </div>
+              <div>
+                <div className="cp-card-title">Invoice reports</div>
+                <div className="cp-card-subtitle">
+                  Export a PDF-ready invoice summary for billing and payment tracking.
+                </div>
+              </div>
             </div>
             <button onClick={() => window.print()} className="btn btn-primary" style={{ padding: "12px 20px" }}>
-              Download PDF
+              <Printer size={15} /> Download PDF
             </button>
           </div>
 
           {invoices.length === 0 ? (
-            <div style={{ color: "var(--text-tertiary)" }}>No invoice reports are available yet.</div>
+            <div className="cp-empty">
+              <div className="cp-empty-icon">
+                <ReceiptText size={24} />
+              </div>
+              No invoice reports are available yet.
+            </div>
           ) : (
-            <div style={{ display: "grid", gap: "12px" }}>
+            <div style={{ display: "grid", gap: "10px" }}>
               {invoices.map((invoice) => (
-                <div key={invoice.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "14px 0", borderBottom: "1px solid var(--border)" }}>
-                  <div>
+                <div
+                  key={invoice.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "14px 16px",
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--glass-border)",
+                  }}
+                >
+                  <div style={{ minWidth: 0 }}>
                     <div style={{ fontWeight: 600 }}>{invoice.invoice_number}</div>
-                    <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>{invoice.status}</div>
+                    <div style={{ marginTop: 5 }}>
+                      <StatusChip status={invoice.status} />
+                    </div>
                   </div>
-                  <div style={{ color: "var(--text-tertiary)", fontSize: "13px" }}>
-                    ₹{Number(invoice.total_amount || 0).toLocaleString("en-IN")}
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
+                    <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17, color: "var(--accent)" }}>
+                      {formatINR(invoice.total_amount)}
+                    </div>
+                    <button
+                      onClick={() => window.print()}
+                      className="btn"
+                      style={{ padding: "8px 14px", fontSize: 13 }}
+                    >
+                      <FileDown size={14} /> Export
+                    </button>
                   </div>
                 </div>
               ))}

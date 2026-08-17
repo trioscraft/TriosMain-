@@ -1,40 +1,27 @@
 import RoleGuard from "@/components/RoleGuard";
 import { supabase } from "@/lib/supabase";
+import { PageHeader, Card } from "@/components/admin/ui/Card";
+import { StatCard } from "@/components/admin/ui/StatCard";
+import { IndianRupee, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import Badge from "@/components/admin/ui/Badge";
+
+function formatINR(value: number) {
+  return `₹${Math.round(value).toLocaleString("en-IN")}`;
+}
 
 export default async function EarningsPage() {
   const { data: projects, error: projectsError } =
-    await supabase
-      .from("projects")
-      .select("*");
+    await supabase.from("projects").select("*");
 
   const { data: profiles, error: profilesError } =
-    await supabase
-      .from("profiles")
-      .select("*");
+    await supabase.from("profiles").select("*");
 
   const { data: entries, error: entriesError } =
-    await supabase
-      .from("time_entries")
-      .select("*");
+    await supabase.from("time_entries").select("*");
 
   const { data: expenses, error: expensesError } =
-    await supabase
-      .from("expenses")
-      .select("project_id, amount");
+    await supabase.from("expenses").select("project_id, amount");
 
-  console.log("Projects:", projects);
-  console.log("Projects Error:", projectsError);
-
-  console.log("Profiles:", profiles);
-  console.log("Profiles Error:", profilesError);
-
-  console.log("Entries:", entries);
-  console.log("Entries Error:", entriesError);
-
-  console.log("Expenses:", expenses);
-  console.log("Expenses Error:", expensesError);
-
-  // Calculate totals for dashboard metrics
   let totalRevenue = 0;
   let totalExpenses = 0;
   let totalProfit = 0;
@@ -51,149 +38,93 @@ export default async function EarningsPage() {
 
   return (
     <RoleGuard allowedRoles={["admin"]}>
-      <div className="text-white">
-        <h1 className="text-4xl font-bold mb-8">
-          Earnings Dashboard 💰
-        </h1>
+      <div style={{ maxWidth: "1060px", animation: "fadeUp 0.5s ease both" }}>
+        <PageHeader
+          title="Earnings"
+          subtitle="Revenue, expenses and profit-share across all projects."
+          icon={<TrendingUp size={22} />}
+        />
 
-        {/* Dashboard Metrics */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
-          <div className="bg-slate-900 p-6 rounded-xl border border-slate-700">
-            <div className="text-slate-400 text-sm mb-2">Total Revenue</div>
-            <div className="text-3xl font-bold text-amber-400">
-              ₹{totalRevenue.toLocaleString("en-IN")}
-            </div>
-          </div>
-
-          <div className="bg-slate-900 p-6 rounded-xl border border-slate-700">
-            <div className="text-slate-400 text-sm mb-2">Total Expenses</div>
-            <div className="text-3xl font-bold text-red-400">
-              ₹{totalExpenses.toLocaleString("en-IN")}
-            </div>
-          </div>
-
-          <div className="bg-slate-900 p-6 rounded-xl border border-slate-700">
-            <div className="text-slate-400 text-sm mb-2">Total Profit</div>
-            <div className={`text-3xl font-bold ${totalProfit >= 0 ? "text-green-400" : "text-red-400"}`}>
-              ₹{totalProfit.toLocaleString("en-IN")}
-            </div>
-          </div>
+        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", marginBottom: 24 }}>
+          <StatCard label="Total Revenue" value={formatINR(totalRevenue)} icon={<IndianRupee size={17} />} deltaTone="up" />
+          <StatCard label="Total Expenses" value={formatINR(totalExpenses)} icon={<Wallet size={17} />} deltaTone="down" />
+          <StatCard label="Total Profit" value={formatINR(totalProfit)} icon={<TrendingUp size={17} />} deltaTone={totalProfit >= 0 ? "up" : "down"} />
         </div>
 
-        {projects?.map((project) => {
-          const projectExpenses =
-            expenses?.filter((e) => e.project_id === project.id) || [];
+        <div style={{ display: "grid", gap: 20 }}>
+          {projects?.map((project) => {
+            const projectExpenses =
+              expenses?.filter((e) => e.project_id === project.id) || [];
 
-          const projectTotalExpenses =
-            projectExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+            const projectTotalExpenses =
+              projectExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
-          const projectProfit = Number(project.budget || 0) - projectTotalExpenses;
+            const projectProfit = Number(project.budget || 0) - projectTotalExpenses;
 
-          const projectEntries =
-            entries?.filter(
-              (entry) =>
-                entry.project_id === project.id
-            ) || [];
+            const projectEntries =
+              entries?.filter((entry) => entry.project_id === project.id) || [];
 
-          const totalHours =
-            projectEntries.reduce(
-              (sum, entry) =>
-                sum + Number(entry.total_hours || 0),
-              0
+            const totalHours =
+              projectEntries.reduce((sum, entry) => sum + Number(entry.total_hours || 0), 0);
+
+            return (
+              <Card key={project.id} style={{ padding: 24 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
+                  <h2 style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 600 }}>{project.name}</h2>
+                  <Badge tone={projectProfit >= 0 ? "green" : "red"} dot>
+                    {projectProfit >= 0 ? "Profitable" : "Loss"}
+                  </Badge>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 18 }}>
+                  <StatCard label="Budget" value={formatINR(Number(project.budget || 0))} deltaTone="flat" />
+                  <StatCard label="Expenses" value={formatINR(projectTotalExpenses)} deltaTone="down" />
+                  <StatCard label="Profit" value={formatINR(projectProfit)} deltaTone={projectProfit >= 0 ? "up" : "down"} />
+                  <StatCard label="Hours" value={`${totalHours.toFixed(1)}h`} deltaTone="flat" />
+                </div>
+
+                <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 16 }}>
+                  Member earnings are calculated based on profit ({formatINR(projectProfit)}), not the full budget.
+                </p>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  {profiles?.map((profile) => {
+                    const memberHours =
+                      projectEntries
+                        .filter((entry) => entry.user_id === profile.id)
+                        .reduce((sum, entry) => sum + Number(entry.total_hours || 0), 0);
+
+                    const share =
+                      totalHours > 0
+                        ? ((memberHours / totalHours) * projectProfit).toFixed(0)
+                        : 0;
+
+                    return (
+                      <div key={profile.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 14px", background: "var(--glass-bg)", border: "1px solid var(--glass-border)", borderRadius: "var(--radius-md)" }}>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: 14 }}>{profile.name}</div>
+                          <div style={{ color: "var(--text-tertiary)", fontSize: 12.5, marginTop: 2 }}>
+                            Hours worked: {memberHours.toFixed(2)}
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <div className="num" style={{ fontWeight: 700, color: projectProfit >= 0 ? "var(--green)" : "var(--red)", fontSize: 14 }}>
+                            {formatINR(Number(share))}
+                          </div>
+                          <div style={{ color: "var(--text-tertiary)", fontSize: 11.5, marginTop: 2 }}>Profit share</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ marginTop: 18, fontSize: 13, color: "var(--text-tertiary)" }}>
+                  Total hours: <strong className="num" style={{ color: "var(--text-primary)" }}>{totalHours.toFixed(2)}</strong>
+                </div>
+              </Card>
             );
-
-          return (
-            <div
-              key={project.id}
-              className="bg-slate-900 p-6 rounded-xl mb-8 border border-slate-700"
-            >
-              <h2 className="text-2xl font-bold">
-                {project.name}
-              </h2>
-
-              {/* Project Financial Summary */}
-              <div className="grid grid-cols-3 gap-4 mt-4 mb-6">
-                <div className="bg-slate-800 p-4 rounded-lg">
-                  <div className="text-slate-400 text-xs mb-1">Budget</div>
-                  <div className="text-lg font-bold text-amber-400">
-                    ₹{Number(project.budget).toLocaleString("en-IN")}
-                  </div>
-                </div>
-                <div className="bg-slate-800 p-4 rounded-lg">
-                  <div className="text-slate-400 text-xs mb-1">Expenses</div>
-                  <div className="text-lg font-bold text-red-400">
-                    ₹{projectTotalExpenses.toLocaleString("en-IN")}
-                  </div>
-                </div>
-                <div className="bg-slate-800 p-4 rounded-lg">
-                  <div className="text-slate-400 text-xs mb-1">Profit</div>
-                  <div className={`text-lg font-bold ${projectProfit >= 0 ? "text-green-400" : "text-red-400"}`}>
-                    ₹{projectProfit.toLocaleString("en-IN")}
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-slate-400 text-sm">
-                Member earnings are calculated based on profit (₹{projectProfit.toLocaleString("en-IN")}), not the full budget.
-              </p>
-
-              <div className="mt-6 space-y-4">
-                {profiles?.map((profile) => {
-                  const memberHours =
-                    projectEntries
-                      .filter(
-                        (entry) =>
-                          entry.member_id ===
-                          profile.id
-                      )
-                      .reduce(
-                        (sum, entry) =>
-                          sum +
-                          Number(
-                            entry.total_hours || 0
-                          ),
-                        0
-                      );
-
-                  // Use profit instead of budget for share calculation
-                  const share =
-                    totalHours > 0
-                      ? (
-                          (memberHours /
-                            totalHours) *
-                          projectProfit
-                        ).toFixed(0)
-                      : 0;
-
-                  return (
-                    <div
-                      key={profile.id}
-                      className="border border-slate-700 rounded-lg p-4"
-                    >
-                      <h3 className="font-bold text-lg">
-                        {profile.name}
-                      </h3>
-
-                      <p className="text-slate-400">
-                        Hours Worked:{" "}
-                        {memberHours.toFixed(2)}
-                      </p>
-
-                      <p className="text-green-400">
-                        Profit Share: ₹{Number(share).toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="mt-6 text-green-400">
-                Total Hours:{" "}
-                {totalHours.toFixed(2)}
-              </div>
-            </div>
-          );
-        })}
+          })}
+        </div>
       </div>
     </RoleGuard>
   );

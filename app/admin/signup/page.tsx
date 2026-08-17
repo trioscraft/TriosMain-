@@ -1,78 +1,77 @@
 "use client";
 
 import { useState } from "react";
+import { Mail, Lock, UserPlus, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import AuthShell from "@/components/admin/AuthShell";
+import Button from "@/components/admin/ui/Button";
+import { Field, Input } from "@/components/admin/ui/Field";
 
 export default function SignupPage() {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   async function signUp() {
-    const { data, error } =
-      await supabase.auth.signUp({
-        email,
-        password,
-      });
-
+    setError("");
+    setSubmitting(true);
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    setSubmitting(false);
     if (error) {
-      alert(error.message);
+      setError(error.message);
       return;
     }
-
     if (data.user) {
-      await supabase
-        .from("profiles")
-        .insert([
-          {
-            id: data.user.id,
-            email: data.user.email,
-          },
-        ]);
+      await supabase.from("profiles").insert([{ id: data.user.id, email: data.user.email }]);
     }
-
-    alert("Account created!");
-
     router.push("/admin/login");
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center text-white">
-      <div className="bg-slate-900 p-8 rounded-xl w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6">
-          Sign Up
-        </h1>
+    <AuthShell
+      title="Create your account"
+      subtitle="Spin up a new TriosFlow workspace"
+      footer={
+        <>
+          Already have an account?{" "}
+          <a href="/admin/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+            Sign in
+          </a>
+        </>
+      }
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Field label="Email address" htmlFor="email">
+          <div style={{ position: "relative" }}>
+            <Mail size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-tertiary)" }} />
+            <Input id="email" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ paddingLeft: 40 }} />
+          </div>
+        </Field>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-3 bg-slate-800 rounded mb-4"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-        />
+        <Field label="Password" htmlFor="password">
+          <div style={{ position: "relative" }}>
+            <Lock size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-tertiary)" }} />
+            <Input
+              id="password"
+              type="password"
+              placeholder="At least 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ paddingLeft: 40 }}
+            />
+          </div>
+        </Field>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-3 bg-slate-800 rounded mb-4"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
+        {error && <div style={{ color: "var(--red)", fontSize: 13 }}>{error}</div>}
 
-        <button
-          onClick={signUp}
-          className="w-full bg-green-600 p-3 rounded"
-        >
-          Create Account
-        </button>
+        <Button variant="primary" size="lg" loading={submitting} disabled={!email || !password} onClick={signUp} style={{ marginTop: 4 }}>
+          {!submitting && <UserPlus size={16} />}
+          Create account
+        </Button>
       </div>
-    </div>
+    </AuthShell>
   );
 }

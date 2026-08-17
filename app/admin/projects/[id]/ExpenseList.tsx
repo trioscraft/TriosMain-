@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Receipt, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
@@ -129,11 +130,11 @@ export default function ExpenseList({
                   display: "grid",
                   placeItems: "center",
                   background: "var(--red-dim)",
-                  fontSize: "18px",
+                  color: "var(--red)",
                   flexShrink: 0,
                 }}
               >
-                💸
+                <Receipt size={18} />
               </div>
               <div style={{ minWidth: 0, flex: 1 }}>
                 <div
@@ -184,25 +185,18 @@ export default function ExpenseList({
                 <button
                   className="btn"
                   onClick={() => setEditingExpense(expense)}
-                  style={{
-                    padding: "8px 12px",
-                    fontSize: "13px",
-                  }}
+                  style={{ padding: "8px 12px", fontSize: "13px" }}
                   title="Edit expense"
                 >
-                  ✏️
+                  <Pencil size={14} />
                 </button>
                 <button
-                  className="btn"
+                  className="btn btn-danger"
                   onClick={() => setDeletingExpense(expense)}
-                  style={{
-                    padding: "8px 12px",
-                    fontSize: "13px",
-                    color: "var(--red)",
-                  }}
+                  style={{ padding: "8px 12px", fontSize: "13px" }}
                   title="Delete expense"
                 >
-                  🗑️
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>

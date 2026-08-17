@@ -154,7 +154,7 @@ export default function ActivityFeed() {
               style={{
                 height: "72px",
                 borderRadius: "14px",
-                background: "rgba(255,255,255,0.04)",
+                background: "var(--glass-bg)",
                 animation: "pulse 1.2s ease-in-out infinite",
               }}
             />
@@ -193,7 +193,7 @@ export default function ActivityFeed() {
                   borderRadius: "12px",
                   display: "grid",
                   placeItems: "center",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--accent-soft)",
                   fontSize: "18px",
                 }}
               >

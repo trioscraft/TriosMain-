@@ -1,67 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ============================================================
-   TriosFlow Admin — design tokens
-   Warm ink control room, brass wayfinding, ledger-mono numerals.
+   TriosFlow Admin — Warm Premium Studio
+   Cream & sand surfaces · charcoal ink · terracotta accent ·
+   serif display (Fraunces) + DM Sans body + mono numerals.
+   Class names (.card, .btn, .input, .badge …) are preserved
+   so existing pages upgrade automatically; new pages use the
+   expanded .glass / .glass-panel toolkit below.
    ============================================================ */
 
 .admin-shell {
-  --bg-base: #0a0d14;
-  --bg-surface: #0e1219;
-  --bg-card: #12161f;
-  --bg-card-hover: #161b26;
-  --bg-elevated: #171c27;
+  /* Surfaces (warm paper) */
+  --bg-base: #f4eee3;
+  --bg-surface: #efe7d7;
+  --bg-card: rgba(255, 253, 249, 0.92);
+  --bg-card-hover: #ffffff;
+  --bg-elevated: #ffffff;
 
-  --border: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(255, 255, 255, 0.14);
-  --border-accent: rgba(216, 167, 92, 0.35);
+  /* Glass primitives */
+  --glass-bg: rgba(255, 253, 249, 0.72);
+  --glass-bg-strong: rgba(255, 253, 249, 0.94);
+  --glass-border: rgba(70, 55, 40, 0.10);
+  --glass-border-hover: rgba(70, 55, 40, 0.20);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --glass-blur: 22px;
+  --glass-shadow: 0 1px 2px rgba(70, 55, 40, 0.06),
+                   0 18px 42px -18px rgba(70, 55, 40, 0.22),
+                   inset 0 1px 0 0 var(--glass-highlight);
 
-  /* Brass — primary accent, replaces generic cyan */
-  --accent: #d8a75c;
-  --accent-dim: rgba(216, 167, 92, 0.12);
-  --accent-glow: rgba(216, 167, 92, 0.28);
+  --border: rgba(70, 55, 40, 0.10);
+  --border-hover: rgba(70, 55, 40, 0.20);
+  --border-accent: rgba(194, 91, 47, 0.32);
 
-  --green: #7fbf8f;
-  --green-dim: rgba(127, 191, 143, 0.12);
+  /* Terracotta — primary accent */
+  --accent: #c25b2e;
+  --accent-bright: #d97b3d;
+  --accent-dim: rgba(194, 91, 47, 0.10);
+  --accent-glow: rgba(194, 91, 47, 0.20);
+  --accent-soft: rgba(194, 91, 47, 0.06);
 
-  --amber: #e0b168;
-  --amber-dim: rgba(224, 177, 104, 0.12);
+  --green: #4e7d5e;
+  --green-dim: rgba(78, 125, 94, 0.12);
+  --green-glow: rgba(78, 125, 94, 0.22);
 
-  --red: #e08585;
-  --red-dim: rgba(224, 133, 133, 0.12);
+  --amber: #c9862b;
+  --amber-dim: rgba(201, 134, 43, 0.12);
 
-  --purple: #a99bd1;
-  --purple-dim: rgba(169, 155, 209, 0.12);
+  --red: #bd5646;
+  --red-dim: rgba(189, 86, 70, 0.12);
+  --red-glow: rgba(189, 86, 70, 0.22);
 
-  /* Slate-blue — secondary/info, quieter than the old bright blue */
-  --info: #8fa8d6;
-  --info-dim: rgba(143, 168, 214, 0.12);
+  --purple: #8b6fa8;
+  --purple-dim: rgba(139, 111, 168, 0.12);
 
-  --text-primary: rgba(255, 255, 255, 0.92);
-  --text-secondary: rgba(255, 255, 255, 0.54);
-  --text-tertiary: rgba(255, 255, 255, 0.30);
+  --info: #5b7d9e;
+  --info-dim: rgba(91, 125, 158, 0.12);
+  --info-glow: rgba(91, 125, 158, 0.20);
 
-  --font-display: 'Space Grotesk', sans-serif;
+  --text-primary: #2b251e;
+  --text-secondary: #6b5f52;
+  --text-tertiary: #9c8f7e;
+
+  --font-display: 'Fraunces', 'DM Sans', serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
 
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 460ms cubic-bezier(0.4, 0, 0.2, 1);
 
   background: var(--bg-base);
   background-image:
-    radial-gradient(1200px 480px at 10% -10%, rgba(216, 167, 92, 0.05), transparent 60%),
-    radial-gradient(900px 420px at 100% 0%, rgba(143, 168, 214, 0.045), transparent 55%);
+    radial-gradient(1100px 520px at 8% -12%, rgba(194, 91, 47, 0.09), transparent 60%),
+    radial-gradient(900px 480px at 102% 4%, rgba(91, 125, 158, 0.08), transparent 58%),
+    radial-gradient(820px 560px at 50% 120%, rgba(201, 134, 43, 0.06), transparent 60%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 .admin-shell *,
@@ -72,25 +95,15 @@
   padding: 0;
 }
 
-.admin-shell ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-.admin-shell ::-webkit-scrollbar-track {
-  background: transparent;
-}
+.admin-shell ::-webkit-scrollbar { width: 6px; height: 6px; }
+.admin-shell ::-webkit-scrollbar-track { background: transparent; }
 .admin-shell ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(70, 55, 40, 0.18);
   border-radius: 99px;
 }
-.admin-shell ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
+.admin-shell ::-webkit-scrollbar-thumb:hover { background: rgba(70, 55, 40, 0.32); }
 
-.admin-shell ::selection {
-  background: var(--accent-dim);
-  color: var(--accent);
-}
+.admin-shell ::selection { background: var(--accent-dim); color: var(--accent); }
 
 .admin-shell :focus-visible {
   outline: 2px solid var(--accent);
@@ -98,22 +111,361 @@
   border-radius: var(--radius-sm);
 }
 
-/* ---- Numerals: currency, percentages, counts ride the ledger mono face ---- */
-.admin-shell .num,
-.admin-shell .stat-value {
-  font-family: var(--font-mono);
-  font-feature-settings: "tnum" 1, "zero" 1;
-  letter-spacing: -0.01em;
+/* ---- Glass toolkit ------------------------------------------------ */
+.admin-shell .glass {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.admin-shell .glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), transparent 45%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.admin-shell .glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+.admin-shell .glass-accent {
+  border-color: var(--border-accent);
+  box-shadow: var(--glass-shadow), 0 0 32px -12px var(--accent-glow);
 }
 
+/* ---- Card --------------------------------------------------------- */
+.admin-shell .card {
+  position: relative;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  transition: border-color var(--transition-base), background var(--transition-base),
+    transform var(--transition-fast), box-shadow var(--transition-base);
+  overflow: hidden;
+}
+.admin-shell .card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), transparent 45%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+.admin-shell .card:hover {
+  border-color: var(--glass-border-hover);
+  background: var(--bg-card-hover);
+  box-shadow: var(--glass-shadow), 0 22px 50px -22px rgba(70, 55, 40, 0.3);
+}
+.admin-shell .card:hover::before { opacity: 1; }
+.admin-shell .card-interactive { cursor: pointer; }
+.admin-shell .card-interactive:hover { transform: translateY(-3px); }
+.admin-shell .card-interactive:active { transform: translateY(-1px); }
+
+/* ---- Kanban ------------------------------------------------------ */
+.admin-shell .kanban-column {
+  background: rgba(70, 55, 40, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+
+/* ---- Buttons ------------------------------------------------------ */
+.admin-shell .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(70, 55, 40, 0.06);
+}
+.admin-shell .btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.admin-shell .btn:hover { border-color: var(--glass-border-hover); transform: translateY(-1px); }
+.admin-shell .btn:hover::after { opacity: 1; }
+.admin-shell .btn:active { transform: translateY(0) scale(0.98); }
+.admin-shell .btn:disabled { opacity: 0.45; pointer-events: none; }
+
+.admin-shell .btn-primary {
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  border-color: transparent;
+  color: #fff7ee;
+  font-weight: 600;
+  box-shadow: 0 10px 26px -10px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.admin-shell .btn-primary:hover {
+  background: linear-gradient(135deg, #e68a4b, var(--accent-bright));
+  box-shadow: 0 14px 30px -10px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.admin-shell .btn-success {
+  background: linear-gradient(135deg, #6f9c7f, var(--green));
+  border-color: transparent; color: #f4faf5; font-weight: 600;
+  box-shadow: 0 10px 26px -10px var(--green-glow);
+}
+.admin-shell .btn-danger {
+  background: linear-gradient(135deg, #cf7263, var(--red));
+  border-color: transparent; color: #fff5f2; font-weight: 600;
+  box-shadow: 0 10px 26px -10px var(--red-glow);
+}
+.admin-shell .btn-ghost { background: transparent; border-color: transparent; box-shadow: none; }
+.admin-shell .btn-ghost:hover { background: var(--glass-bg); }
+
+/* ---- Inputs & fields --------------------------------------------- */
+.admin-shell .input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  outline: none;
+  box-shadow: 0 1px 2px rgba(70, 55, 40, 0.04);
+}
+.admin-shell .input::placeholder { color: var(--text-tertiary); }
+.admin-shell .input:hover { border-color: var(--glass-border-hover); }
+.admin-shell .input:focus {
+  border-color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 0 22px -8px var(--accent-glow);
+}
+.admin-shell select.input { appearance: none; cursor: pointer; }
+.admin-shell textarea.input { resize: vertical; min-height: 88px; line-height: 1.5; }
+
+.admin-shell .label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.admin-shell .field-error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- Badges ------------------------------------------------------- */
+.admin-shell .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.admin-shell .badge-blue   { background: var(--info-dim);   color: var(--info);   border-color: rgba(91,125,158,0.28); }
+.admin-shell .badge-green  { background: var(--green-dim);  color: var(--green);  border-color: rgba(78,125,94,0.28); }
+.admin-shell .badge-amber  { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(201,134,43,0.28); }
+.admin-shell .badge-red    { background: var(--red-dim);    color: var(--red);    border-color: rgba(189,86,70,0.28); }
+.admin-shell .badge-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(139,111,168,0.28); }
+.admin-shell .badge-brass  { background: var(--accent-dim); color: var(--accent); border-color: var(--border-accent); }
+
+/* ---- Progress ----------------------------------------------------- */
+.admin-shell .progress-track {
+  height: 5px;
+  background: rgba(70, 55, 40, 0.10);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.admin-shell .progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  box-shadow: 0 0 12px -2px var(--accent-glow);
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Skeleton & dividers ----------------------------------------- */
+.admin-shell .skeleton {
+  background: linear-gradient(90deg, rgba(70, 55, 40, 0.07) 25%, rgba(255, 255, 255, 0.65) 50%, rgba(70, 55, 40, 0.07) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+.admin-shell .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ---- Typographic helpers ------------------------------------------ */
+.admin-shell .section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.9;
+}
+.admin-shell .stat-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.admin-shell h1, .admin-shell h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.admin-shell .page-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.admin-shell .page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.admin-shell .text-muted { color: var(--text-secondary); }
+.admin-shell .text-faint { color: var(--text-tertiary); }
+.admin-shell .num { font-family: var(--font-mono); font-feature-settings: "tnum" 1, "zero" 1; letter-spacing: -0.01em; }
+
+/* ---- Stat card ---------------------------------------------------- */
+.admin-shell .stat-card {
+  position: relative;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+.admin-shell .stat-card::after {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  pointer-events: none;
+}
+.admin-shell .stat-card:hover { border-color: var(--glass-border-hover); transform: translateY(-2px); transition: all var(--transition-base); }
+
+/* ---- Empty state -------------------------------------------------- */
+.admin-shell .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px dashed var(--glass-border-hover);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+.admin-shell .empty-state-icon {
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  font-size: 24px;
+  color: var(--accent);
+}
+
+/* ---- Modal / overlay --------------------------------------------- */
+.admin-shell .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(60, 48, 35, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease both;
+}
+.admin-shell .modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+  border: 1px solid var(--glass-border-hover);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 30px 80px -20px rgba(60, 48, 35, 0.5), inset 0 1px 0 rgba(255,255,255,0.9);
+  padding: 26px;
+  animation: scaleIn 0.26s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ---- Avatar ------------------------------------------------------- */
+.admin-shell .avatar {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  flex-shrink: 0;
+}
+
+/* ---- Animations --------------------------------------------------- */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideInLeft {
   from { opacity: 0; transform: translateX(-20px); }
   to   { opacity: 1; transform: translateX(0); }
@@ -126,19 +478,29 @@
   from { background-position: -200% 0; }
   to   { background-position: 200% 0; }
 }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 @keyframes pulse-ring {
   0%   { box-shadow: 0 0 0 0 var(--accent-glow); }
-  70%  { box-shadow: 0 0 0 8px transparent; }
+  70%  { box-shadow: 0 0 0 9px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-4px); }
 }
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50%      { box-shadow: 0 0 22px -2px var(--accent-glow); }
+}
 
 .admin-shell .animate-fade-up  { animation: fadeUp 0.5s ease both; }
 .admin-shell .animate-fade-in  { animation: fadeIn 0.4s ease both; }
 .admin-shell .animate-scale-in { animation: scaleIn 0.35s ease both; }
+.admin-shell .animate-float   { animation: float 4s ease-in-out infinite; }
+.admin-shell .glow-pulse      { animation: glow-pulse 2.4s ease-in-out infinite; }
 
 .admin-shell .delay-1 { animation-delay: 60ms; }
 .admin-shell .delay-2 { animation-delay: 120ms; }
@@ -146,147 +508,7 @@
 .admin-shell .delay-4 { animation-delay: 240ms; }
 .admin-shell .delay-5 { animation-delay: 300ms; }
 
-/* ---- Card: instrument-panel surface with a brass hairline on hover ---- */
-.admin-shell .card {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  transition: border-color var(--transition-base), background var(--transition-base), transform var(--transition-fast);
-}
-.admin-shell .card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 14px; right: 14px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-  pointer-events: none;
-}
-.admin-shell .card:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-card-hover);
-}
-.admin-shell .card:hover::before {
-  opacity: 1;
-}
-.admin-shell .card-interactive { cursor: pointer; }
-.admin-shell .card-interactive:hover { transform: translateY(-2px); }
-.admin-shell .card-interactive:active { transform: translateY(0); }
-
-.admin-shell .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  white-space: nowrap;
-  background: transparent;
-  color: var(--text-primary);
-  position: relative;
-  overflow: hidden;
-}
-.admin-shell .btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-.admin-shell .btn:hover::after { opacity: 0.04; }
-.admin-shell .btn:active { transform: scale(0.97); }
-
-.admin-shell .btn-primary { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 600; }
-.admin-shell .btn-primary:hover { background: #e3b876; border-color: #e3b876; }
-.admin-shell .btn-success { background: var(--green); border-color: var(--green); color: #0e1f14; font-weight: 600; }
-.admin-shell .btn-danger  { background: var(--red);   border-color: var(--red);   color: #22100f; font-weight: 600; }
-
-.admin-shell .input {
-  width: 100%;
-  padding: 10px 14px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 14px;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  outline: none;
-}
-.admin-shell .input::placeholder { color: var(--text-tertiary); }
-.admin-shell .input:hover { border-color: var(--border-hover); }
-.admin-shell .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-
-.admin-shell .label {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-
-.admin-shell .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  border-radius: 6px;
-  border: 1px solid;
-}
-.admin-shell .badge-blue   { background: var(--info-dim);   color: var(--info);   border-color: rgba(143,168,214,0.22); }
-.admin-shell .badge-green  { background: var(--green-dim);  color: var(--green);  border-color: rgba(127,191,143,0.22); }
-.admin-shell .badge-amber  { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(224,177,104,0.22); }
-.admin-shell .badge-red    { background: var(--red-dim);    color: var(--red);    border-color: rgba(224,133,133,0.22); }
-.admin-shell .badge-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(169,155,209,0.22); }
-
-.admin-shell .progress-track { height: 4px; background: var(--bg-elevated); border-radius: 99px; overflow: hidden; }
-.admin-shell .progress-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), #e8c98a); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
-
-.admin-shell .skeleton {
-  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: var(--radius-md);
-}
-
-.admin-shell .divider { height: 1px; background: var(--border); margin: 20px 0; }
-
-.admin-shell .section-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  opacity: 0.85;
-}
-
-.admin-shell .stat-value {
-  font-family: var(--font-mono);
-  font-size: 28px;
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-/* Headings default to the display face; keep it restrained (not the whole page) */
-.admin-shell h1,
-.admin-shell h2 {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
+/* ---- Responsive helpers ------------------------------------------- */
+@media (max-width: 900px) {
+  .admin-shell .modal { max-width: 100%; }
 }

@@ -5,6 +5,12 @@ import Link from "next/link";
 import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { getInvoicesByClient } from "@/lib/invoice-utils";
 import type { InvoiceWithRelations } from "@/lib/types/invoice";
+import StatusChip from "@/components/StatusChip";
+import { ReceiptText, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
+
+function formatINR(amount: number) {
+  return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
+}
 
 export default function ClientInvoicesPage() {
   const [invoices, setInvoices] = useState<InvoiceWithRelations[]>([]);
@@ -35,8 +41,10 @@ export default function ClientInvoicesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <div className="bg-slate-900 p-8 rounded-xl">Loading invoices…</div>
+      <div className="cp-skeleton-list">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="cp-skeleton-card" style={{ animationDelay: `${i * 80}ms` }} />
+        ))}
       </div>
     );
   }
@@ -44,36 +52,43 @@ export default function ClientInvoicesPage() {
   const outstanding = invoices.filter((invoice) => invoice.status !== "paid").length;
   const paid = invoices.filter((invoice) => invoice.status === "paid").length;
 
+  const stats = [
+    { label: "Outstanding invoices", value: outstanding, icon: AlertCircle },
+    { label: "Paid invoices", value: paid, icon: CheckCircle2 },
+  ];
+
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
-      <div style={{ marginBottom: "20px" }}>
-        <div className="section-label">Invoices</div>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "30px", fontWeight: 700 }}>
-          Invoice history
-        </h1>
-        <p style={{ color: "var(--text-secondary)", marginTop: "8px" }}>
-          Review invoices and download payment-ready documents.
-        </p>
+      <div className="cp-header">
+        <div>
+          <div className="section-label" style={{ marginBottom: 8 }}>
+            Invoices
+          </div>
+          <h1>Invoice history</h1>
+          <p>Review invoices and download payment-ready documents.</p>
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "16px", marginBottom: "24px" }}>
-        <div className="card" style={{ padding: "22px" }}>
-          <div style={{ fontSize: "12px", color: "var(--text-tertiary)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Outstanding invoices
+      <div className="cp-stats" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
+        {stats.map(({ label, value, icon: Icon }, i) => (
+          <div key={label} className="cp-stat" style={{ animationDelay: `${i * 60}ms` }}>
+            <div className="cp-stat-icon">
+              <Icon size={20} strokeWidth={2} />
+            </div>
+            <div className="cp-stat-label">{label}</div>
+            <div className="cp-stat-value">{value}</div>
           </div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 700 }}>{outstanding}</div>
-        </div>
-        <div className="card" style={{ padding: "22px" }}>
-          <div style={{ fontSize: "12px", color: "var(--text-tertiary)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Paid invoices
-          </div>
-          <div style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 700 }}>{paid}</div>
-        </div>
+        ))}
       </div>
 
       {invoices.length === 0 ? (
-        <div className="card" style={{ padding: "32px", color: "var(--text-tertiary)" }}>
-          No invoices are available for your account yet.
+        <div className="cp-card">
+          <div className="cp-empty">
+            <div className="cp-empty-icon">
+              <ReceiptText size={24} />
+            </div>
+            No invoices are available for your account yet.
+          </div>
         </div>
       ) : (
         <div style={{ display: "grid", gap: "14px" }}>
@@ -81,19 +96,50 @@ export default function ClientInvoicesPage() {
             <Link
               key={invoice.id}
               href={`/admin/client/invoices/${invoice.id}`}
-              className="card card-interactive"
-              style={{ padding: "20px", display: "grid", gridTemplateColumns: "1fr auto", gap: "18px", alignItems: "center" }}
+              className="cp-row"
+              style={{ padding: "18px 20px" }}
             >
-              <div>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "17px", fontWeight: 700 }}>{invoice.invoice_number}</div>
-                <div style={{ color: "var(--text-secondary)", marginTop: "6px", fontSize: "13px" }}>
-                  Due {invoice.due_date || "N/A"} · {invoice.status}
+              <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "var(--radius-md)",
+                    display: "grid",
+                    placeItems: "center",
+                    background: "var(--accent-soft)",
+                    border: "1px solid var(--border-accent)",
+                    color: "var(--accent)",
+                    flexShrink: 0,
+                  }}
+                >
+                  <ReceiptText size={19} />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700 }}>
+                    {invoice.invoice_number}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 7, flexWrap: "wrap" }}>
+                    <StatusChip status={invoice.status} />
+                    <span style={{ color: "var(--text-tertiary)", fontSize: 13 }}>
+                      {invoice.project?.name || "Project not assigned"}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "16px", fontWeight: 700 }}>₹{Number(invoice.total_amount || 0).toLocaleString("en-IN")}</div>
-                <div style={{ color: "var(--text-tertiary)", fontSize: "12px" }}>{invoice.project?.name || "Project not assigned"}</div>
+
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <div className="cp-amount" style={{ fontSize: 19 }}>
+                  {formatINR(invoice.total_amount)}
+                </div>
+                <div style={{ color: "var(--text-tertiary)", fontSize: 12.5, marginTop: 5 }}>
+                  Due {invoice.due_date || "N/A"}
+                </div>
               </div>
+              <ArrowRight
+                size={17}
+                style={{ color: "var(--text-tertiary)", flexShrink: 0 }}
+              />
             </Link>
           ))}
         </div>

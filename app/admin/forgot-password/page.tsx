@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Mail, ArrowRight, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import AuthShell from "@/components/admin/AuthShell";
+import Button from "@/components/admin/ui/Button";
+import { Field, Input } from "@/components/admin/ui/Field";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -15,134 +19,64 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3001/admin/reset-password",
+      redirectTo: `${window.location.origin}/admin/reset-password`,
     });
-
     if (error) {
       setError(error.message);
       setLoading(false);
       return;
     }
-
     setSent(true);
     setLoading(false);
   }
 
   if (sent) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)", padding: 20 }}>
-        <div style={{
-          maxWidth: 440, width: "100%", padding: "48px 44px 40px",
-          background: "rgba(14,20,32,0.82)", backdropFilter: "blur(28px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(28px) saturate(1.4)", borderRadius: 28,
-          border: "1px solid rgba(99,179,237,0.12)",
-          boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
-        }}>
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(99,179,237,0.45), rgba(183,148,244,0.35), transparent)",
-            backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite",
-          }} />
-          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 24, marginBottom: 16, color: "var(--text-primary)" }}>
-            Check your email
-          </h2>
+      <AuthShell title="Check your email">
+        <div className="empty-state" style={{ border: "none", background: "transparent", padding: "8px 0 0" }}>
+          <div className="empty-state-icon">
+            <CheckCircle2 size={24} />
+          </div>
           <p style={{ color: "var(--text-secondary)", fontSize: 14, lineHeight: 1.6 }}>
-            We&apos;ve sent a password reset link to <strong style={{ color: "var(--text-primary)" }}>{email}</strong>. Click the link in the email to reset your password.
+            We&apos;ve sent a reset link to <strong style={{ color: "var(--text-primary)" }}>{email}</strong>.
           </p>
-          <button onClick={() => router.push("/admin/login")} style={{
-            marginTop: 24, width: "100%", padding: "12px 24px",
-            background: "linear-gradient(135deg, #63b3ed 0%, #4a9bd4 50%, #3a86c0 100%)",
-            border: "none", borderRadius: 12, cursor: "pointer",
-            color: "#051628", fontFamily: "var(--font-body)", fontSize: 14,
-            fontWeight: 700,
-          }}>
-            Back to Login
-          </button>
         </div>
-      </div>
+        <Button variant="primary" size="lg" onClick={() => router.push("/admin/login")} style={{ marginTop: 20 }}>
+          Back to login
+        </Button>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)", padding: 20 }}>
-      <div style={{
-        maxWidth: 440, width: "100%", padding: "48px 44px 40px",
-        background: "rgba(14,20,32,0.82)", backdropFilter: "blur(28px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(28px) saturate(1.4)", borderRadius: 28,
-        border: "1px solid rgba(99,179,237,0.12)",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
-      }}>
-        <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: 1,
-          background: "linear-gradient(90deg, transparent, rgba(99,179,237,0.45), rgba(183,148,244,0.35), transparent)",
-          backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite",
-        }} />
-        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 24, marginBottom: 8, color: "var(--text-primary)" }}>
-          Forgot Password?
-        </h2>
-        <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 28, lineHeight: 1.6 }}>
-          Enter your email and we&apos;ll send you a reset link.
-        </p>
-
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div>
-            <label style={{
-              display: "block", fontSize: 12, fontWeight: 500,
-              color: "var(--text-tertiary)", marginBottom: 8,
-              letterSpacing: "0.08em", textTransform: "uppercase",
-            }}>
-              Email address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              required
-              style={{
-                width: "100%", boxSizing: "border-box", padding: "13px 16px",
-                background: "rgba(26,34,53,0.7)", border: "1px solid var(--border)",
-                borderRadius: 12, color: "var(--text-primary)",
-                fontFamily: "var(--font-body)", fontSize: 14, outline: "none",
-                transition: "all 0.2s ease",
-              }}
-            />
-          </div>
-
-          {error && (
-            <p style={{ color: "var(--red)", fontSize: 13 }}>{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading || !email}
-            style={{
-              marginTop: 6, width: "100%", padding: "14px 24px",
-              background: loading
-                ? "rgba(99,179,237,0.3)"
-                : "linear-gradient(135deg, #63b3ed 0%, #4a9bd4 50%, #3a86c0 100%)",
-              border: "none", borderRadius: 12, cursor: loading ? "not-allowed" : "pointer",
-              color: "#051628", fontFamily: "var(--font-body)", fontSize: 15,
-              fontWeight: 700, opacity: !email && !loading ? 0.45 : 1,
-              transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
-            }}
-          >
-            {loading ? "Sending..." : "Send Reset Link"}
-          </button>
-        </form>
-
-        <p style={{ marginTop: 24, textAlign: "center", color: "var(--text-tertiary)", fontSize: 13 }}>
-          Remember your password?{" "}
-          <button onClick={() => router.push("/admin/login")} style={{
-            background: "none", border: "none", color: "var(--accent)",
-            cursor: "pointer", fontFamily: "var(--font-body)", textDecoration: "underline",
-          }}>
+    <AuthShell
+      title="Forgot password?"
+      subtitle="Enter your email and we'll send a reset link."
+      footer={
+        <>
+          Remember it?{" "}
+          <a href="/admin/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
             Sign in
-          </button>
-        </p>
-      </div>
-    </div>
+          </a>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Field label="Email address" htmlFor="email">
+          <div style={{ position: "relative" }}>
+            <Mail size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-tertiary)" }} />
+            <Input id="email" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ paddingLeft: 40 }} required />
+          </div>
+        </Field>
+
+        {error && <div style={{ color: "var(--red)", fontSize: 13 }}>{error}</div>}
+
+        <Button type="submit" variant="primary" size="lg" loading={loading} disabled={!email} style={{ marginTop: 4 }}>
+          {!loading && <ArrowRight size={16} />}
+          Send reset link
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

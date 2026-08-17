@@ -1,3 +1,4 @@
+import "./client.css";
 import ClientNav from "@/components/ClientNav";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -9,6 +10,7 @@ export default function ClientLayout({
   return (
     <RoleGuard allowedRoles={["client"]}>
       <div
+        className="client-portal"
         style={{
           display: "flex",
           alignItems: "flex-start",
@@ -19,7 +21,7 @@ export default function ClientLayout({
         }}
       >
         <ClientNav />
-        <div style={{ flex: 1 }}>{children}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
       </div>
     </RoleGuard>
   );

@@ -506,7 +506,7 @@ function DayView({
                         borderLeft: `3px solid ${colors.border}`,
                         color: colors.text,
                         cursor: "grab",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                        boxShadow: "0 1px 3px rgba(70,55,40,0.12)",
                       }}
                     >
                       <div style={{ fontWeight: 600 }}>{ev.title}</div>
@@ -738,12 +738,12 @@ export function CalendarView({
             left: "50%",
             transform: "translateX(-50%)",
             background: "var(--accent)",
-            color: "#fff",
+            color: "#fff7ee",
             padding: "8px 20px",
             borderRadius: "20px",
             fontSize: "13px",
             fontWeight: 600,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+            boxShadow: "0 4px 12px rgba(70,55,40,0.22)",
             zIndex: 1000,
           }}
         >

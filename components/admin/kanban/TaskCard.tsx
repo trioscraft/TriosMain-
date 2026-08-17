@@ -120,7 +120,7 @@ export default function TaskCard({
                   width: `${task.progress}%`,
                   background:
                     task.status === "completed"
-                      ? "linear-gradient(90deg, var(--green), rgba(16,185,129,0.6))"
+                      ? "linear-gradient(90deg, var(--green), rgba(126,161,135,0.6))"
                       : "linear-gradient(90deg, var(--accent), var(--purple))",
                   borderRadius: 999,
                 }}

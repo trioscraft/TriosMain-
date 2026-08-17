@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import EditTaskModal, { TaskData } from "@/components/EditTaskModal";
 import DeleteTaskButton from "@/app/admin/projects/[id]/DeleteTaskButton";
 import TaskAssignee from "@/app/admin/projects/[id]/TaskAssignee";
@@ -96,47 +97,36 @@ export default function TaskCard({
           </span>
 
           <div style={{ position: "relative" }}>
-            <button
-              className="btn"
-              onClick={() => setMenuOpen((value) => !value)}
-              style={{ padding: "6px 10px", minWidth: "42px" }}
-            >
-              ⋯
+            <button className="btn" onClick={() => setMenuOpen((value) => !value)} style={{ padding: "6px 10px", minWidth: "42px" }} aria-label="Task actions">
+              <MoreVertical size={16} />
             </button>
             {menuOpen && (
               <div
+                className="glass-strong"
                 style={{
                   position: "absolute",
                   right: 0,
                   top: "110%",
                   width: "180px",
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--border)",
                   borderRadius: "14px",
-                  boxShadow: "0 18px 40px rgba(0,0,0,0.16)",
+                  border: "1px solid var(--glass-border-hover)",
+                  boxShadow: "0 18px 40px rgba(70, 55, 40, 0.25)",
                   zIndex: 20,
                   padding: "8px",
                 }}
               >
                 <button
-                  className="btn"
+                  className="btn btn-ghost"
                   onClick={() => {
                     setIsEditing(true);
                     setMenuOpen(false);
                   }}
-                  style={{
-                    width: "100%",
-                    justifyContent: "flex-start",
-                    padding: "10px 12px",
-                    background: "none",
-                    border: "none",
-                    color: "var(--text-secondary)",
-                  }}
+                  style={{ width: "100%", justifyContent: "flex-start", padding: "10px 12px", gap: 8 }}
                 >
-                  Edit task
+                  <Pencil size={14} /> Edit task
                 </button>
 
-                <div style={{ padding: "8px 0" }}>
+                <div style={{ paddingTop: 8 }}>
                   <DeleteTaskButton
                     taskId={task.id}
                     taskTitle={task.title}

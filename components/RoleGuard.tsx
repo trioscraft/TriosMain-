@@ -67,7 +67,7 @@ export default function RoleGuard({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "white",
+          color: "var(--text-secondary)",
           padding: "24px",
         }}
       >

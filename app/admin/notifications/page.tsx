@@ -9,6 +9,10 @@ import {
 } from "@/lib/admin/notifications";
 import NotificationList from "@/components/NotificationList";
 import { Notification } from "@/types/admin/notifications";
+import { PageHeader } from "@/components/admin/ui/Card";
+import { Input, Select } from "@/components/admin/ui/Field";
+import Button from "@/components/admin/ui/Button";
+import { Bell } from "lucide-react";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -113,40 +117,17 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          gap: "16px",
-          alignItems: "center",
-          marginBottom: "24px",
-        }}
-      >
-        <div>
-          <h1 style={{ margin: 0 }}>Notifications</h1>
-          <p style={{ color: "var(--text-secondary)", marginTop: "8px" }}>
-            Review your latest alerts and manage unread items.
-          </p>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button
-            onClick={handleMarkAllRead}
-            style={{
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "transparent",
-              color: "white",
-              padding: "12px 18px",
-              borderRadius: "14px",
-              cursor: "pointer",
-            }}
-          >
+    <div style={{ maxWidth: "900px", animation: "fadeUp 0.5s ease both" }}>
+      <PageHeader
+        title="Notifications"
+        subtitle="Review your latest alerts and manage unread items."
+        icon={<Bell size={22} />}
+        actions={
+          <Button variant="ghost" onClick={handleMarkAllRead}>
             Mark all read
-          </button>
-        </div>
-      </div>
+          </Button>
+        }
+      />
 
       <div
         style={{
@@ -157,19 +138,11 @@ export default function NotificationsPage() {
         }}
       >
         <div style={{ display: "grid", gap: "16px" }}>
-          <input
+          <Input
             aria-label="Search notifications"
             placeholder="Search notifications"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              borderRadius: "14px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "var(--bg-elevated)",
-              color: "white",
-            }}
           />
 
           <div style={{ display: "flex", gap: "12px" }}>
@@ -177,24 +150,16 @@ export default function NotificationsPage() {
               <span style={{ display: "block", marginBottom: "6px", color: "var(--text-tertiary)" }}>
                 Type
               </span>
-              <select
+              <Select
                 value={typeFilter}
                 onChange={(event) => setTypeFilter(event.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "14px 16px",
-                  borderRadius: "14px",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  background: "var(--bg-elevated)",
-                  color: "white",
-                }}
               >
                 <option value="all">All types</option>
                 <option value="task">Task</option>
                 <option value="project">Project</option>
                 <option value="client">Client</option>
                 <option value="invoice">Invoice</option>
-              </select>
+              </Select>
             </label>
           </div>
 
@@ -217,21 +182,19 @@ export default function NotificationsPage() {
         </div>
 
         <div
+          className="card"
           style={{
-            borderRadius: "18px",
-            border: "1px solid rgba(255,255,255,0.1)",
             padding: "20px",
-            background: "rgba(255,255,255,0.02)",
           }}
         >
-          <h2 style={{ margin: "0 0 14px" }}>Summary</h2>
+          <h2 style={{ margin: "0 0 14px", fontSize: 18 }}>Summary</h2>
           <div style={{ display: "grid", gap: "12px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Total</span>
+              <span style={{ color: "var(--text-secondary)" }}>Total</span>
               <strong>{notifications.length}</strong>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Unread</span>
+              <span style={{ color: "var(--text-secondary)" }}>Unread</span>
               <strong>{notifications.filter((n) => !n.is_read).length}</strong>
             </div>
           </div>

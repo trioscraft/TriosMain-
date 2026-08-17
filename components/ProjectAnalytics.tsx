@@ -1,59 +1,61 @@
+import { FolderKanban } from "lucide-react";
 import type { ProjectAnalyticsPoint } from "@/lib/types/analytics";
+import { ChartCard } from "@/components/admin/ui/Card";
+import Badge from "@/components/admin/ui/Badge";
 
-export default function ProjectAnalytics({
-  projects,
-}: {
-  projects: ProjectAnalyticsPoint[];
-}) {
+function statusTone(status: string) {
+  if (status === "completed") return "green" as const;
+  if (status === "active" || status === "in_progress") return "amber" as const;
+  if (status === "on_hold" || status === "paused") return "red" as const;
+  return "blue" as const;
+}
+
+export default function ProjectAnalytics({ projects }: { projects: ProjectAnalyticsPoint[] }) {
   return (
-    <div className="card" style={{ padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
-        <div>
-          <div className="section-label">Project Analytics</div>
-          <h2 style={{ margin: "10px 0 0", fontSize: "22px" }}>Performance by project</h2>
-        </div>
-        <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
-          Monitor budgets, expenses, profits and forecasted completion.
-        </div>
-      </div>
-
-      <div style={{ marginTop: "24px", display: "grid", gap: "14px" }}>
+    <ChartCard
+      icon={<FolderKanban size={19} />}
+      label="Project Analytics"
+      title="Performance by project"
+      description="Budgets, expenses, profit and forecasted completion."
+    >
+      <div style={{ display: "grid", gap: 12 }}>
         {projects.slice(0, 6).map((project) => (
-          <div key={project.projectId} className="card" style={{ padding: "18px", border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+          <div key={project.projectId} className="card" style={{ padding: 18, border: "1px solid var(--glass-border)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700 }}>{project.name}</div>
-                <div style={{ color: "var(--text-secondary)", fontSize: "13px", marginTop: "4px" }}>
-                  Status: {project.status} • Progress: {project.progress}%
+                <div style={{ fontSize: 15.5, fontWeight: 700 }}>{project.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
+                  <Badge tone={statusTone(project.status)} dot>
+                    {project.status.replace("_", " ")}
+                  </Badge>
+                  <span style={{ color: "var(--text-tertiary)", fontSize: 12.5 }}>{project.progress}% complete</span>
                 </div>
               </div>
-              <div style={{ textAlign: "right", minWidth: "120px" }}>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: project.profit >= 0 ? "var(--green)" : "var(--red)" }}>
+              <div style={{ textAlign: "right", minWidth: 120 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: project.profit >= 0 ? "var(--green)" : "var(--red)", fontFamily: "var(--font-mono)" }}>
                   ₹{project.profit.toLocaleString("en-IN")}
                 </div>
-                <div style={{ color: "var(--text-secondary)", fontSize: "12px", marginTop: "4px" }}>
-                  Forecast: {project.expectedCompletion}
-                </div>
+                <div style={{ color: "var(--text-secondary)", fontSize: 12, marginTop: 4 }}>Forecast: {project.expectedCompletion}</div>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "12px", marginTop: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12, marginTop: 16 }}>
               <div>
-                <div style={{ color: "var(--text-tertiary)", fontSize: "12px", marginBottom: "4px" }}>Budget</div>
-                <div style={{ fontWeight: 700 }}>₹{project.budget.toLocaleString("en-IN")}</div>
+                <div style={{ color: "var(--text-tertiary)", fontSize: 11.5, marginBottom: 4 }}>Budget</div>
+                <div style={{ fontWeight: 700, fontFamily: "var(--font-mono)" }}>₹{project.budget.toLocaleString("en-IN")}</div>
               </div>
               <div>
-                <div style={{ color: "var(--text-tertiary)", fontSize: "12px", marginBottom: "4px" }}>Expenses</div>
-                <div style={{ fontWeight: 700, color: "var(--red)" }}>₹{project.expenses.toLocaleString("en-IN")}</div>
+                <div style={{ color: "var(--text-tertiary)", fontSize: 11.5, marginBottom: 4 }}>Expenses</div>
+                <div style={{ fontWeight: 700, color: "var(--red)", fontFamily: "var(--font-mono)" }}>₹{project.expenses.toLocaleString("en-IN")}</div>
               </div>
               <div>
-                <div style={{ color: "var(--text-tertiary)", fontSize: "12px", marginBottom: "4px" }}>Logged hours</div>
-                <div style={{ fontWeight: 700 }}>{project.hours.toFixed(1)}h</div>
+                <div style={{ color: "var(--text-tertiary)", fontSize: 11.5, marginBottom: 4 }}>Hours</div>
+                <div style={{ fontWeight: 700, fontFamily: "var(--font-mono)" }}>{project.hours.toFixed(1)}h</div>
               </div>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </ChartCard>
   );
 }

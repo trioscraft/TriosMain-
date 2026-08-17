@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Bell } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Notification } from "@/types/admin/notifications";
 import NotificationDropdown from "@/components/NotificationDropdown";
@@ -27,18 +28,11 @@ export default function NotificationBell() {
       const id = user?.id ?? "";
       setUserId(id);
 
-      if (!id) {
-        return;
-      }
+      if (!id) return;
 
       const data = await getUserNotifications(id);
-      if (mounted && data) {
-        setNotifications(data);
-      }
+      if (mounted && data) setNotifications(data);
 
-      // Subscribe to realtime notifications, but guard against
-      // missing tables (e.g. in environments where migrations weren't applied)
-      // and avoid adding callbacks after subscribe().
       try {
         channelRef.current = supabase.channel("notifications");
 
@@ -65,9 +59,7 @@ export default function NotificationBell() {
     void loadNotifications();
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
+      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
     };
 
     window.addEventListener("mousedown", handleClickOutside);
@@ -75,45 +67,35 @@ export default function NotificationBell() {
     return () => {
       mounted = false;
       window.removeEventListener("mousedown", handleClickOutside);
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-      }
+      if (channelRef.current) supabase.removeChannel(channelRef.current);
     };
   }, []);
 
   const unreadCount = notifications.filter((notification) => !notification.is_read).length;
 
   async function handleMarkAllRead() {
-    if (!userId) {
-      return;
-    }
-
+    if (!userId) return;
     await markAllNotificationsRead(userId);
-    setNotifications((current) =>
-      current.map((notification) => ({
-        ...notification,
-        is_read: true,
-      }))
-    );
+    setNotifications((current) => current.map((notification) => ({ ...notification, is_read: true })));
   }
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button
         onClick={() => setOpen((prev) => !prev)}
+        aria-label="Notifications"
+        className="btn"
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "10px",
-          border: "1px solid rgba(255,255,255,0.12)",
-          background: "transparent",
-          color: "white",
-          padding: "10px 14px",
-          borderRadius: "14px",
-          cursor: "pointer",
+          width: 44,
+          height: 44,
+          padding: 0,
+          borderRadius: "var(--radius-md)",
+          background: "var(--glass-bg)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid var(--glass-border)",
         }}
       >
-        <span style={{ fontSize: "18px" }}>🔔</span>
+        <Bell size={18} style={{ color: open ? "var(--accent)" : "var(--text-secondary)" }} />
         <UnreadBadge count={unreadCount} />
       </button>
 

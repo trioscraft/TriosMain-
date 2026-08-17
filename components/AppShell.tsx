@@ -37,8 +37,8 @@ export default function AppShell({
               position: "sticky",
               top: 0,
               zIndex: 10,
-              background: "rgba(10, 13, 20, 0.85)",
-              backdropFilter: "blur(10px)",
+              background: "rgba(244, 238, 227, 0.72)",
+              backdropFilter: "blur(16px)",
               borderBottom: "1px solid var(--border)",
             }}
           >

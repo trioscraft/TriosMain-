@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Plus, Search, Users, Pencil, Trash2, Building2, Mail, Phone, ArrowRight } from "lucide-react";
 import RoleGuard from "@/components/RoleGuard";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
@@ -9,6 +10,12 @@ import { createNotificationForAdmins } from "@/lib/admin/notifications";
 import ClientForm, { ClientData, ClientFormValues } from "@/components/ClientForm";
 import EditClientModal from "@/components/EditClientModal";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import { PageHeader, Card } from "@/components/admin/ui/Card";
+import { EmptyState } from "@/components/admin/ui/Modal";
+import Button from "@/components/admin/ui/Button";
+import Badge from "@/components/admin/ui/Badge";
+import { Avatar } from "@/components/admin/ui/Avatar";
+import { Modal } from "@/components/admin/ui/Modal";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<ClientData[]>([]);
@@ -26,14 +33,8 @@ export default function ClientsPage() {
 
   async function loadClients() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("clients")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!error) {
-      setClients(data || []);
-    }
+    const { data, error } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
+    if (!error) setClients(data || []);
     setLoading(false);
   }
 
@@ -44,64 +45,64 @@ export default function ClientsPage() {
     }
 
     setSaving(true);
-    const { data: result, error } = await supabase
-      .from("clients")
-      .insert([values])
-      .select("*")
-      .single();
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    if (error || !result) {
-      alert(error?.message || "Unable to create client.");
-      setSaving(false);
-      return;
-    }
+      const res = await fetch("/api/admin/create-client", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
+        body: JSON.stringify(values),
+      });
+      const json = await res.json();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    let userName = "Unknown";
-    const userId = user?.id ?? "";
-
-    if (user?.email) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("name")
-        .eq("email", user.email)
-        .single();
-
-      if (profile?.name) {
-        userName = profile.name;
+      if (!res.ok) {
+        alert(json.error || "Unable to create client.");
+        setSaving(false);
+        return;
       }
+
+      // Refresh the list immediately so the new client shows up.
+      setShowCreate(false);
+      await loadClients();
+      setSaving(false);
+
+      // Best-effort extras — don't block the refresh if these fail.
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        let userName = "Unknown";
+        const userId = user?.id ?? "";
+        if (user?.email) {
+          const { data: profile } = await supabase.from("profiles").select("name").eq("email", user.email).single();
+          if (profile?.name) userName = profile.name;
+        }
+
+        await logActivity({ userId, userName, action: `created client ${values.company_name}`, clientId: json.id, clientName: values.company_name });
+        await createNotificationForAdmins({
+          title: "New client added",
+          message: `Client ${values.company_name} was added to the CRM.`,
+          type: "client",
+          relatedId: `/admin/clients/${json.id}`,
+        });
+      } catch (extraErr) {
+        console.warn("Activity/notification logging failed:", extraErr);
+      }
+    } catch (err) {
+      console.error("Create client failed:", err);
+      alert("Something went wrong creating the client.");
     }
-
-    await logActivity({
-      userId,
-      userName,
-      action: `created client ${values.company_name}`,
-      clientId: result.id,
-      clientName: values.company_name,
-    });
-
-    await createNotificationForAdmins({
-      title: "New client added",
-      message: `Client ${values.company_name} was added to the CRM.`,
-      type: "client",
-      relatedId: `/admin/clients/${result.id}`,
-    });
-
-    setClients((current) => [result, ...current]);
-    setShowCreate(false);
     setSaving(false);
   }
 
   async function handleDeleteClient() {
     if (!deleteClientId) return;
-
     setDeleting(true);
     await supabase.from("projects").update({ client_id: null }).eq("client_id", deleteClientId);
     const { error } = await supabase.from("clients").delete().eq("id", deleteClientId);
-
     if (error) {
       alert(error.message);
       setDeleting(false);
@@ -113,29 +114,13 @@ export default function ClientsPage() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       let userName = "Unknown";
       const userId = user?.id ?? "";
-
       if (user?.email) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("name")
-          .eq("email", user.email)
-          .single();
-
-        if (profile?.name) {
-          userName = profile.name;
-        }
+        const { data: profile } = await supabase.from("profiles").select("name").eq("email", user.email).single();
+        if (profile?.name) userName = profile.name;
       }
-
-      await logActivity({
-        userId,
-        userName,
-        action: `deleted client ${deletedClient.company_name}`,
-        clientId: deletedClient.id,
-        clientName: deletedClient.company_name,
-      });
+      await logActivity({ userId, userName, action: `deleted client ${deletedClient.company_name}`, clientId: deletedClient.id, clientName: deletedClient.company_name });
     }
 
     setClients((current) => current.filter((client) => client.id !== deleteClientId));
@@ -155,220 +140,104 @@ export default function ClientsPage() {
 
   return (
     <RoleGuard allowedRoles={["admin"]}>
-      <div style={{ maxWidth: "980px", animation: "fadeUp 0.5s ease both" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            gap: "18px",
-            marginBottom: "28px",
-          }}
-        >
-          <div>
-            <div className="section-label" style={{ marginBottom: "8px" }}>
-              Management
-            </div>
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "30px",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-              }}
-            >
-              Clients
-            </h1>
-            <p style={{ color: "var(--text-secondary)", marginTop: "4px", fontSize: "14px" }}>
-              {clients.length} client{clients.length !== 1 ? "s" : ""} in the CRM.
-            </p>
-          </div>
+      <div style={{ maxWidth: "1000px", animation: "fadeUp 0.5s ease both" }}>
+        <PageHeader
+          title="Clients"
+          subtitle={`${clients.length} client${clients.length !== 1 ? "s" : ""} in the CRM.`}
+          icon={<Users size={22} />}
+          actions={
+            <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <Plus size={16} /> New Client
+            </Button>
+          }
+        />
 
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowCreate(true)}
-            style={{ display: "flex", alignItems: "center", gap: "8px" }}
-          >
-            + New Client
-          </button>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-            alignItems: "center",
-            marginBottom: "24px",
-          }}
-        >
-          <input
-            className="input"
-            placeholder="Search company, contact, or email"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ flex: 1 }}
-          />
+        <div style={{ position: "relative", marginBottom: 24, maxWidth: 460 }}>
+          <Search size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-tertiary)" }} />
+          <input className="input" placeholder="Search company, contact, or email" value={search} onChange={(e) => setSearch(e.target.value)} style={{ paddingLeft: 40 }} />
         </div>
 
         {loading ? (
-          <div style={{ display: "grid", gap: "14px" }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="skeleton"
-                style={{ height: "120px", animationDelay: `${index * 80}ms` }}
-              />
+              <div key={index} className="skeleton" style={{ height: 110, animationDelay: `${index * 80}ms` }} />
             ))}
           </div>
         ) : filteredClients.length === 0 ? (
-          <div
-            className="card"
-            style={{ padding: "48px", textAlign: "center" }}
-          >
-            <div style={{ fontSize: "24px", marginBottom: "12px" }}>🧾</div>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                fontSize: "18px",
-                marginBottom: "8px",
-              }}
-            >
-              No matching clients
-            </div>
-            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
-              Create a new client or adjust your search to find a profile.
-            </p>
-          </div>
+          <EmptyState
+            icon={<Building2 size={24} />}
+            title={search ? "No matching clients" : "No clients yet"}
+            description={search ? "Adjust your search to find a profile." : "Create a new client to start tracking projects and invoices."}
+            action={
+              !search && (
+                <Button variant="primary" onClick={() => setShowCreate(true)}>
+                  <Plus size={16} /> New Client
+                </Button>
+              )
+            }
+          />
         ) : (
-          <div style={{ display: "grid", gap: "14px" }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {filteredClients.map((client) => (
-              <div
-                key={client.id}
-                className="card"
-                style={{ padding: "22px", display: "grid", gap: "14px" }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                    gap: "16px",
-                  }}
-                >
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "16px",
-                        fontWeight: 700,
-                        marginBottom: "6px",
-                      }}
-                    >
-                      {client.company_name}
-                    </div>
-                    <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "6px" }}>
-                      {client.contact_name || "No contact name"}
-                    </div>
-                    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", fontSize: "13px", color: "var(--text-tertiary)" }}>
-                      <span>{client.email || "No email"}</span>
-                      <span>{client.phone || "No phone"}</span>
-                      <span>{client.status}</span>
+              <Card key={client.id} interactive style={{ padding: 22 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", gap: 14, minWidth: 0, flex: 1 }}>
+                    <Avatar name={client.company_name} size={44} />
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 700, marginBottom: 4 }}>{client.company_name}</div>
+                      <div style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 8 }}>{client.contact_name || "No contact name"}</div>
+                      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", fontSize: 13, color: "var(--text-tertiary)" }}>
+                        {client.email && (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <Mail size={13} /> {client.email}
+                          </span>
+                        )}
+                        {client.phone && (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <Phone size={13} /> {client.phone}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: "10px", flexShrink: 0, flexWrap: "wrap" }}>
-                    <Link href={`/admin/clients/${client.id}`} className="btn" style={{ padding: "10px 14px" }}>
-                      Details
+                  <div style={{ display: "flex", gap: 10, flexShrink: 0, flexWrap: "wrap", alignItems: "center" }}>
+                    <Badge tone={client.status === "active" ? "green" : "red"} dot>
+                      {client.status}
+                    </Badge>
+                    <Link href={`/admin/clients/${client.id}`} className="btn" style={{ padding: "9px 14px", gap: 6 }}>
+                      Details <ArrowRight size={14} />
                     </Link>
-                    <button
-                      className="btn"
-                      onClick={() => setEditClient(client)}
-                      style={{ padding: "10px 14px" }}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setEditClient(client)} leftIcon={<Pencil size={14} />}>
                       Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => setDeleteClientId(client.id)}
-                      style={{ padding: "10px 14px", background: "var(--red)", color: "white" }}
-                    >
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={() => setDeleteClientId(client.id)} leftIcon={<Trash2 size={14} />}>
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
-                {client.address ? (
-                  <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>{client.address}</div>
-                ) : null}
-              </div>
+                {client.address ? <div style={{ color: "var(--text-secondary)", fontSize: 13, marginTop: 12 }}>{client.address}</div> : null}
+              </Card>
             ))}
           </div>
         )}
 
-        {showCreate && (
-          <div
-            className="form-overlay"
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.6)",
-              backdropFilter: "blur(4px)",
-              zIndex: 50,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "20px",
-            }}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setShowCreate(false);
-            }}
-          >
-            <div className="card" style={{ width: "100%", maxWidth: "560px", padding: "28px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "24px",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "20px",
-                      fontWeight: 700,
-                    }}
-                  >
-                    Create Client
-                  </div>
-                  <p style={{ color: "var(--text-secondary)", marginTop: "6px", fontSize: "14px" }}>
-                    Add a new business client to your CRM and connect projects.
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => setShowCreate(false)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "var(--text-tertiary)",
-                    fontSize: "24px",
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-
-              <ClientForm
-                onSubmit={handleCreateClient}
-                onCancel={() => setShowCreate(false)}
-                submitting={saving}
-                submitLabel={saving ? "Creating..." : "Create Client"}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          open={showCreate}
+          onClose={() => setShowCreate(false)}
+          title="New Client"
+          size="lg"
+          footer={null}
+        >
+          <p style={{ color: "var(--text-secondary)", fontSize: 13.5, marginTop: -8, marginBottom: 18 }}>
+            Add a business to your CRM and create their portal login.
+          </p>
+          <ClientForm
+            onSubmit={handleCreateClient}
+            onCancel={() => setShowCreate(false)}
+            submitting={saving}
+            submitLabel={saving ? "Creating..." : "Create Client"}
+          />
+        </Modal>
 
         {editClient && (
           <EditClientModal

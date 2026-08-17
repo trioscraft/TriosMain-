@@ -42,8 +42,8 @@ export default function KanbanColumn({
         ref={setNodeRef}
         style={{
           borderRadius: 18,
-          border: `1px dashed ${isOver ? "rgba(99,102,241,0.7)" : "var(--border)"}`,
-          background: isOver ? "rgba(99,102,241,0.06)" : "transparent",
+          border: `1px dashed ${isOver ? "var(--accent)" : "var(--border)"}`,
+          background: isOver ? "var(--accent-soft)" : "transparent",
           padding: 12,
           minHeight: 180,
           transition: "background 120ms ease, border-color 120ms ease",

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Clock, ExternalLink } from "lucide-react";
 import { Notification } from "@/types/admin/notifications";
 
 export default function NotificationList({
@@ -12,15 +13,11 @@ export default function NotificationList({
 }) {
   if (notifications.length === 0) {
     return (
-      <div
-        style={{
-          padding: "24px",
-          borderRadius: "18px",
-          background: "rgba(255,255,255,0.03)",
-          color: "var(--text-secondary)",
-        }}
-      >
-        No notifications found.
+      <div className="empty-state">
+        <div className="empty-state-icon">
+          <span style={{ fontSize: 24 }}>🔔</span>
+        </div>
+        <span>No notifications found.</span>
       </div>
     );
   }
@@ -30,13 +27,11 @@ export default function NotificationList({
       {notifications.map((notification) => (
         <div
           key={notification.id}
+          className="card"
           style={{
             padding: "18px",
-            borderRadius: "18px",
-            background: notification.is_read
-              ? "rgba(255,255,255,0.04)"
-              : "rgba(94, 111, 255, 0.14)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: notification.is_read ? "var(--glass-bg)" : "var(--accent-soft)",
+            borderColor: notification.is_read ? "var(--glass-border)" : "var(--border-accent)",
           }}
         >
           <div
@@ -49,11 +44,9 @@ export default function NotificationList({
             }}
           >
             <div>
-              <strong style={{ display: "block", marginBottom: "6px" }}>
-                {notification.title}
-              </strong>
-              <span style={{ color: "var(--text-tertiary)", fontSize: "13px" }}>
-                {new Date(notification.created_at).toLocaleString()}
+              <strong style={{ display: "block", marginBottom: "6px" }}>{notification.title}</strong>
+              <span style={{ color: "var(--text-tertiary)", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <Clock size={12} /> {new Date(notification.created_at).toLocaleString()}
               </span>
             </div>
             <div
@@ -63,49 +56,25 @@ export default function NotificationList({
                 gap: "6px",
                 fontSize: "12px",
                 color: "var(--text-secondary)",
+                textTransform: "capitalize",
               }}
             >
               <span>{notification.type}</span>
               {!notification.is_read && (
-                <span
-                  style={{
-                    padding: "4px 8px",
-                    borderRadius: "999px",
-                    background: "var(--accent)",
-                    color: "white",
-                  }}
-                >
+                <span className="badge badge-brass" style={{ padding: "2px 9px" }}>
                   New
                 </span>
               )}
             </div>
           </div>
-          <p style={{ margin: 0, lineHeight: 1.7, color: "var(--text-secondary)" }}>
-            {notification.message}
-          </p>
+          <p style={{ margin: 0, lineHeight: 1.7, color: "var(--text-secondary)" }}>{notification.message}</p>
 
           <div style={{ marginTop: "14px", display: "flex", gap: "10px" }}>
-            <Link
-              href={notification.related_id || "/admin/notifications"}
-              style={{
-                color: "var(--accent)",
-                textDecoration: "underline",
-              }}
-            >
-              View details
+            <Link href={notification.related_id || "/admin/notifications"} className="btn btn-ghost" style={{ padding: "8px 12px", fontSize: 13, gap: 6 }}>
+              <ExternalLink size={13} /> View details
             </Link>
             {!notification.is_read && (
-              <button
-                onClick={() => onMarkAsRead(notification.id)}
-                style={{
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  background: "transparent",
-                  color: "white",
-                  padding: "8px 12px",
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={() => onMarkAsRead(notification.id)} className="btn" style={{ padding: "8px 12px", fontSize: 13 }}>
                 Mark as read
               </button>
             )}

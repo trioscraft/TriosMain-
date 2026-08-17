@@ -38,7 +38,7 @@ export async function logActivity({
   ]);
 
   if (error) {
-    console.error("Failed to log activity:", error);
+    console.error("Failed to log activity:", error.message, error);
   }
 
   return { data, error };
