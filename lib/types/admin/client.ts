@@ -46,5 +46,6 @@ export interface Project {
   due_date: string | null;
   budget?: number | null;
   description?: string | null;
+  created_at?: string;
 }
 

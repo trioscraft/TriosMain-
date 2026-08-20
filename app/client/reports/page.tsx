@@ -46,7 +46,7 @@ export default function ClientReportsPage() {
           .from("projects")
           .select("id, name, status, start_date, due_date")
           .eq("client_id", currentClient.client_id)
-          .order("updated_at", { ascending: false }),
+          .order("created_at", { ascending: false }),
         supabase
           .from("invoices")
           .select("id, invoice_number, status, due_date, total_amount")

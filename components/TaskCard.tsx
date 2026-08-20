@@ -25,6 +25,8 @@ export default function TaskCard({
       style={{
         padding: "18px 20px",
         position: "relative",
+        overflow: "visible",
+        zIndex: menuOpen ? 30 : undefined,
       }}
     >
       <div

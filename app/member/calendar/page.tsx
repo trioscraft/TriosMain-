@@ -1,9 +1,9 @@
 import RoleGuard from "@/components/RoleGuard";
 import CalendarPageClient from "@/components/admin/calendar/CalendarPageClient";
 
-export default async function CalendarPage() {
+export default async function MemberCalendarPage() {
   return (
-    <RoleGuard allowedRoles={["admin"]}>
+    <RoleGuard allowedRoles={["member"]}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 0 20px" }}>
         <div style={{ marginBottom: 20 }}>
           <div className="section-label" style={{ marginBottom: 8 }}>Schedule</div>
@@ -27,5 +27,3 @@ export default async function CalendarPage() {
     </RoleGuard>
   );
 }
-
-

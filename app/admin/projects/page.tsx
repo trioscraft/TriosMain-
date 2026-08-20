@@ -145,7 +145,7 @@ export default function ProjectsPage() {
         ) : (
           <div style={{ display: "grid", gap: 12 }}>
             {projects.map((project, i) => (
-              <Card key={project.id} interactive style={{ padding: "18px 20px", animationDelay: `${i * 50}ms` }}>
+              <Card key={project.id} interactive style={{ padding: "18px 20px", animationDelay: `${i * 50}ms`, overflow: "visible", zIndex: activeMenuId === project.id ? 30 : undefined }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                   <Link href={`/admin/projects/${project.id}`} style={{ flex: 1, display: "flex", alignItems: "center", gap: 14, textDecoration: "none", color: "inherit", minWidth: 0 }}>
                     <span

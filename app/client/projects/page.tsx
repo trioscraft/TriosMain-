@@ -26,7 +26,7 @@ export default function ClientProjectsPage() {
         .from("projects")
         .select("id, name, progress, status, start_date, due_date")
         .eq("client_id", currentClient.client_id)
-        .order("updated_at", { ascending: false });
+        .order("created_at", { ascending: false });
 
       if (!error) {
         setProjects(data || []);
