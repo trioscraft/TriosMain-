@@ -80,7 +80,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/login"
+            href="/admin/login"
             className="neu-btn hidden md:inline-flex"
           >
             Login
@@ -154,7 +154,7 @@ export default function Header() {
                 )
               })}
               <Link
-                href="/login"
+                href="/admin/login"
                 onClick={() => setMenuOpen(false)}
                 className="neu-btn neu-btn-primary mt-1 w-full"
               >
