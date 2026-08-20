@@ -114,7 +114,7 @@ async function main() {
   console.log("\n✅ Client user setup complete!");
   console.log(`   Email: ${CLIENT_EMAIL}`);
   console.log(`   Password: ${CLIENT_PASSWORD}`);
-  console.log(`   Login URL: /admin/login`);
+  console.log(`   Login URL: /login`);
 }
 
 main().catch((err) => {

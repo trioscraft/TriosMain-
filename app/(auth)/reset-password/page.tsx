@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
       return;
     }
     setSuccess(true);
-    setTimeout(() => router.push("/admin/login"), 2000);
+    setTimeout(() => router.push("/login"), 2000);
   }
 
   if (checkingSession) {
@@ -108,7 +108,7 @@ export default function ResetPasswordPage() {
           </p>
         </div>
         {!success && (
-          <Button variant="primary" size="lg" onClick={() => router.push("/admin/forgot-password")} style={{ marginTop: 20 }}>
+          <Button variant="primary" size="lg" onClick={() => router.push("/forgot-password")} style={{ marginTop: 20 }}>
             Try again
           </Button>
         )}

@@ -22,7 +22,7 @@ export default function LoginPage() {
       const role = await getCurrentUserRole();
       if (!isMounted) return;
       if (role) {
-        router.replace(role === "admin" ? "/admin" : role === "member" ? "/admin/my-tasks" : "/admin/client");
+        router.replace(role === "admin" ? "/admin" : role === "member" ? "/member" : "/client");
         return;
       }
       setLoading(false);
@@ -52,7 +52,7 @@ export default function LoginPage() {
       setError("Login succeeded, but we could not determine your role. Please check that your profile has a valid role.");
       return;
     }
-    router.replace(role === "admin" ? "/admin" : role === "member" ? "/admin/my-tasks" : "/admin/client");
+    router.replace(role === "admin" ? "/admin" : role === "member" ? "/member" : "/client");
   }
 
   if (loading) {
@@ -90,7 +90,7 @@ export default function LoginPage() {
       footer={
         <>
           Forgot your password?{" "}
-          <a href="/admin/forgot-password" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+          <a href="/forgot-password" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
             Reset it
           </a>
         </>

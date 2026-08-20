@@ -16,6 +16,9 @@ import {
   ArrowRight,
   Clock,
   CalendarDays,
+  AlertCircle,
+  MessageSquare,
+  BarChart3,
 } from "lucide-react";
 
 function formatINR(amount: number) {
@@ -83,6 +86,13 @@ export default function ClientDashboardPage() {
   const pendingInvoices = invoices.filter((invoice) => invoice.status !== "paid").length;
   const paidInvoices = invoices.filter((invoice) => invoice.status === "paid").length;
 
+  const outstandingAmount = invoices
+    .filter((invoice) => invoice.status !== "paid")
+    .reduce((sum, invoice) => sum + Number(invoice.total_amount || 0), 0);
+  const overdueInvoices = invoices.filter(
+    (invoice) => invoice.status !== "paid" && invoice.due_date && new Date(invoice.due_date) < new Date()
+  ).length;
+
   const firstName =
     clientInfo?.company_name || "Valued Client";
 
@@ -90,7 +100,14 @@ export default function ClientDashboardPage() {
     { label: "Active Projects", value: activeProjects, icon: FolderKanban },
     { label: "Completed Projects", value: completedProjects, icon: CheckCircle2 },
     { label: "Pending Invoices", value: pendingInvoices, icon: Clock },
-    { label: "Paid Invoices", value: paidInvoices, icon: Wallet },
+    { label: "Outstanding", value: formatINR(outstandingAmount), icon: Wallet, colored: true },
+  ];
+
+  const quickLinks = [
+    { href: "/client/projects", label: "View projects", icon: FolderKanban, desc: `${projects.length} project${projects.length !== 1 ? "s" : ""} linked to your account` },
+    { href: "/client/invoices", label: "Invoices & payments", icon: ReceiptText, desc: `${pendingInvoices} pending, ${paidInvoices} paid` },
+    { href: "/client/messages", label: "Message the team", icon: MessageSquare, desc: "Replies in one thread" },
+    { href: "/client/reports", label: "Download reports", icon: BarChart3, desc: "Project & invoice summaries" },
   ];
 
   return (
@@ -119,26 +136,35 @@ export default function ClientDashboardPage() {
           </p>
           <div className="cp-hero-actions">
             <Link
-              href="/admin/client/projects"
+              href="/client/projects"
               className="btn btn-primary"
               style={{ padding: "12px 22px" }}
             >
               <FolderKanban size={16} /> View projects
             </Link>
-            <Link
-              href="/admin/client/messages"
-              className="btn"
-              style={{ padding: "12px 22px" }}
-            >
-              Message the team <ArrowRight size={15} />
-            </Link>
           </div>
         </div>
       </div>
 
+      {/* Payment due banner */}
+      {pendingInvoices > 0 && (
+        <div className={`cp-banner ${overdueInvoices > 0 ? "urgent" : ""}`}>
+          <AlertCircle size={18} style={{ color: overdueInvoices > 0 ? "var(--red)" : "var(--accent)", flexShrink: 0 }} />
+          <span>
+            {overdueInvoices > 0
+              ? `${overdueInvoices} invoice${overdueInvoices !== 1 ? "s" : ""} past due — please review your balance.`
+              : `${pendingInvoices} invoice${pendingInvoices !== 1 ? "s" : ""} awaiting payment.`}
+          </span>
+          <span className="cp-banner-amount">{formatINR(outstandingAmount)}</span>
+          <Link href="/client/invoices" className="btn" style={{ padding: "8px 16px", fontSize: 13, marginLeft: 4 }}>
+            Review <ArrowRight size={14} />
+          </Link>
+        </div>
+      )}
+
       {/* Stats */}
       <div className="cp-stats">
-        {stats.map(({ label, value, icon: Icon }, i) => (
+        {stats.map(({ label, value, icon: Icon, colored }, i) => (
           <div
             key={label}
             className="cp-stat"
@@ -148,8 +174,36 @@ export default function ClientDashboardPage() {
               <Icon size={20} strokeWidth={2} />
             </div>
             <div className="cp-stat-label">{label}</div>
-            <div className="cp-stat-value">{value}</div>
+            <div className={`cp-stat-value${colored ? " colored" : ""}`}>{value}</div>
           </div>
+        ))}
+      </div>
+
+      {/* Quick actions */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+          gap: 14,
+          marginBottom: 24,
+        }}
+      >
+        {quickLinks.map(({ href, label, icon: Icon, desc }, i) => (
+          <Link
+            key={href}
+            href={href}
+            className="cp-row"
+            style={{ flexDirection: "column", alignItems: "flex-start", gap: 12, padding: "18px 20px" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12, width: "100%" }}>
+              <div className="cp-project-icon" style={{ width: 40, height: 40 }}>
+                <Icon size={18} />
+              </div>
+              <span style={{ fontWeight: 600, fontSize: 15 }}>{label}</span>
+              <ArrowRight size={15} style={{ color: "var(--text-tertiary)", marginLeft: "auto" }} />
+            </div>
+            <div style={{ color: "var(--text-tertiary)", fontSize: 12.5, lineHeight: 1.5 }}>{desc}</div>
+          </Link>
         ))}
       </div>
 
@@ -164,7 +218,7 @@ export default function ClientDashboardPage() {
           </div>
           {projects.length > 0 && (
             <Link
-              href="/admin/client/projects"
+              href="/client/projects"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -192,7 +246,7 @@ export default function ClientDashboardPage() {
             {projects.slice(0, 4).map((project) => (
               <Link
                 key={project.id}
-                href={`/admin/client/projects/${project.id}`}
+                href={`/client/projects/${project.id}`}
                 className="cp-project-card"
                 style={{ textDecoration: "none", color: "inherit", display: "grid", gap: 0 }}
               >
@@ -255,7 +309,7 @@ export default function ClientDashboardPage() {
               <div className="cp-card-subtitle">Your most recent invoices.</div>
             </div>
             <Link
-              href="/admin/client/invoices"
+              href="/client/invoices"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -282,7 +336,7 @@ export default function ClientDashboardPage() {
               {invoices.slice(0, 3).map((invoice) => (
                 <Link
                   key={invoice.id}
-                  href={`/admin/client/invoices/${invoice.id}`}
+                  href={`/client/invoices/${invoice.id}`}
                   className="cp-row"
                 >
                   <div style={{ minWidth: 0 }}>

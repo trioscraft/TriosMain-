@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CheckCheck, Bell } from "lucide-react";
 import { Notification } from "@/types/admin/notifications";
 import { markNotificationRead } from "@/lib/admin/notifications";
@@ -16,6 +17,8 @@ export default function NotificationDropdown({
   onClose: () => void;
   onMarkAllRead: () => void;
 }) {
+  const pathname = usePathname();
+  const notificationsHref = pathname.startsWith("/member") ? "/member/notifications" : "/admin/notifications";
   if (!open) return null;
 
   return (
@@ -66,7 +69,7 @@ export default function NotificationDropdown({
           {notifications.slice(0, 8).map((notification) => (
             <Link
               key={notification.id}
-              href={notification.related_id || "/admin/notifications"}
+              href={notification.related_id || notificationsHref}
               onClick={async () => {
                 await markNotificationRead(notification.id);
                 onClose();

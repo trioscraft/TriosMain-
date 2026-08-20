@@ -1,0 +1,61 @@
+
+> trios-craft@1.0.0 dev
+> next dev
+
+▲ Next.js 16.3.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.94:3000
+- Environments: .env.local
+✓ Ready in 1956ms
+✓ Running next.config.js took 98ms
+
+[browser] Realtime notifications subscription failed: Error: cannot add `postgres_changes` callbacks for realtime:notifications after `subscribe()`.
+    at loadNotifications (components/NotificationBell.tsx:39:28)
+  37 |         channelRef.current = supabase.channel("notifications");
+  38 |
+> 39 |         channelRef.current.on(
+     |                            ^
+  40 |           "postgres_changes",
+  41 |           {
+  42 |             event: "INSERT", (components/NotificationBell.tsx:55:17)
+[browser] Realtime notifications subscription failed: Error: cannot add `postgres_changes` callbacks for realtime:notifications after `subscribe()`.
+    at loadNotifications (components/NotificationBell.tsx:39:28)
+  37 |         channelRef.current = supabase.channel("notifications");
+  38 |
+> 39 |         channelRef.current.on(
+     |                            ^
+  40 |           "postgres_changes",
+  41 |           {
+  42 |             event: "INSERT", (components/NotificationBell.tsx:55:17)
+ GET /member/profile 200 in 2.2s (next.js: 1369ms, application-code: 807ms)
+ GET /admin 200 in 2.8s (next.js: 1547ms, application-code: 1210ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 3.5s (next.js: 3.4s, application-code: 104ms)
+ PATCH /api/client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 4.3s (next.js: 2.9s, application-code: 1443ms)
+✓ Compiled in 780ms
+ GET / 200 in 869ms (next.js: 136ms, application-code: 734ms)
+ GET /member 200 in 154ms (next.js: 86ms, application-code: 68ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 234ms (next.js: 66ms, application-code: 168ms)
+ GET /member/profile 200 in 232ms (next.js: 179ms, application-code: 54ms)
+ GET /admin 200 in 236ms (next.js: 122ms, application-code: 114ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 262ms (next.js: 37ms, application-code: 225ms)
+ GET /member/profile 200 in 181ms (next.js: 117ms, application-code: 64ms)
+ GET /admin 200 in 183ms (next.js: 34ms, application-code: 149ms)
+ GET /member/profile 200 in 272ms (next.js: 118ms, application-code: 155ms)
+ GET /admin 200 in 275ms (next.js: 36ms, application-code: 239ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 93ms (next.js: 34ms, application-code: 59ms)
+[browser] Realtime notifications subscription failed: Error: cannot add `postgres_changes` callbacks for realtime:notifications after `subscribe()`.
+    at loadNotifications (components/NotificationBell.tsx:39:28)
+  37 |         channelRef.current = supabase.channel("notifications");
+  38 |
+> 39 |         channelRef.current.on(
+     |                            ^
+  40 |           "postgres_changes",
+  41 |           {
+  42 |             event: "INSERT", (components/NotificationBell.tsx:55:17)
+ GET /member/profile 200 in 292ms (next.js: 126ms, application-code: 167ms)
+ GET /admin 200 in 301ms (next.js: 42ms, application-code: 259ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 109ms (next.js: 45ms, application-code: 64ms)
+ GET /member/profile 200 in 265ms (next.js: 22ms, application-code: 243ms)
+ GET /admin 200 in 189ms (next.js: 20ms, application-code: 169ms)
+ GET /client/projects/22c85d4e-0e8f-4468-a56e-71f0e9c3fe4f 200 in 99ms (next.js: 39ms, application-code: 59ms)
+[?25h

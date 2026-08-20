@@ -6,11 +6,15 @@ import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { supabase } from "@/lib/supabase";
 import type { Project } from "@/lib/types/admin/client";
 import StatusChip from "@/components/StatusChip";
-import { FolderKanban, CalendarDays, ArrowRight, Gauge } from "lucide-react";
+import { FolderKanban, CalendarDays, ArrowRight, Gauge, Search, CheckCircle2, PlayCircle, PauseCircle } from "lucide-react";
+
+const statusFilters = ["all", "active", "completed", "on hold", "paused"] as const;
 
 export default function ClientProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   useEffect(() => {
     let mounted = true;
@@ -50,6 +54,28 @@ export default function ClientProjectsPage() {
     );
   }
 
+  const counts = (status: string) =>
+    status === "all"
+      ? projects.length
+      : projects.filter((p) => (p.status || "").toLowerCase() === status).length;
+
+  const visibleProjects = projects.filter((project) => {
+    const matchesSearch =
+      !search.trim() ||
+      project.name.toLowerCase().includes(search.trim().toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" ||
+      (project.status || "").toLowerCase() === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const filterIcon = (f: string) => {
+    if (f === "active") return <PlayCircle size={14} />;
+    if (f === "completed") return <CheckCircle2 size={14} />;
+    if (f === "on hold" || f === "paused") return <PauseCircle size={14} />;
+    return null;
+  };
+
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
       <div className="cp-header">
@@ -65,21 +91,56 @@ export default function ClientProjectsPage() {
         </div>
       </div>
 
-      {projects.length === 0 ? (
+      <div className="cp-tabs">
+        {statusFilters.map((filter) => (
+          <button
+            key={filter}
+            className={`cp-tab ${statusFilter === filter ? "active" : ""}`}
+            onClick={() => setStatusFilter(filter)}
+          >
+            {filterIcon(filter)}
+            <span style={{ textTransform: "capitalize" }}>{filter}</span>
+            <span style={{ opacity: 0.75, fontSize: 12 }}>{counts(filter)}</span>
+          </button>
+        ))}
+        <div style={{ marginLeft: "auto", position: "relative", minWidth: 220 }}>
+          <Search
+            size={15}
+            style={{
+              position: "absolute",
+              left: 12,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--text-tertiary)",
+            }}
+          />
+          <input
+            className="input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search projects…"
+            style={{ paddingLeft: 36 }}
+          />
+        </div>
+      </div>
+
+      {visibleProjects.length === 0 ? (
         <div className="cp-card">
           <div className="cp-empty">
             <div className="cp-empty-icon">
               <FolderKanban size={24} />
             </div>
-            No projects are available for your client account yet.
+            {search || statusFilter !== "all"
+              ? "No projects match your search or filter."
+              : "No projects are available for your client account yet."}
           </div>
         </div>
       ) : (
         <div style={{ display: "grid", gap: "16px" }}>
-          {projects.map((project) => (
+          {visibleProjects.map((project) => (
             <Link
               key={project.id}
-              href={`/admin/client/projects/${project.id}`}
+              href={`/client/projects/${project.id}`}
               className="cp-project-card"
               style={{ textDecoration: "none", color: "inherit", display: "block" }}
             >

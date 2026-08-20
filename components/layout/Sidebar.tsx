@@ -18,6 +18,8 @@ import {
   BarChart3,
   MessageSquare,
   CircleUser,
+  FolderOpen,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import LogoutButton from "@/components/LogoutButton";
@@ -44,31 +46,32 @@ const adminNavigation: NavItem[] = [
   { href: "/admin/earnings", icon: TrendingUp, label: "Earnings" },
   { href: "/admin/notifications", icon: Bell, label: "Notifications" },
   { href: "/admin/invoices", icon: ReceiptText, label: "Invoices" },
-  { href: "/admin/timer", icon: Timer, label: "Timer" },
-  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
+  { href: "/admin/portfolio", icon: FolderOpen, label: "Portfolio" },
+  { href: "/admin/reviews", icon: Star, label: "Reviews" },
   { href: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
 const memberNavigation: NavItem[] = [
-  { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
-  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
-  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
-  { href: "/admin/timer", icon: Timer, label: "Timer" },
-  { href: "/admin/my-earnings", icon: TrendingUp, label: "My Earnings" },
-  { href: "/admin/profile", icon: CircleUser, label: "Profile" },
+  { href: "/member", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/member" },
+  { href: "/member/calendar", icon: Calendar, label: "Calendar" },
+  { href: "/member/notifications", icon: Bell, label: "Notifications" },
+  { href: "/member/my-tasks", icon: ListTodo, label: "My Tasks" },
+  { href: "/member/timer", icon: Timer, label: "Timer" },
+  { href: "/member/my-earnings", icon: TrendingUp, label: "My Earnings" },
+  { href: "/member/profile", icon: CircleUser, label: "Profile" },
 ];
 
 const clientNavigation: NavItem[] = [
-  { href: "/admin/client", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/admin/client" },
-  { href: "/admin/client/projects", icon: FolderKanban, label: "Projects" },
-  { href: "/admin/client/invoices", icon: ReceiptText, label: "Invoices" },
-  { href: "/admin/client/reports", icon: BarChart3, label: "Reports" },
-  { href: "/admin/client/messages", icon: MessageSquare, label: "Messages" },
+  { href: "/client", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/client" },
+  { href: "/client/projects", icon: FolderKanban, label: "Projects" },
+  { href: "/client/invoices", icon: ReceiptText, label: "Invoices" },
+  { href: "/client/reports", icon: BarChart3, label: "Reports" },
+  { href: "/client/messages", icon: MessageSquare, label: "Messages" },
 ];
 
 const genericNavigation: NavItem[] = [
-  { href: "/admin/timer", icon: Timer, label: "Timer" },
-  { href: "/admin/my-tasks", icon: ListTodo, label: "My Tasks" },
+  { href: "/member/timer", icon: Timer, label: "Timer" },
+  { href: "/member/my-tasks", icon: ListTodo, label: "My Tasks" },
 ];
 
 export default function Sidebar() {

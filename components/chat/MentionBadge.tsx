@@ -10,7 +10,7 @@ export default function MentionBadge({
   display: string;
 }) {
   // Assumes you have a profile page route. Adjust if different.
-  const href = `/admin/profile/${userId}`;
+  const href = `/member/profile/${userId}`;
 
   return (
     <Link

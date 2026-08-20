@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError("");
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/admin/reset-password`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) {
       setError(error.message);
@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
             We&apos;ve sent a reset link to <strong style={{ color: "var(--text-primary)" }}>{email}</strong>.
           </p>
         </div>
-        <Button variant="primary" size="lg" onClick={() => router.push("/admin/login")} style={{ marginTop: 20 }}>
+        <Button variant="primary" size="lg" onClick={() => router.push("/login")} style={{ marginTop: 20 }}>
           Back to login
         </Button>
       </AuthShell>
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
       footer={
         <>
           Remember it?{" "}
-          <a href="/admin/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+          <a href="/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
             Sign in
           </a>
         </>

@@ -74,7 +74,7 @@ export default function ClientInvoiceDetailPage() {
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
       <Link
-        href="/admin/client/invoices"
+        href="/client/invoices"
         style={{
           display: "inline-flex",
           alignItems: "center",

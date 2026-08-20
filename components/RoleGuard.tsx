@@ -29,8 +29,8 @@ export default function RoleGuard({
       console.log("RoleGuard - role:", role, "allowedRoles:", allowedRoles);
 
       if (!role) {
-        console.log("RoleGuard - no role found, redirecting to /admin/login");
-        router.replace("/admin/login");
+        console.log("RoleGuard - no role found, redirecting to /login");
+        router.replace("/login");
         return;
       }
 
@@ -39,8 +39,8 @@ export default function RoleGuard({
           role === "admin"
             ? "/admin"
             : role === "member"
-            ? "/admin/my-tasks"
-            : "/admin/client";
+            ? "/member"
+            : "/client";
         console.log(
           "RoleGuard - unauthorized role, redirecting to:",
           redirectTo

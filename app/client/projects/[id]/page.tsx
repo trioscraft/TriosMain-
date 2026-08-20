@@ -7,6 +7,7 @@ import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { supabase } from "@/lib/supabase";
 import type { Project } from "@/lib/types/admin/client";
 import StatusChip from "@/components/StatusChip";
+import DatePicker from "@/components/DatePicker";
 import {
   ArrowLeft,
   FolderKanban,
@@ -19,6 +20,21 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+const editButtonStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "9px 16px",
+  borderRadius: "var(--radius-md)",
+  fontSize: 13,
+  fontWeight: 600,
+  color: "var(--accent)",
+  background: "var(--accent-soft)",
+  border: "1px solid var(--border-accent)",
+  cursor: "pointer",
+  transition: "background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)",
+};
+
 function formatINR(amount: number) {
   return `\u20B9${Number(amount || 0).toLocaleString("en-IN")}`;
 }
@@ -26,7 +42,6 @@ function formatINR(amount: number) {
 export default function ClientProjectDetailPage() {
   const { id } = useParams();
   const [project, setProject] = useState<Project | null>(null);
-  const [clientId, setClientId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -57,7 +72,6 @@ export default function ClientProjectDetailPage() {
 
       if (!error && data) {
         setProject(data);
-        setClientId(currentClient.client_id);
         seedDraft(data);
       }
       setLoading(false);
@@ -94,7 +108,12 @@ export default function ClientProjectDetailPage() {
     setSaveError("");
 
     // Start date is locked to the project's created date (auto-populated if missing)
-    const updates: Record<string, string | number | null> = {
+    const updates: {
+      due_date: string | null;
+      budget: number | null;
+      description: string;
+      start_date?: string;
+    } = {
       due_date: dueDate.trim() || null,
       budget: budget.trim() === "" ? null : Number(budget.trim()),
       description: description.trim(),
@@ -110,22 +129,44 @@ export default function ClientProjectDetailPage() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("projects")
-      .update(updates)
-      .eq("id", project.id)
-      .eq("client_id", clientId ?? "")
-      .select("id, name, description, progress, status, start_date, due_date, budget, created_at")
-      .single();
-
-    setSaving(false);
-
-    if (error || !data) {
-      setSaveError(error?.message || "Failed to save changes. Please try again.");
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    if (!token) {
+      setSaveError("Your session has expired. Please log in again.");
+      setSaving(false);
       return;
     }
 
-    setProject(data);
+    let res: Response;
+    try {
+      res = await fetch(`/api/client/projects/${project.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+    } catch {
+      setSaveError("Network error while saving. Please try again.");
+      setSaving(false);
+      return;
+    }
+
+    setSaving(false);
+
+    const payload = (await res.json().catch(() => null)) as
+      | { project?: Project; error?: string }
+      | null;
+
+    if (!res.ok || !payload?.project) {
+      setSaveError(payload?.error || "Failed to save changes. Please try again.");
+      return;
+    }
+
+    setProject(payload.project);
     setEditing(false);
     setSaved(true);
     window.setTimeout(() => setSaved(false), 4000);
@@ -159,7 +200,7 @@ export default function ClientProjectDetailPage() {
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
       <Link
-        href="/admin/client/projects"
+        href="/client/projects"
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -185,8 +226,17 @@ export default function ClientProjectDetailPage() {
             {!editing && !saved && (
               <button
                 onClick={startEditing}
-                className="btn"
-                style={{ padding: "8px 14px", fontSize: 13 }}
+                style={editButtonStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--accent)";
+                  e.currentTarget.style.color = "#fff7ee";
+                  e.currentTarget.style.boxShadow = "0 8px 20px -8px var(--accent-glow)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--accent-soft)";
+                  e.currentTarget.style.color = "var(--accent)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
               >
                 <Pencil size={14} /> Edit details
               </button>
@@ -287,13 +337,7 @@ export default function ClientProjectDetailPage() {
               {/* Due date - editable */}
               <div>
                 <label className="label">Due date</label>
-                <input
-                  type="date"
-                  className="input"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  min={startDate || undefined}
-                />
+                <DatePicker value={dueDate} onChange={setDueDate} min={startDate || undefined} />
                 <div style={{ fontSize: 12, color: "var(--text-tertiary)", marginTop: 6 }}>
                   You can adjust your expected completion date.
                 </div>

@@ -11,10 +11,10 @@ export default function AppShell({
 }) {
   const pathname = usePathname();
   const hideSidebar =
-    pathname === "/admin/login" ||
-    pathname === "/admin/signup" ||
-    pathname === "/admin/forgot-password" ||
-    pathname === "/admin/reset-password";
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password";
 
   return (
     <div className="admin-shell" style={{ display: "flex" }}>

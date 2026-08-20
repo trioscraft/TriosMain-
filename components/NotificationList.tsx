@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Clock, ExternalLink } from "lucide-react";
 import { Notification } from "@/types/admin/notifications";
 
@@ -11,6 +12,8 @@ export default function NotificationList({
   notifications: Notification[];
   onMarkAsRead: (id: string) => void;
 }) {
+  const pathname = usePathname();
+  const notificationsHref = pathname.startsWith("/member") ? "/member/notifications" : "/admin/notifications";
   if (notifications.length === 0) {
     return (
       <div className="empty-state">
@@ -70,7 +73,7 @@ export default function NotificationList({
           <p style={{ margin: 0, lineHeight: 1.7, color: "var(--text-secondary)" }}>{notification.message}</p>
 
           <div style={{ marginTop: "14px", display: "flex", gap: "10px" }}>
-            <Link href={notification.related_id || "/admin/notifications"} className="btn btn-ghost" style={{ padding: "8px 12px", fontSize: 13, gap: 6 }}>
+            <Link href={notification.related_id || notificationsHref} className="btn btn-ghost" style={{ padding: "8px 12px", fontSize: 13, gap: 6 }}>
               <ExternalLink size={13} /> View details
             </Link>
             {!notification.is_read && (

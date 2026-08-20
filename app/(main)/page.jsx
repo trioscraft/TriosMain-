@@ -1,4 +1,5 @@
-import { services, projects } from "@/lib/data"
+import { services } from "@/lib/data"
+import { getFeaturedPortfolioProjects } from "@/lib/portfolio"
 import Hero from "@/components/hero"
 import ServiceCard from "@/components/service-card"
 import ProjectCard from "@/components/project-card"
@@ -28,8 +29,8 @@ const techStack = [
 
 export const dynamic = "force-dynamic"
 
-export default function HomePage() {
-  const featuredProjects = projects.filter((p) => p.featured)
+export default async function HomePage() {
+  const featuredProjects = await getFeaturedPortfolioProjects()
 
   return (
     <>
@@ -107,13 +108,19 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((project, i) => (
-              <Reveal key={project.id} delay={0.1 + i * 0.08}>
-                <ProjectCard project={project} />
-              </Reveal>
-            ))}
-          </div>
+          {featuredProjects.length === 0 ? (
+            <p className="mx-auto mt-12 max-w-xl text-center text-slate-600 dark:text-slate-400">
+              Featured projects are on the way — explore what we&apos;re building soon.
+            </p>
+          ) : (
+            <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {featuredProjects.map((project, i) => (
+                <Reveal key={project.id} delay={0.1 + i * 0.08}>
+                  <ProjectCard project={project} />
+                </Reveal>
+              ))}
+            </div>
+          )}
 
           <Reveal delay={0.3} className="mt-12 text-center">
             <a

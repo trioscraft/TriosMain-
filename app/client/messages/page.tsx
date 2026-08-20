@@ -57,6 +57,13 @@ export default function ClientMessagesPage() {
     }
   }
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      void handleSend();
+    }
+  }
+
   function formatTime(dateString: string) {
     return new Date(dateString).toLocaleString("en-IN", {
       day: "numeric",
@@ -201,9 +208,13 @@ export default function ClientMessagesPage() {
         <textarea
           value={newMessage}
           onChange={(event) => setNewMessage(event.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Ask your team about project progress, billing, or delivery"
         />
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14, gap: 10 }}>
+          <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+            Press Enter to send · Shift+Enter for a new line
+          </span>
           <button
             onClick={handleSend}
             disabled={sending || !newMessage.trim()}

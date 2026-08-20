@@ -81,7 +81,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/admin/login"
+            href="/login"
             className="hidden rounded-lg border border-primary-500/50 px-4 py-1.5 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-50 hover:border-primary-500 dark:text-luxe-200 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-luxe-300/40 md:inline-flex"
           >
             Login
@@ -151,7 +151,7 @@ export default function Header() {
                 )
               })}
               <Link
-                href="/admin/login"
+                href="/login"
                 onClick={() => setMenuOpen(false)}
                 className="rounded-lg bg-primary-600 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-500"
               >

@@ -19,7 +19,7 @@ export default function AuthGuard({
       } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push("/admin/login");
+        router.push("/login");
         return;
       }
 

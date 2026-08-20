@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { supabase } from "@/lib/supabase";
 import StatusChip from "@/components/StatusChip";
-import { FolderKanban, ReceiptText, Printer, FileDown, CalendarDays } from "lucide-react";
+import { FolderKanban, ReceiptText, Printer, FileDown, CalendarDays, Wallet, Files } from "lucide-react";
 
 type ReportProject = {
   id: string;
@@ -75,6 +75,10 @@ export default function ClientReportsPage() {
     );
   }
 
+  const outstandingTotal = invoices
+    .filter((invoice) => invoice.status !== "paid")
+    .reduce((sum, invoice) => sum + Number(invoice.total_amount || 0), 0);
+
   return (
     <div style={{ animation: "fadeUp 0.5s ease both" }}>
       <div className="cp-header">
@@ -86,6 +90,30 @@ export default function ClientReportsPage() {
           <p>
             Generate quick project and invoice summaries optimized for printing or PDF export.
           </p>
+        </div>
+      </div>
+
+      <div className="cp-stats" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+        <div className="cp-stat">
+          <div className="cp-stat-icon">
+            <Files size={20} />
+          </div>
+          <div className="cp-stat-label">Projects</div>
+          <div className="cp-stat-value">{projects.length}</div>
+        </div>
+        <div className="cp-stat">
+          <div className="cp-stat-icon">
+            <ReceiptText size={20} />
+          </div>
+          <div className="cp-stat-label">Invoices</div>
+          <div className="cp-stat-value">{invoices.length}</div>
+        </div>
+        <div className="cp-stat">
+          <div className="cp-stat-icon">
+            <Wallet size={20} />
+          </div>
+          <div className="cp-stat-label">Outstanding</div>
+          <div className="cp-stat-value colored">{formatINR(outstandingTotal)}</div>
         </div>
       </div>
 

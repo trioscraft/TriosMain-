@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   getUserNotifications,
@@ -21,10 +21,10 @@ export default function MemberNotificationsPage() {
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const [typeFilter, setTypeFilter] = useState("all");
   const [userId, setUserId] = useState("");
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   useEffect(() => {
     let mounted = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
     async function loadNotifications() {
       const {
@@ -33,7 +33,7 @@ export default function MemberNotificationsPage() {
 
       const id = user?.id ?? "";
       setUserId(id);
-      if (!id) {
+      if (!id || !mounted) {
         return;
       }
 
@@ -42,8 +42,12 @@ export default function MemberNotificationsPage() {
         setNotifications(data);
       }
 
-      channelRef.current = supabase
-        .channel("notifications-page")
+      if (!mounted) {
+        return;
+      }
+
+      channel = supabase
+        .channel(`notifications-page-${id}-${Date.now()}`)
         .on(
           "postgres_changes",
           {
@@ -64,8 +68,8 @@ export default function MemberNotificationsPage() {
 
     return () => {
       mounted = false;
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+      if (channel) {
+        supabase.removeChannel(channel);
       }
     };
   }, []);

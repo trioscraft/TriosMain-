@@ -27,7 +27,7 @@ export default function SignupPage() {
     if (data.user) {
       await supabase.from("profiles").insert([{ id: data.user.id, email: data.user.email }]);
     }
-    router.push("/admin/login");
+    router.push("/login");
   }
 
   return (
@@ -37,7 +37,7 @@ export default function SignupPage() {
       footer={
         <>
           Already have an account?{" "}
-          <a href="/admin/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
+          <a href="/login" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 600 }}>
             Sign in
           </a>
         </>

@@ -1,3 +1,4 @@
+import "../admin/admin.css";
 import "./client.css";
 import ClientNav from "@/components/ClientNav";
 import RoleGuard from "@/components/RoleGuard";
@@ -9,19 +10,21 @@ export default function ClientLayout({
 }) {
   return (
     <RoleGuard allowedRoles={["client"]}>
-      <div
-        className="client-portal"
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "24px",
-          margin: "0 auto",
-          maxWidth: "1280px",
-          paddingTop: "18px",
-        }}
-      >
-        <ClientNav />
-        <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+      <div className="admin-shell client-portal" style={{ minHeight: "100vh" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "24px",
+            margin: "0 auto",
+            maxWidth: "1280px",
+            paddingTop: "18px",
+            width: "100%",
+          }}
+        >
+          <ClientNav />
+          <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+        </div>
       </div>
     </RoleGuard>
   );

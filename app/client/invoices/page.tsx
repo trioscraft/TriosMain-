@@ -6,7 +6,7 @@ import { getCurrentClientUser } from "@/lib/admin/client-auth";
 import { getInvoicesByClient } from "@/lib/invoice-utils";
 import type { InvoiceWithRelations } from "@/lib/types/invoice";
 import StatusChip from "@/components/StatusChip";
-import { ReceiptText, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { ReceiptText, AlertCircle, CheckCircle2, ArrowRight, FileDown, Wallet } from "lucide-react";
 
 function formatINR(amount: number) {
   return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
@@ -51,10 +51,14 @@ export default function ClientInvoicesPage() {
 
   const outstanding = invoices.filter((invoice) => invoice.status !== "paid").length;
   const paid = invoices.filter((invoice) => invoice.status === "paid").length;
+  const outstandingAmount = invoices
+    .filter((invoice) => invoice.status !== "paid")
+    .reduce((sum, invoice) => sum + Number(invoice.total_amount || 0), 0);
 
   const stats = [
     { label: "Outstanding invoices", value: outstanding, icon: AlertCircle },
     { label: "Paid invoices", value: paid, icon: CheckCircle2 },
+    { label: "Total outstanding", value: formatINR(outstandingAmount), icon: Wallet, colored: true },
   ];
 
   return (
@@ -69,14 +73,14 @@ export default function ClientInvoicesPage() {
         </div>
       </div>
 
-      <div className="cp-stats" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
-        {stats.map(({ label, value, icon: Icon }, i) => (
+      <div className="cp-stats" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+        {stats.map(({ label, value, icon: Icon, colored }, i) => (
           <div key={label} className="cp-stat" style={{ animationDelay: `${i * 60}ms` }}>
             <div className="cp-stat-icon">
               <Icon size={20} strokeWidth={2} />
             </div>
             <div className="cp-stat-label">{label}</div>
-            <div className="cp-stat-value">{value}</div>
+            <div className={`cp-stat-value${colored ? " colored" : ""}`}>{value}</div>
           </div>
         ))}
       </div>
@@ -93,13 +97,15 @@ export default function ClientInvoicesPage() {
       ) : (
         <div style={{ display: "grid", gap: "14px" }}>
           {invoices.map((invoice) => (
-            <Link
+            <div
               key={invoice.id}
-              href={`/admin/client/invoices/${invoice.id}`}
               className="cp-row"
-              style={{ padding: "18px 20px" }}
+              style={{ padding: "18px 20px", alignItems: "center" }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+              <Link
+                href={`/client/invoices/${invoice.id}`}
+                style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 14, flex: 1, minWidth: 0 }}
+              >
                 <div
                   style={{
                     width: 44,
@@ -126,7 +132,7 @@ export default function ClientInvoicesPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
 
               <div style={{ textAlign: "right", flexShrink: 0 }}>
                 <div className="cp-amount" style={{ fontSize: 19 }}>
@@ -136,11 +142,19 @@ export default function ClientInvoicesPage() {
                   Due {invoice.due_date || "N/A"}
                 </div>
               </div>
+              <button
+                onClick={() => window.print()}
+                className="btn"
+                style={{ padding: "9px 14px", fontSize: 13, flexShrink: 0 }}
+                title="Print / save as PDF"
+              >
+                <FileDown size={14} /> PDF
+              </button>
               <ArrowRight
                 size={17}
                 style={{ color: "var(--text-tertiary)", flexShrink: 0 }}
               />
-            </Link>
+            </div>
           ))}
         </div>
       )}

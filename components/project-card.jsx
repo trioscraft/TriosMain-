@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Github, ExternalLink } from "lucide-react"
+import { Github, ExternalLink, Play } from "lucide-react"
 
 export default function ProjectCard({ project }) {
   const {
@@ -11,11 +11,17 @@ export default function ProjectCard({ project }) {
     tagline,
     description,
     image,
+    video_url,
     category,
     tech,
+    demo_url,
+    github_url,
     demo,
     github,
   } = project
+
+  const demoHref = demo_url || demo
+  const githubHref = github_url || github
 
   return (
     <motion.div
@@ -34,9 +40,17 @@ export default function ProjectCard({ project }) {
               src={image}
               alt={title}
               fill
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover object-center"
+              unoptimized={!image.startsWith("/") && image.startsWith("http")}
             />
           </motion.div>
+        ) : video_url ? (
+          <div className="flex h-full w-full items-center justify-center bg-slate-100 dark:bg-slate-800/60">
+            <span className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+              <Play className="h-5 w-5" /> Video project
+            </span>
+          </div>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-4xl">
             💼
@@ -71,10 +85,10 @@ export default function ProjectCard({ project }) {
       </div>
 
       <div className="mt-auto flex items-center gap-3 pt-2">
-        {demo && (
+        {demoHref && (
           <motion.div whileHover={{ x: 2 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href={demo}
+              href={demoHref}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
@@ -84,10 +98,10 @@ export default function ProjectCard({ project }) {
             </Link>
           </motion.div>
         )}
-        {github && (
+        {githubHref && (
           <motion.div whileHover={{ x: 2 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href={github}
+              href={githubHref}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"

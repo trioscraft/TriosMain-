@@ -12,6 +12,7 @@ import { Notification } from "@/types/admin/notifications";
 import { PageHeader } from "@/components/admin/ui/Card";
 import { Input, Select } from "@/components/admin/ui/Field";
 import Button from "@/components/admin/ui/Button";
+import RoleGuard from "@/components/RoleGuard";
 import { Bell } from "lucide-react";
 
 export default function NotificationsPage() {
@@ -37,8 +38,14 @@ export default function NotificationsPage() {
       }
 
       const data = await getUserNotifications(id);
-      if (mounted && data) {
+      if (!mounted) return;
+      if (data) {
         setNotifications(data);
+      }
+
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
 
       channelRef.current = supabase
@@ -117,6 +124,7 @@ export default function NotificationsPage() {
   }
 
   return (
+    <RoleGuard allowedRoles={["admin"]}>
     <div style={{ maxWidth: "900px", animation: "fadeUp 0.5s ease both" }}>
       <PageHeader
         title="Notifications"
@@ -206,5 +214,6 @@ export default function NotificationsPage() {
         onMarkAsRead={handleMarkAsRead}
       />
     </div>
+    </RoleGuard>
   );
 }

@@ -31,10 +31,16 @@ export default function NotificationBell() {
       if (!id) return;
 
       const data = await getUserNotifications(id);
-      if (mounted && data) setNotifications(data);
+      if (!mounted) return;
+      if (data) setNotifications(data);
 
       try {
-        channelRef.current = supabase.channel("notifications");
+        if (channelRef.current) {
+          supabase.removeChannel(channelRef.current);
+          channelRef.current = null;
+        }
+
+        channelRef.current = supabase.channel(`notifications-${id}`);
 
         channelRef.current.on(
           "postgres_changes",

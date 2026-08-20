@@ -1,21 +1,9 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import type { CalendarEvent } from "@/components/admin/calendar/CalendarPageClient";
 
 type Priority = "low" | "medium" | "high" | "urgent";
-
-type TaskEvent = {
-  id: string;
-  title: string;
-  project_id: string;
-  project_name?: string | null;
-  assigned_to: string | null;
-  assigned_name?: string | null;
-  priority: Priority;
-  due_date: string;
-  status: string | null;
-  progress: number | null;
-};
 
 type Profile = { id: string; name: string };
 type Project = { id: string; name: string };
@@ -26,6 +14,8 @@ const PRIORITY_COLORS: Record<Priority, { bg: string; border: string; text: stri
   medium: { bg: "#dbeafe", border: "#3b82f6", text: "#2563eb", dot: "🔵" },
   low: { bg: "#f0fdf4", border: "#22c55e", text: "#16a34a", dot: "🟢" },
 };
+
+const PROJECT_COLORS = { bg: "#fdeeda", border: "#c25b2f", text: "#a1481f" };
 
 const VIEW_LABELS = { month: "Month", week: "Week", day: "Day" } as const;
 type ViewMode = keyof typeof VIEW_LABELS;
@@ -68,7 +58,7 @@ interface Props {
   onChangeView: (v: ViewMode) => void;
   anchorDate: string;
   onChangeAnchorDate: (d: Date) => void;
-  events: TaskEvent[];
+  events: CalendarEvent[];
   loading: boolean;
   projects: Project[];
   assignees: Profile[];
@@ -94,7 +84,7 @@ function MonthGrid({
   onTaskClick,
 }: {
   anchor: Date;
-  events: TaskEvent[];
+  events: CalendarEvent[];
   onDragStart: (ev: { id: string; due_date?: string }, e: React.DragEvent) => void;
   onTaskDrop?: (taskId: string, newDateISO: string) => void;
   onCellClick: (dateISO: string) => void;
@@ -115,7 +105,7 @@ function MonthGrid({
   const today = new Date();
 
   const eventsByDate = useMemo(() => {
-    const map = new Map<string, TaskEvent[]>();
+    const map = new Map<string, CalendarEvent[]>();
     events.forEach((ev) => {
       const existing = map.get(ev.due_date) || [];
       existing.push(ev);
@@ -197,20 +187,25 @@ function MonthGrid({
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
               {cellEvents.slice(0, maxVisible).map((ev) => {
-                const colors = PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                const isProject = ev.kind === "project";
+                const colors = isProject
+                  ? PROJECT_COLORS
+                  : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
                 return (
                   <div
                     key={ev.id}
-                    draggable
+                    draggable={!isProject}
                     onDragStart={(e) => {
+                      if (isProject) return;
                       e.dataTransfer.setData("taskId", ev.id);
                       e.dataTransfer.setData("fromDate", ev.due_date);
                       onDragStart(ev, e);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      onTaskClick?.(ev.id);
+                      if (!isProject) onTaskClick?.(ev.id);
                     }}
+                    title={isProject ? `Project due: ${ev.title}` : ev.title}
                     style={{
                       padding: "2px 5px",
                       borderRadius: "4px",
@@ -219,13 +214,19 @@ function MonthGrid({
                       background: colors.bg,
                       borderLeft: `2px solid ${colors.border}`,
                       color: colors.text,
-                      cursor: "grab",
+                      cursor: isProject ? "default" : "grab",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "3px",
                     }}
                   >
-                    {ev.title}
+                    {isProject && <span style={{ fontWeight: 700, opacity: 0.9 }}>📅</span>}
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {ev.title}
+                    </span>
                   </div>
                 );
               })}
@@ -258,7 +259,7 @@ function WeekGrid({
   onTaskClick,
 }: {
   anchor: Date;
-  events: TaskEvent[];
+  events: CalendarEvent[];
   onDragStart: (ev: { id: string; due_date?: string }, e: React.DragEvent) => void;
   onTaskDrop?: (taskId: string, newDateISO: string) => void;
   onTaskClick?: (id: string) => void;
@@ -268,7 +269,7 @@ function WeekGrid({
   const today = new Date();
 
   const eventsByDate = useMemo(() => {
-    const map = new Map<string, TaskEvent[]>();
+    const map = new Map<string, CalendarEvent[]>();
     events.forEach((ev) => {
       const existing = map.get(ev.due_date) || [];
       existing.push(ev);
@@ -366,17 +367,24 @@ function WeekGrid({
                   }}
                 >
                   {cellEvents.map((ev) => {
-                    const colors = PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                    const isProject = ev.kind === "project";
+                    const colors = isProject
+                      ? PROJECT_COLORS
+                      : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
                     return (
                       <div
                         key={ev.id}
-                        draggable
+                        draggable={!isProject}
                         onDragStart={(e) => {
+                          if (isProject) return;
                           e.dataTransfer.setData("taskId", ev.id);
                           e.dataTransfer.setData("fromDate", ev.due_date);
                           onDragStart(ev, e);
                         }}
-                        onClick={() => onTaskClick?.(ev.id)}
+                        onClick={() => {
+                          if (!isProject) onTaskClick?.(ev.id);
+                        }}
+                        title={isProject ? `Project due: ${ev.title}` : ev.title}
                         style={{
                           padding: "3px 5px",
                           borderRadius: "4px",
@@ -384,13 +392,13 @@ function WeekGrid({
                           background: colors.bg,
                           borderLeft: `2px solid ${colors.border}`,
                           color: colors.text,
-                          cursor: "grab",
+                          cursor: isProject ? "default" : "grab",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {ev.title}
+                        {isProject ? `📅 ${ev.title}` : ev.title}
                       </div>
                     );
                   })}
@@ -413,7 +421,7 @@ function DayView({
   onTaskClick,
 }: {
   anchor: Date;
-  events: TaskEvent[];
+  events: CalendarEvent[];
   onDragStart: (ev: { id: string; due_date?: string }, e: React.DragEvent) => void;
   onTaskDrop?: (taskId: string, newDateISO: string) => void;
   onTaskClick?: (id: string) => void;
@@ -487,17 +495,23 @@ function DayView({
                 }}
               >
                 {hour === 9 && hourEvents.map((ev) => {
-                  const colors = PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                  const isProject = ev.kind === "project";
+                  const colors = isProject
+                    ? PROJECT_COLORS
+                    : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
                   return (
                     <div
                       key={ev.id}
-                      draggable
+                      draggable={!isProject}
                       onDragStart={(e) => {
+                        if (isProject) return;
                         e.dataTransfer.setData("taskId", ev.id);
                         e.dataTransfer.setData("fromDate", ev.due_date);
                         onDragStart(ev, e);
                       }}
-                      onClick={() => onTaskClick?.(ev.id)}
+                      onClick={() => {
+                        if (!isProject) onTaskClick?.(ev.id);
+                      }}
                       style={{
                         padding: "6px 10px",
                         borderRadius: "6px",
@@ -505,15 +519,28 @@ function DayView({
                         background: colors.bg,
                         borderLeft: `3px solid ${colors.border}`,
                         color: colors.text,
-                        cursor: "grab",
+                        cursor: isProject ? "default" : "grab",
                         boxShadow: "0 1px 3px rgba(70,55,40,0.12)",
                       }}
                     >
                       <div style={{ fontWeight: 600 }}>{ev.title}</div>
-                      {ev.project_name && (
+                      {isProject && (
+                        <>
+                          <div style={{ fontSize: "10px", opacity: 0.7 }}>
+                            📅 Project due date
+                          </div>
+                          {ev.client_name && (
+                            <div style={{ fontSize: "10px", opacity: 0.7 }}>🏢 {ev.client_name}</div>
+                          )}
+                          {ev.progress != null && (
+                            <div style={{ fontSize: "10px", opacity: 0.7 }}>📊 {ev.progress}% complete</div>
+                          )}
+                        </>
+                      )}
+                      {!isProject && ev.project_name && (
                         <div style={{ fontSize: "10px", opacity: 0.7 }}>📁 {ev.project_name}</div>
                       )}
-                      {ev.assigned_name && (
+                      {!isProject && ev.assigned_name && (
                         <div style={{ fontSize: "10px", opacity: 0.7 }}>👤 {ev.assigned_name}</div>
                       )}
                     </div>
@@ -587,10 +614,26 @@ export function CalendarView({
     return anchor.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   }, [view, anchor]);
 
+  const upcomingEvents = useMemo(() => {
+    const todayIso = dateToISO(new Date());
+    return events
+      .filter((ev) => ev.due_date >= todayIso)
+      .sort((a, b) => (a.due_date < b.due_date ? -1 : 1))
+      .slice(0, 8);
+  }, [events]);
+
+  const handleUpcomingClick = (iso: string) => {
+    onChangeAnchorDate(isoToDate(iso));
+    if (view !== "day") onChangeView("day");
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      {/* Toolbar */}
-      <div
+      <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+        {/* Left column: toolbar + calendar */}
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
+          {/* Toolbar */}
+          <div
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -776,6 +819,105 @@ export function CalendarView({
           .calendar-grid { font-size: 11px !important; }
         }
       `}</style>
+        </div>
+
+        {/* Right column: sticky Upcoming Events note */}
+        <aside
+          style={{
+            width: "260px",
+            flexShrink: 0,
+            position: "sticky",
+            top: "16px",
+            alignSelf: "flex-start",
+          }}
+        >
+          <div
+            style={{
+              background: "linear-gradient(160deg, #fff8dc 0%, #ffedb3 100%)",
+              border: "1px solid #e8d48b",
+              borderRadius: "4px",
+              boxShadow: "0 6px 16px rgba(120,90,20,0.18)",
+              padding: "16px 14px",
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "-14px",
+                left: "50%",
+                transform: "translateX(-50%) rotate(-2deg)",
+                background: "#f4b942",
+                width: "90px",
+                height: "26px",
+                borderRadius: "2px 2px 8px 8px",
+                opacity: 0.9,
+              }}
+            />
+            <div
+              style={{
+                fontSize: "13px",
+                fontWeight: 800,
+                color: "#8a5a00",
+                letterSpacing: "0.4px",
+                textTransform: "uppercase",
+                marginBottom: "10px",
+              }}
+            >
+              🗓️ Upcoming Events
+            </div>
+            {upcomingEvents.length === 0 ? (
+              <div style={{ fontSize: "12px", color: "#8a7a45", fontStyle: "italic" }}>
+                No upcoming deadlines.
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {upcomingEvents.map((ev) => {
+                  const isProject = ev.kind === "project";
+                  const colors = isProject
+                    ? PROJECT_COLORS
+                    : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                  return (
+                    <button
+                      key={ev.id}
+                      onClick={() => handleUpcomingClick(ev.due_date)}
+                      title={isProject ? `Project due: ${ev.title}` : ev.title}
+                      style={{
+                        textAlign: "left",
+                        background: "rgba(255,255,255,0.75)",
+                        border: `1px solid ${colors.border}`,
+                        borderLeft: `3px solid ${colors.border}`,
+                        borderRadius: "4px",
+                        padding: "6px 8px",
+                        cursor: "pointer",
+                        fontSize: "11px",
+                        color: colors.text,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <div style={{ fontWeight: 700 }}>
+                        {formatDisplay(isoToDate(ev.due_date))}
+                      </div>
+                      <div style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {isProject ? `📅 ${ev.title}` : ev.title}
+                      </div>
+                      {ev.client_name && (
+                        <div style={{ fontSize: "10px", opacity: 0.75 }}>🏢 {ev.client_name}</div>
+                      )}
+                      {isProject && ev.progress != null && (
+                        <div style={{ fontSize: "10px", opacity: 0.75 }}>📊 {ev.progress}% complete</div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

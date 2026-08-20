@@ -5,7 +5,7 @@ import { Star } from "lucide-react"
 import Image from "next/image"
 
 export default function ReviewCard({ review }) {
-  const { name, company, rating, comment, createdAt } = review
+  const { name, company, rating, comment, reply, createdAt } = review
   const date = createdAt
     ? new Intl.DateTimeFormat("en-US", {
         timeZone: "UTC",
@@ -40,6 +40,17 @@ export default function ReviewCard({ review }) {
       <p className="mb-4 flex-grow text-slate-700 dark:text-slate-300">
         &ldquo;{comment}&rdquo;
       </p>
+
+      {reply ? (
+        <div className="mb-4 rounded-xl border border-luxe-200/60 bg-gradient-to-br from-primary-500/10 to-luxe-400/10 px-4 py-3 dark:border-white/10">
+          <p className="mb-1 text-xs font-semibold text-primary-700 dark:text-luxe-300">
+            Trios Craft
+          </p>
+          <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            {reply}
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-auto flex items-center gap-3">
         <motion.div

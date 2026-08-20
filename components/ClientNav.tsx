@@ -15,11 +15,11 @@ import {
 import LogoutButton from "@/components/LogoutButton";
 
 const clientNavigation: Array<{ href: string; icon: LucideIcon; label: string; match?: (p: string) => boolean }> = [
-  { href: "/admin/client", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/admin/client" },
-  { href: "/admin/client/projects", icon: FolderKanban, label: "Projects" },
-  { href: "/admin/client/invoices", icon: ReceiptText, label: "Invoices" },
-  { href: "/admin/client/reports", icon: BarChart3, label: "Reports" },
-  { href: "/admin/client/messages", icon: MessageSquare, label: "Messages" },
+  { href: "/client", icon: LayoutDashboard, label: "Dashboard", match: (p) => p === "/client" },
+  { href: "/client/projects", icon: FolderKanban, label: "Projects" },
+  { href: "/client/invoices", icon: ReceiptText, label: "Invoices" },
+  { href: "/client/reports", icon: BarChart3, label: "Reports" },
+  { href: "/client/messages", icon: MessageSquare, label: "Messages" },
 ];
 
 export default function ClientNav() {
