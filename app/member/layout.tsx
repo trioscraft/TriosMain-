@@ -4,6 +4,7 @@ import "../admin/admin.css";
 import "../admin/member.css";
 import Sidebar from "@/components/layout/Sidebar";
 import NotificationBell from "@/components/NotificationBell";
+import RefreshIndicator from "@/components/RefreshIndicator";
 
 export default function MemberLayout({
   children,
@@ -40,6 +41,7 @@ export default function MemberLayout({
         </div>
         <div style={{ padding: "22px 40px 40px" }}>{children}</div>
       </main>
+      <RefreshIndicator label="Member workspace" variant="dots" />
     </div>
   );
 }

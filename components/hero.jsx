@@ -53,12 +53,11 @@ export default function Hero({
       onMouseMove={handleMove}
       className="container-width section relative overflow-hidden pb-24 pt-20 md:pt-28"
     >
-      {/* Tech backdrop — grid, aurora, cursor glow, scanline, grain */}
+      {/* Soft neumorphic backdrop — calm blobs + cursor glow, no harsh grid */}
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <div className="tech-grid absolute inset-0 opacity-60" />
         <div className="aurora-bg">
-          <div className="aurora-blob left-[8%] top-[6%] h-72 w-72 bg-primary-500/30 animate-aurora" />
-          <div className="aurora-blob right-[10%] top-[14%] h-80 w-80 bg-secondary-500/25 animate-aurora-slow" />
+          <div className="aurora-blob left-[8%] top-[6%] h-72 w-72 bg-primary-500/25 animate-aurora" />
+          <div className="aurora-blob right-[10%] top-[14%] h-80 w-80 bg-secondary-500/20 animate-aurora-slow" />
           <div className="aurora-blob bottom-[2%] left-1/2 h-72 w-72 -translate-x-1/2 bg-luxe-400/20 animate-aurora" />
         </div>
         <div
@@ -66,18 +65,16 @@ export default function Hero({
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgb(2 187 208 / 0.14), transparent 42%)",
+              "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--neu-accent) 12%, transparent), transparent 42%)",
           }}
         />
-        <div className="scanline animate-scan opacity-50" />
-        <div className="noise-overlay" />
       </div>
 
-      {/* Floating tech chips — large screens only (avoid tablet/phone overlap) */}
+      {/* Floating neumorphic tech chips — large screens only */}
       {chips.map((c) => (
         <div
           key={c.label}
-          className={`absolute z-0 hidden items-center gap-1.5 rounded-full glass-surface px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 lg:flex ${c.pos} ${c.anim}`}
+          className={`absolute z-0 hidden items-center gap-1.5 neu-chip lg:flex ${c.pos} ${c.anim}`}
         >
           <c.icon className="h-3.5 w-3.5 text-luxe-400" />
           {c.label}
@@ -91,7 +88,7 @@ export default function Hero({
         className="relative z-10 mx-auto max-w-4xl text-center"
       >
         <motion.div variants={item} className="mb-6 flex justify-center px-4">
-          <span className="glass-surface inline-flex max-w-[90vw] items-center gap-2 rounded-full px-4 py-1.5 text-center text-xs font-medium text-slate-700 dark:text-slate-200">
+          <span className="neu-chip inline-flex max-w-[90vw] items-center gap-2 px-4 py-1.5 text-center text-xs font-medium">
             <Cpu className="h-3.5 w-3.5 shrink-0 text-primary-400" />
             AI-native studio · Built by 3 CS grads
           </span>
@@ -133,7 +130,7 @@ export default function Hero({
           variants={item}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          <Button asChild variant="primary" size="lg" className="group shadow-glow">
+          <Button asChild variant="primary" size="lg">
             <a href={primaryCTA.href}>
               {primaryCTA.label}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

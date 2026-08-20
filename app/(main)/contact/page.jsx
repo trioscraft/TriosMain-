@@ -42,21 +42,23 @@ export default function ContactPage() {
               <div className="mt-8 space-y-4">
                 {contactInfo.map((info, i) => (
                   <Reveal key={info.title} delay={0.1 + i * 0.05}>
-                    <div className="luxe-card flex items-center gap-4 px-4 py-3 transition-transform hover:translate-x-1">
-                      <info.icon className="h-5 w-5 text-luxe-400" />
+                    <div className="neu-card neu-card-hover flex items-center gap-4 p-4 transition-transform hover:translate-x-1">
+                      <span className="neu-icon h-10 w-10">
+                        <info.icon className="h-5 w-5 text-[var(--neu-gold)]" />
+                      </span>
                       <div>
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                        <p className="text-sm font-medium text-[var(--neu-text-2)]">
                           {info.title}
                         </p>
                         {info.href ? (
                           <a
                             href={info.href}
-                            className="text-slate-900 dark:text-slate-100 hover:text-primary-700 dark:hover:text-primary-300"
+                            className="text-[var(--neu-text)] hover:text-[var(--neu-accent)]"
                           >
                             {info.detail}
                           </a>
                         ) : (
-                          <p className="text-slate-900 dark:text-slate-100">
+                          <p className="text-[var(--neu-text)]">
                             {info.detail}
                           </p>
                         )}
@@ -67,7 +69,7 @@ export default function ContactPage() {
               </div>
 
               <Reveal delay={0.2}>
-                <div className="mt-6 h-64 w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="neu-card mt-6 h-64 w-full overflow-hidden">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3135.387129898855!2d-122.45188188422606!3d37.78699057518318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1r8!3m3!1m2!1s0x80858064ab2bc13f%3A0xb40c21b3878c9937!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1!6m1!1sen"
                     width="100%"
@@ -82,7 +84,7 @@ export default function ContactPage() {
               </Reveal>
             </Reveal>
 
-            <Reveal delay={0.1} className="luxe-card sm:p-8">
+            <Reveal delay={0.1} className="neu-card p-6 sm:p-8">
               <h2 className="heading-xl mb-4 text-fluid-xl">Send a message</h2>
               <ContactForm />
             </Reveal>

@@ -57,7 +57,7 @@ export default function ReviewsPage() {
 
           <Reveal
             delay={0.1}
-            className="mt-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8"
+            className="mt-10 neu-card p-6 sm:p-8"
           >
             <ReviewForm />
           </Reveal>

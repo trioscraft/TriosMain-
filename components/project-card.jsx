@@ -27,9 +27,9 @@ export default function ProjectCard({ project }) {
     <motion.div
       whileHover={{ y: -8 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="luxe-card group flex flex-col overflow-hidden"
+      className="neu-card neu-card-hover group flex flex-col overflow-hidden p-6"
     >
-      <div className="relative mb-4 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800/60 ring-1 ring-inset ring-white/10">
+      <div className="relative mb-4 aspect-video overflow-hidden rounded-2xl bg-[#d4d9e3] dark:bg-[#1b1e24] shadow-[inset_4px_4px_10px_var(--neu-shadow-dark),inset_-4px_-4px_10px_var(--neu-shadow-light)]">
         {image ? (
           <motion.div
             className="h-full w-full"
@@ -46,8 +46,8 @@ export default function ProjectCard({ project }) {
             />
           </motion.div>
         ) : video_url ? (
-          <div className="flex h-full w-full items-center justify-center bg-slate-100 dark:bg-slate-800/60">
-            <span className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <div className="flex h-full w-full items-center justify-center bg-[#d4d9e3] dark:bg-[#1b1e24]">
+            <span className="neu-chip flex items-center gap-2 text-sm font-medium">
               <Play className="h-5 w-5" /> Video project
             </span>
           </div>
@@ -56,20 +56,18 @@ export default function ProjectCard({ project }) {
             💼
           </div>
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#05070c]/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        <span className="absolute top-3 right-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-medium text-slate-800 backdrop-blur dark:bg-[#070a11]/80 dark:text-slate-200">
+        <span className="neu-chip absolute top-3 right-3 px-2.5 py-0.5 text-xs font-medium">
           {category}
         </span>
-        <div className="scanline opacity-0 transition-opacity duration-500 group-hover:opacity-70" />
       </div>
 
-      <h3 className="mb-1 font-display text-xl font-semibold text-slate-900 dark:text-white">
+      <h3 className="mb-1 font-display text-xl font-semibold neu-text-primary">
         {title}
       </h3>
-      <p className="mb-2 text-sm font-medium text-luxe-600 dark:text-luxe-300">
+      <p className="mb-2 text-sm font-medium neu-text-gold">
         {tagline}
       </p>
-      <p className="mb-4 text-sm text-slate-600 dark:text-slate-300 flex-grow">
+      <p className="mb-4 text-sm neu-text-secondary flex-grow">
         {description}
       </p>
 
@@ -77,21 +75,21 @@ export default function ProjectCard({ project }) {
         {tech.map((t) => (
           <span
             key={t}
-            className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-white/5 dark:text-slate-300"
+            className="neu-chip px-2.5 py-0.5 text-xs font-medium"
           >
             {t}
           </span>
         ))}
       </div>
 
-      <div className="mt-auto flex items-center gap-3 pt-2">
+      <div className="mt-auto flex items-center gap-4 pt-2">
         {demoHref && (
           <motion.div whileHover={{ x: 2 }} whileTap={{ scale: 0.95 }}>
             <Link
               href={demoHref}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
+              className="flex items-center gap-1.5 text-sm font-medium neu-text-accent"
             >
               <ExternalLink className="h-4 w-4" />
               <span>Live Demo</span>
@@ -104,7 +102,7 @@ export default function ProjectCard({ project }) {
               href={githubHref}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+              className="flex items-center gap-1.5 text-sm font-medium neu-text-secondary hover:neu-text-primary"
             >
               <Github className="h-4 w-4" />
               <span>Source</span>

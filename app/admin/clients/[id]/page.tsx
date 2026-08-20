@@ -14,8 +14,8 @@ function statusTone(status: string) {
   return "blue" as const;
 }
 
-export default async function ClientDetailsPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function ClientDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   const { data: client } = await supabase.from("clients").select("*").eq("id", id).single();
 

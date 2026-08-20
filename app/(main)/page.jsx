@@ -154,18 +154,21 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-width">
-          <Reveal delay={0.1} className="relative overflow-hidden rounded-3xl gradient-bg py-16 text-center text-white shadow-glow-luxe">
-            <div aria-hidden="true" className="noise-overlay" />
+          <Reveal delay={0.1} className="relative overflow-hidden rounded-[2rem] neu-card p-12 text-center md:p-16">
+            <div aria-hidden="true" className="aurora-bg">
+              <div className="aurora-blob left-[10%] top-0 h-64 w-64 bg-primary-500/20 animate-aurora" />
+              <div className="aurora-blob right-[10%] bottom-0 h-64 w-64 bg-luxe-400/20 animate-aurora-slow" />
+            </div>
             <div className="relative">
-              <h2 className="font-display text-fluid-2xl font-extrabold">
+              <h2 className="font-display text-fluid-2xl font-extrabold text-slate-900 dark:text-white">
                 Ready to build something great?
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-white/90">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-300">
                 Let us chat about your next project.
               </p>
               <a
                 href="/contact"
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-transform hover:scale-105 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700"
+                className="neu-btn neu-btn-primary mt-8"
               >
                 Get in touch
               </a>
@@ -179,11 +182,11 @@ export default async function HomePage() {
 
 function Stat({ number, suffix = "", label, delay = 0 }) {
   return (
-    <div className="text-center">
-      <div className="text-3xl font-extrabold text-primary-700 dark:text-luxe-300">
+    <div className="neu-card neu-card-hover w-full max-w-[180px] px-4 py-5">
+      <div className="text-3xl font-extrabold text-[var(--neu-accent)]">
         <CountUp value={number} suffix={suffix} duration={1.8} />
       </div>
-      <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">{label}</div>
+      <div className="mt-1 text-sm text-[var(--neu-text-2)]">{label}</div>
     </div>
   )
 }

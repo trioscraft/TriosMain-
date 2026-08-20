@@ -2,6 +2,7 @@ import "../admin/admin.css";
 import "./client.css";
 import ClientNav from "@/components/ClientNav";
 import RoleGuard from "@/components/RoleGuard";
+import RefreshIndicator from "@/components/RefreshIndicator";
 
 export default function ClientLayout({
   children,
@@ -26,6 +27,7 @@ export default function ClientLayout({
           <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
         </div>
       </div>
+      <RefreshIndicator label="Client portal" variant="wave" />
     </RoleGuard>
   );
 }

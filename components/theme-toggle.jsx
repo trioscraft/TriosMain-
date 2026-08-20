@@ -24,10 +24,14 @@ export default function ThemeToggle() {
   ]
 
   return (
-    <div className="relative inline-flex h-9 w-[130px] items-center rounded-full border border-white/15 bg-white/60 p-1 text-xs font-medium shadow-soft-dark backdrop-blur-xl dark:bg-white/5">
+    <div className="neu-raised-sm relative inline-flex h-9 w-[130px] items-center rounded-full p-1 text-xs font-medium">
       <div
-        className="absolute inset-0 m-1 h-7 w-7 rounded-md bg-white dark:bg-slate-800 shadow transition-transform duration-200"
+        className="absolute inset-0 m-1 h-7 w-7 rounded-full neu-text-accent transition-transform duration-200"
         style={{
+          background:
+            "linear-gradient(135deg, color-mix(in srgb, var(--neu-accent) 30%, transparent), color-mix(in srgb, var(--neu-accent-strong) 25%, transparent))",
+          boxShadow:
+            "inset 2px 2px 5px var(--neu-shadow-dark), inset -2px -2px 5px var(--neu-shadow-light)",
           transform: `translateX(${
             resolved === "light"
               ? "0%"
@@ -47,10 +51,10 @@ export default function ThemeToggle() {
             aria-label={opt.label}
             onClick={() => setTheme(opt.value)}
             className={clsx(
-              "relative z-10 flex-1 rounded-md py-1.5 text-center transition-colors",
+              "relative z-10 flex-1 rounded-full py-1.5 text-center transition-colors",
               active
-                ? "text-slate-900 dark:text-slate-100"
-                : "text-slate-500 dark:text-slate-400"
+                ? "neu-text-accent"
+                : "neu-text-muted"
             )}
           >
             <span className="sr-only">{opt.label}</span>

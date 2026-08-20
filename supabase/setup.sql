@@ -1480,6 +1480,60 @@ CREATE TRIGGER update_project_wiki_pages_updated_at
 
 
 -- ============================================================
+-- ADMIN APPLICATION SETTINGS (singleton row, id = 1)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS public.settings (
+  id                 integer PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  company_name       text NOT NULL DEFAULT 'Trios Craft',
+  business_email     text NOT NULL DEFAULT '',
+  phone              text NOT NULL DEFAULT '',
+  address            text NOT NULL DEFAULT '',
+  currency           text NOT NULL DEFAULT 'INR',
+  timezone           text NOT NULL DEFAULT 'Asia/Kolkata',
+  date_format        text NOT NULL DEFAULT 'DD MMM YYYY',
+  sender_name        text NOT NULL DEFAULT 'Trios Craft',
+  sender_email       text NOT NULL DEFAULT '',
+  notify_new_client      boolean NOT NULL DEFAULT true,
+  notify_project_updates boolean NOT NULL DEFAULT true,
+  notify_invoice_paid    boolean NOT NULL DEFAULT true,
+  notify_reviews         boolean NOT NULL DEFAULT true,
+  notify_mentions        boolean NOT NULL DEFAULT true,
+  maintenance_mode   boolean NOT NULL DEFAULT false,
+  updated_at         timestamptz NOT NULL DEFAULT now(),
+  updated_by         uuid
+);
+
+ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "settings_read_authenticated" ON public.settings;
+CREATE POLICY "settings_read_authenticated" ON public.settings
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+INSERT INTO public.settings (id) VALUES (1)
+  ON CONFLICT (id) DO NOTHING;
+
+-- Per-panel maintenance controls (client / member / both, with a timer).
+ALTER TABLE public.settings
+  ADD COLUMN IF NOT EXISTS maintenance_scope text NOT NULL DEFAULT 'both',
+  ADD COLUMN IF NOT EXISTS maintenance_type text NOT NULL DEFAULT 'scheduled',
+  ADD COLUMN IF NOT EXISTS maintenance_message text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS maintenance_ends_at timestamptz;
+
+ALTER TABLE public.settings
+  DROP CONSTRAINT IF EXISTS settings_maintenance_scope_check;
+ALTER TABLE public.settings
+  ADD CONSTRAINT settings_maintenance_scope_check
+  CHECK (maintenance_scope IN ('client', 'member', 'both'));
+
+ALTER TABLE public.settings
+  DROP CONSTRAINT IF EXISTS settings_maintenance_type_check;
+ALTER TABLE public.settings
+  ADD CONSTRAINT settings_maintenance_type_check
+  CHECK (maintenance_type IN ('scheduled', 'emergency', 'updating'));
+
+
+-- ============================================================
 -- BOOTSTRAP ADMIN USER: trioscraft2025@gmail.com / QWERTY
 -- Inserts the auth user (bcrypt password) and promotes the
 -- auto-created profile to role='admin'.

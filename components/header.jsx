@@ -27,20 +27,20 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const bgClass = scrolled
-    ? "glass-surface shadow-soft-dark"
-    : "bg-white/30 dark:bg-[#05070c]/30"
+  const headerClass = scrolled
+    ? "glass-surface"
+    : "bg-transparent"
 
   const linkClass = (active) =>
     active
-      ? "text-primary-700 dark:text-luxe-200"
-      : "text-slate-700 hover:text-primary-600 dark:text-slate-300 dark:hover:text-white"
+      ? "neu-text-accent font-semibold"
+      : "neu-text-secondary hover:neu-text-accent"
 
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className={`sticky top-0 z-40 w-full border-b border-slate-200/60 dark:border-slate-800 transition-all duration-300 ${bgClass} backdrop-blur`}
+      className={`sticky top-0 z-40 w-full transition-all duration-300 ${headerClass}`}
     >
       <div className="container-width flex h-16 items-center justify-between">
         <motion.div
@@ -53,7 +53,7 @@ export default function Header() {
           </Link>
         </motion.div>
 
-        <nav className="hidden md:flex items-center space-x-1">
+        <nav className="hidden md:flex items-center gap-1.5">
           {navLinks.map((link, i) => {
             const active = pathname === link.href
             return (
@@ -65,14 +65,13 @@ export default function Header() {
               >
                 <Link
                   href={link.href}
-                  className={`relative px-3 py-2 text-sm font-medium transition-colors ${linkClass(active)}`}
+                  className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    active
+                      ? "neu-raised-sm !shadow-[inset_3px_3px_7px_var(--neu-shadow-dark),inset_-3px_-3px_7px_var(--neu-shadow-light)]"
+                      : linkClass(active)
+                  }`}
                 >
                   {link.label}
-                  <span
-                    className={`absolute bottom-1 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-primary-500 via-secondary-400 to-luxe-400 transition-all ${
-                      active ? "scale-x-100" : "scale-x-0"
-                    }`}
-                  />
                 </Link>
               </motion.div>
             )
@@ -82,7 +81,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="hidden rounded-lg border border-primary-500/50 px-4 py-1.5 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-50 hover:border-primary-500 dark:text-luxe-200 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 dark:hover:border-luxe-300/40 md:inline-flex"
+            className="neu-btn hidden md:inline-flex"
           >
             Login
           </Link>
@@ -91,7 +90,7 @@ export default function Header() {
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={() => setMenuOpen(!menuOpen)}
-              className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="neu-icon h-9 w-9"
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
             >
@@ -105,17 +104,17 @@ export default function Header() {
                 transition={{ duration: 0.2 }}
               >
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  className="block h-0.5 w-5 rounded bg-current"
                   variants={{ open: { rotate: 45, y: 6 }, closed: { rotate: 0, y: 0 } }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  className="block h-0.5 w-5 rounded bg-current"
                   variants={{ open: { opacity: 0 }, closed: { opacity: 1 } }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-slate-700 dark:bg-slate-300"
+                  className="block h-0.5 w-5 rounded bg-current"
                   variants={{ open: { rotate: -45, y: -6 }, closed: { rotate: 0, y: 0 } }}
                   transition={{ duration: 0.2 }}
                 />
@@ -134,9 +133,9 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="md:hidden border-t border-white/10 bg-white/60 dark:bg-[#05070c]/70 backdrop-blur-xl"
+            className="md:hidden glass-surface"
           >
-            <div className="container-width flex flex-col gap-1 py-2">
+            <div className="container-width flex flex-col gap-2 py-4">
               {navLinks.map((link) => {
                 const active = pathname === link.href
                 return (
@@ -144,7 +143,11 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${linkClass(active)}`}
+                    className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all ${
+                      active
+                        ? "neu-pressed-sm"
+                        : "neu-raised-sm"
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -153,7 +156,7 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg bg-primary-600 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-500"
+                className="neu-btn neu-btn-primary mt-1 w-full"
               >
                 Login
               </Link>

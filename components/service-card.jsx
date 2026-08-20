@@ -12,15 +12,15 @@ export default function ServiceCard({ service }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="luxe-card group h-full flex flex-col"
+      className="neu-card neu-card-hover group h-full flex flex-col p-6"
     >
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500/20 to-secondary-500/20 text-3xl ring-1 ring-inset ring-white/10 transition-transform duration-500 ease-premium group-hover:scale-110 group-hover:rotate-6">
+      <div className="neu-icon mb-5 h-14 w-14 text-2xl transition-transform duration-500 ease-premium group-hover:scale-110 group-hover:rotate-6">
         {icon}
       </div>
-      <h3 className="mb-2 font-display text-xl font-semibold text-slate-900 dark:text-white">
+      <h3 className="mb-2 font-display text-xl font-semibold neu-text-primary">
         {title}
       </h3>
-      <p className="mb-4 text-sm text-slate-600 dark:text-slate-300 flex-grow">
+      <p className="mb-4 text-sm neu-text-secondary flex-grow">
         {description}
       </p>
 
@@ -40,9 +40,9 @@ export default function ServiceCard({ service }) {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                className="flex items-center gap-2 neu-text-secondary"
               >
-                <span className="text-luxe-500 dark:text-luxe-300">✓</span>
+                <span className="neu-text-gold">✓</span>
                 <span>{f}</span>
               </motion.li>
             ))}
@@ -53,7 +53,7 @@ export default function ServiceCard({ service }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="mt-auto flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-900 dark:text-luxe-300"
+        className="neu-btn neu-btn-ghost mt-auto justify-start px-0 !shadow-none text-sm font-medium neu-text-accent"
       >
         <span>What&apos;s included</span>
         <motion.span

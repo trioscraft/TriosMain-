@@ -1,0 +1,412 @@
+/* ============================================
+   Trios Craft — Main marketing site
+   Neumorphic ("soft UI") design system
+   Scoped under .main-site so admin/member/client
+   are untouched.
+   ============================================ */
+
+/* ---- Design tokens ---- */
+.main-site {
+  --neu-bg: #e8ebf2;
+  --neu-bg-2: #eef1f7;
+  --neu-surface: var(--neu-bg);
+  --neu-shadow-dark: rgba(163, 177, 198, 0.6);
+  --neu-shadow-mid: rgba(163, 177, 198, 0.42);
+  --neu-shadow-light: rgba(255, 255, 255, 0.95);
+  --neu-text: #2e3542;
+  --neu-text-2: #5a6474;
+  --neu-text-3: #8b95a5;
+  --neu-accent: #0e97a6;
+  --neu-accent-strong: #0b7f8c;
+  --neu-gold: #c9a14c;
+  --neu-danger: #d9605b;
+  --neu-radius: 1.25rem;
+
+  background: var(--neu-bg);
+  color: var(--neu-text);
+  min-height: 100vh;
+  isolation: isolate;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark .main-site {
+  --neu-bg: #23262d;
+  --neu-bg-2: #262a32;
+  --neu-surface: var(--neu-bg);
+  --neu-shadow-dark: rgba(0, 0, 0, 0.55);
+  --neu-shadow-mid: rgba(0, 0, 0, 0.4);
+  --neu-shadow-light: rgba(255, 255, 255, 0.05);
+  --neu-text: #e7eaf1;
+  --neu-text-2: #a3adbd;
+  --neu-text-3: #737e8f;
+  --neu-accent: #46c7d4;
+  --neu-accent-strong: #6fd6e0;
+  --neu-gold: #e2b96b;
+  --neu-danger: #e5817c;
+
+  background: var(--neu-bg);
+  color: var(--neu-text);
+}
+
+.main-site ::selection {
+  background: color-mix(in srgb, var(--neu-accent) 30%, transparent);
+  color: var(--neu-text);
+}
+
+.main-site ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--neu-text-3) 60%, transparent);
+}
+
+/* ---- Layout primitives (were previously no-ops) ---- */
+.main-site .section {
+  padding-block: 4.5rem;
+}
+.main-site .container-width {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* ---- Neumorphic surfaces ---- */
+.main-site .neu-raised {
+  background: var(--neu-surface);
+  border-radius: var(--neu-radius);
+  box-shadow: 9px 9px 18px var(--neu-shadow-dark),
+    -9px -9px 18px var(--neu-shadow-light);
+}
+.main-site .neu-raised-sm {
+  background: var(--neu-surface);
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px var(--neu-shadow-dark),
+    -5px -5px 10px var(--neu-shadow-light);
+}
+.main-site .neu-pressed {
+  background: var(--neu-surface);
+  border-radius: var(--neu-radius);
+  box-shadow: inset 6px 6px 12px var(--neu-shadow-dark),
+    inset -6px -6px 12px var(--neu-shadow-light);
+}
+.main-site .neu-pressed-sm {
+  background: var(--neu-surface);
+  border-radius: 1rem;
+  box-shadow: inset 4px 4px 8px var(--neu-shadow-dark),
+    inset -4px -4px 8px var(--neu-shadow-light);
+}
+
+/* ---- Cards ---- */
+.main-site .neu-card {
+  background: var(--neu-surface);
+  border-radius: 1.5rem;
+  box-shadow: 10px 10px 22px var(--neu-shadow-dark),
+    -10px -10px 22px var(--neu-shadow-light);
+  transition: box-shadow 0.3s var(--ease-premium), transform 0.3s var(--ease-premium);
+}
+.main-site .neu-card-hover:hover {
+  box-shadow: 6px 6px 14px var(--neu-shadow-mid),
+    -6px -6px 14px var(--neu-shadow-light);
+  transform: translateY(-4px);
+}
+
+/* ---- Buttons ---- */
+.main-site .neu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 9999px;
+  background: var(--neu-surface);
+  color: var(--neu-text);
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  box-shadow: 5px 5px 10px var(--neu-shadow-dark),
+    -5px -5px 10px var(--neu-shadow-light);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease,
+    color 0.2s ease;
+}
+.main-site .neu-btn:hover {
+  box-shadow: 3px 3px 7px var(--neu-shadow-mid),
+    -3px -3px 7px var(--neu-shadow-light);
+  transform: translateY(1px);
+}
+.main-site .neu-btn:active {
+  box-shadow: inset 4px 4px 8px var(--neu-shadow-dark),
+    inset -4px -4px 8px var(--neu-shadow-light);
+  transform: translateY(1px);
+}
+.main-site .neu-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.main-site .neu-btn-primary {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--neu-accent) 85%, white),
+    var(--neu-accent-strong)
+  );
+  color: #fff;
+  box-shadow: 6px 6px 14px color-mix(in srgb, var(--neu-accent) 45%, transparent),
+    -4px -4px 12px var(--neu-shadow-light);
+}
+.main-site .neu-btn-primary:hover {
+  box-shadow: 4px 4px 10px color-mix(in srgb, var(--neu-accent) 40%, transparent),
+    -3px -3px 9px var(--neu-shadow-light);
+}
+.main-site .neu-btn-primary:active {
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.25),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.18);
+}
+.main-site .neu-btn-ghost {
+  background: transparent;
+  box-shadow: none;
+  color: var(--neu-text-2);
+}
+.main-site .neu-btn-ghost:hover {
+  background: color-mix(in srgb, var(--neu-text-3) 12%, transparent);
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---- Inputs ---- */
+.main-site .neu-input,
+.main-site .neu-textarea {
+  width: 100%;
+  background: var(--neu-bg-2);
+  color: var(--neu-text);
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  box-shadow: inset 4px 4px 9px var(--neu-shadow-dark),
+    inset -4px -4px 9px var(--neu-shadow-light);
+  transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+.main-site .neu-input::placeholder,
+.main-site .neu-textarea::placeholder {
+  color: var(--neu-text-3);
+}
+.main-site .neu-input:focus,
+.main-site .neu-textarea:focus {
+  outline: none;
+  box-shadow: inset 5px 5px 10px var(--neu-shadow-dark),
+    inset -5px -5px 10px var(--neu-shadow-light),
+    0 0 0 3px color-mix(in srgb, var(--neu-accent) 28%, transparent);
+  background: var(--neu-surface);
+}
+
+/* ---- Chips / pills ---- */
+.main-site .neu-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: var(--neu-surface);
+  color: var(--neu-text-2);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  box-shadow: 4px 4px 8px var(--neu-shadow-dark),
+    -4px -4px 8px var(--neu-shadow-light);
+}
+
+/* ---- Icon tiles & avatars ---- */
+.main-site .neu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: var(--neu-surface);
+  color: var(--neu-accent);
+  box-shadow: 4px 4px 9px var(--neu-shadow-dark),
+    -4px -4px 9px var(--neu-shadow-light);
+}
+.main-site .neu-avatar {
+  border-radius: 9999px;
+  background: var(--neu-surface);
+  color: var(--neu-accent);
+  box-shadow: 4px 4px 9px var(--neu-shadow-dark),
+    -4px -4px 9px var(--neu-shadow-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Text helpers ---- */
+.main-site .neu-text-primary {
+  color: var(--neu-text);
+}
+.main-site .neu-text-secondary {
+  color: var(--neu-text-2);
+}
+.main-site .neu-text-muted {
+  color: var(--neu-text-3);
+}
+.main-site .neu-text-accent {
+  color: var(--neu-accent);
+}
+.main-site .neu-text-gold {
+  color: var(--neu-gold);
+}
+
+/* ---- Override shared globals classes within the main site ---- */
+.main-site .section {
+  padding-block: 4.5rem;
+}
+.main-site .container-width {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.main-site .luxe-card,
+.main-site .card,
+.main-site .card-hover {
+  background: var(--neu-surface);
+  border: none;
+  border-radius: 1.5rem;
+  box-shadow: 10px 10px 22px var(--neu-shadow-dark),
+    -10px -10px 22px var(--neu-shadow-light);
+  transition: box-shadow 0.3s var(--ease-premium), transform 0.3s var(--ease-premium);
+}
+.main-site .luxe-card:hover,
+.main-site .card-hover:hover {
+  box-shadow: 6px 6px 14px var(--neu-shadow-mid),
+    -6px -6px 14px var(--neu-shadow-light);
+  transform: translateY(-4px);
+  border: none;
+}
+.main-site .luxe-card::before,
+.main-site .luxe-card::after {
+  display: none;
+}
+
+.main-site .glass-surface {
+  background: color-mix(in srgb, var(--neu-bg) 78%, transparent);
+  border: none;
+  backdrop-filter: blur(12px);
+  box-shadow: 4px 4px 10px var(--neu-shadow-mid),
+    -4px -4px 10px var(--neu-shadow-light);
+}
+
+.main-site .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 9999px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--neu-accent) 85%, white),
+    var(--neu-accent-strong)
+  );
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 6px 6px 14px color-mix(in srgb, var(--neu-accent) 45%, transparent),
+    -4px -4px 12px var(--neu-shadow-light);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.main-site .btn-primary::after {
+  display: none;
+}
+.main-site .btn-primary:hover {
+  box-shadow: 4px 4px 10px color-mix(in srgb, var(--neu-accent) 40%, transparent),
+    -3px -3px 9px var(--neu-shadow-light);
+  transform: translateY(1px);
+}
+.main-site .btn-primary:active {
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.25),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.18);
+}
+
+.main-site .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--neu-text-3) 45%, transparent);
+  background: transparent;
+  color: var(--neu-text-2);
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 4px 4px 9px var(--neu-shadow-mid),
+    -4px -4px 9px var(--neu-shadow-light);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+.main-site .btn-outline:hover {
+  background: color-mix(in srgb, var(--neu-text-3) 10%, transparent);
+  box-shadow: 2px 2px 6px var(--neu-shadow-mid), -2px -2px 6px var(--neu-shadow-light);
+}
+
+.main-site .eyebrow {
+  color: var(--neu-accent);
+}
+.main-site .eyebrow::before {
+  background: linear-gradient(to right, transparent, var(--neu-gold));
+}
+
+.main-site .heading-xl {
+  color: var(--neu-text);
+}
+
+.main-site .link-underline {
+  color: var(--neu-text-2);
+}
+.main-site .link-underline::after {
+  background: linear-gradient(to right, var(--neu-accent), var(--neu-gold));
+}
+
+.main-site .divider-glow {
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--neu-text-3),
+    transparent
+  );
+}
+.main-site .divider-glow::after {
+  background: var(--neu-gold);
+  box-shadow: 3px 3px 7px var(--neu-shadow-dark),
+    -3px -3px 7px var(--neu-shadow-light);
+}
+
+.main-site .caret {
+  background: var(--neu-gold);
+}
+
+.main-site .tech-grid {
+  background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--neu-text-3) 14%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--neu-text-3) 14%, transparent) 1px,
+      transparent 1px
+    );
+}
+
+.main-site .particle {
+  background: color-mix(in srgb, var(--neu-accent) 55%, transparent);
+}
+
+/* Soften the aurora blobs for a calmer neumorphic canvas */
+.main-site .aurora-blob {
+  opacity: 0.45;
+  filter: blur(70px);
+}
+
+/* Focus rings */
+.main-site a:focus-visible,
+.main-site button:focus-visible,
+.main-site input:focus-visible,
+.main-site textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--neu-accent) 40%, transparent);
+}

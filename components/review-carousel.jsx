@@ -51,7 +51,7 @@ export default function ReviewCarousel({ reviews }) {
             onClick={() => scroll("prev")}
             whileHover={{ scale: 1.1, x: -2 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute -left-4 top-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-slate-800 p-2.5 text-slate-700 shadow-md hover:bg-slate-100 dark:text-slate-200"
+            className="neu-icon absolute -left-4 top-1/2 -translate-y-1/2 h-11 w-11 text-[var(--neu-text-2)]"
             aria-label="Previous review"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -61,7 +61,7 @@ export default function ReviewCarousel({ reviews }) {
             onClick={() => scroll("next")}
             whileHover={{ scale: 1.1, x: 2 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute -right-4 top-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-slate-800 p-2.5 text-slate-700 shadow-md hover:bg-slate-100 dark:text-slate-200"
+            className="neu-icon absolute -right-4 top-1/2 -translate-y-1/2 h-11 w-11 text-[var(--neu-text-2)]"
             aria-label="Next review"
           >
             <ChevronRight className="h-5 w-5" />

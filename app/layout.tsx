@@ -2,6 +2,7 @@ import "./globals.css"
 import type { ReactNode } from "react"
 import { Inter, Sora } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import Script from "next/script"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,6 +58,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         suppressHydrationWarning
         className={`${inter.variable} ${sora.variable} bg-white text-slate-900 dark:bg-[#05070c] dark:text-slate-200 antialiased`}
       >
+        <Script
+          id="ri-detect-reload"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var r=false;var n=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];if(n&&n.type==="reload"){r=true;}if(!r&&performance.navigation&&performance.navigation.type===1){r=true;}if(r){document.documentElement.classList.add("ri-refreshing");}}catch(e){}})();`,
+          }}
+        />
+        <style>{`
+          html.ri-refreshing .admin-shell aside,
+          html.ri-refreshing .admin-shell aside *,
+          html.ri-refreshing .client-portal aside,
+          html.ri-refreshing .client-portal aside * {
+            animation: none !important;
+          }
+        `}</style>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
         </ThemeProvider>

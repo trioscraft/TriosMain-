@@ -7,17 +7,13 @@ import { motion } from "framer-motion"
 const MotionButton = motion.button
 
 const base =
-  "inline-flex items-center justify-center rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none transition-shadow duration-200"
+  "inline-flex items-center justify-center rounded-full font-medium focus:outline-none disabled:opacity-50 disabled:pointer-events-none transition-all duration-200"
 
 const variants = {
-  primary:
-    "bg-primary-600 text-white hover:bg-primary-700 shadow-soft hover:shadow-glow",
-  secondary:
-    "bg-secondary-500 text-white hover:bg-secondary-600 shadow-soft hover:shadow-glow-secondary",
-  outline:
-    "bg-transparent border-2 border-primary-600 text-primary-600 hover:bg-primary-50/70 dark:hover:bg-slate-800",
-  ghost:
-    "bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
+  primary: "neu-btn neu-btn-primary",
+  secondary: "neu-btn neu-btn-primary",
+  outline: "neu-btn",
+  ghost: "neu-btn neu-btn-ghost",
 }
 
 const sizes = {
@@ -27,7 +23,7 @@ const sizes = {
 }
 
 const hoverTap = {
-  whileHover: { scale: 1.03, y: -1 },
+  whileHover: { scale: 1.02 },
   whileTap: { scale: 0.97 },
   transition: { duration: 0.16, ease: [0.4, 0, 0.2, 1] },
 }

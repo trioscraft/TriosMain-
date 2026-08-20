@@ -3,6 +3,7 @@
 import "./admin.css";
 import Sidebar from "@/components/layout/Sidebar";
 import NotificationBell from "@/components/NotificationBell";
+import RefreshIndicator from "@/components/RefreshIndicator";
 
 export default function AdminLayout({
   children,
@@ -39,6 +40,7 @@ export default function AdminLayout({
         </div>
         <div style={{ padding: "22px 40px 40px" }}>{children}</div>
       </main>
+      <RefreshIndicator label="Admin workspace" variant="ring" />
     </div>
   );
 }
