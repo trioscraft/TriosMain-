@@ -40,7 +40,7 @@ export default function ClientsPage() {
 
   async function handleCreateClient(values: ClientFormValues) {
     if (!values.company_name.trim()) {
-      alert("Company name is required.");
+      alert("Client name is required.");
       return;
     }
 
@@ -154,7 +154,7 @@ export default function ClientsPage() {
 
         <div style={{ position: "relative", marginBottom: 24, maxWidth: 460 }}>
           <Search size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-tertiary)" }} />
-          <input className="input" placeholder="Search company, contact, or email" value={search} onChange={(e) => setSearch(e.target.value)} style={{ paddingLeft: 40 }} />
+          <input className="input" placeholder="Search company, contact, or email" value={search} onChange={(e) => setSearch(e.target.value)} autoComplete="off" autoCorrect="off" spellCheck={false} data-form-type="other" style={{ paddingLeft: 40 }} />
         </div>
 
         {loading ? (

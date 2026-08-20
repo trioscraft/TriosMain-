@@ -36,6 +36,22 @@ async function requireAdmin(request: NextRequest) {
   return { error: null, user: authData.user };
 }
 
+export async function GET(request: NextRequest) {
+  const guard = await requireAdmin(request);
+  if (guard.error) return guard.error;
+
+  const { data, error } = await supabaseAdmin
+    .from("reviews")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  return NextResponse.json({ reviews: data || [] });
+}
+
 export async function PATCH(request: NextRequest) {
   const guard = await requireAdmin(request);
   if (guard.error) return guard.error;

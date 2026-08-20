@@ -139,6 +139,19 @@ create table if not exists public.tasks (
   created_at timestamptz not null default now()
 );
 
+-- Supabase enables RLS by default on new tables; without a policy every
+-- insert/update is denied. Allow authenticated users (admins + members) to
+-- manage tasks — admins create/assign, members update their own task progress.
+alter table public.tasks enable row level security;
+
+drop policy if exists "Authenticated can manage tasks" on public.tasks;
+create policy "Authenticated can manage tasks"
+  on public.tasks
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+
 -- ------------------------------
 -- time_entries
 -- ------------------------------
@@ -1518,7 +1531,9 @@ ALTER TABLE public.settings
   ADD COLUMN IF NOT EXISTS maintenance_scope text NOT NULL DEFAULT 'both',
   ADD COLUMN IF NOT EXISTS maintenance_type text NOT NULL DEFAULT 'scheduled',
   ADD COLUMN IF NOT EXISTS maintenance_message text NOT NULL DEFAULT '',
-  ADD COLUMN IF NOT EXISTS maintenance_ends_at timestamptz;
+  ADD COLUMN IF NOT EXISTS maintenance_ends_at timestamptz,
+  ADD COLUMN IF NOT EXISTS maintenance_reopen_at timestamptz,
+  ADD COLUMN IF NOT EXISTS maintenance_started_at timestamptz;
 
 ALTER TABLE public.settings
   DROP CONSTRAINT IF EXISTS settings_maintenance_scope_check;
@@ -1571,4 +1586,50 @@ end $$;
 
 -- Re-promote anytime (safe no-op if already admin):
 -- UPDATE public.profiles SET role='admin' WHERE email='trioscraft2025@gmail.com';
+
+-- ============================================================
+-- MAINTENANCE HISTORY: rolling log of the last 30 sessions.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.maintenance_history (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  started_at timestamptz NOT NULL,
+  ended_at timestamptz NOT NULL,
+  scope text NOT NULL DEFAULT 'both',
+  type text NOT NULL DEFAULT 'scheduled',
+  message text,
+  reopen_minutes integer,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.maintenance_history ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Authenticated can read maintenance history"
+  ON public.maintenance_history;
+CREATE POLICY "Authenticated can read maintenance history"
+  ON public.maintenance_history
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+CREATE OR REPLACE FUNCTION public.trim_maintenance_history()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  DELETE FROM public.maintenance_history
+  WHERE id IN (
+    SELECT id FROM public.maintenance_history
+    ORDER BY ended_at DESC, id DESC
+    OFFSET 30
+  );
+  RETURN NULL;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_trim_maintenance_history
+  ON public.maintenance_history;
+CREATE TRIGGER trg_trim_maintenance_history
+  AFTER INSERT ON public.maintenance_history
+  FOR EACH ROW
+  EXECUTE FUNCTION public.trim_maintenance_history();
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, IndianRupee, TrendingUp, Wallet, Gauge, FolderKanban, Receipt } from "lucide-react";
 import RoleGuard from "@/components/RoleGuard";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabaseAdmin";
 import AddTaskForm from "./AddTaskForm";
 import AddExpenseForm from "./AddExpenseForm";
 import ExpenseList from "./ExpenseList";
@@ -133,10 +133,10 @@ export default async function ProjectDetails({ params }: { params: Promise<{ id:
             <StatCard label="Profit" value={`₹${profit.toLocaleString("en-IN")}`} deltaTone={profit >= 0 ? "up" : "down"} />
           </div>
 
-          <AddExpenseForm projectId={id} projectName={project.name} onSuccess={() => {}} />
+          <AddExpenseForm projectId={id} projectName={project.name} />
 
           <div style={{ marginTop: 16 }}>
-            <ExpenseList expenses={expenses || []} projectId={id} projectName={project.name} onExpensesChange={() => {}} />
+            <ExpenseList expenses={expenses || []} projectId={id} projectName={project.name} />
           </div>
         </div>
       </div>

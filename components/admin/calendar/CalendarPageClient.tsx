@@ -3,12 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { CalendarView } from "@/components/admin/calendar/CalendarView";
+import { getIndianHolidaysInRange } from "@/lib/indian-calendar";
 
 export type Priority = "low" | "medium" | "high" | "urgent";
 
 export type CalendarEvent = {
   id: string;
-  kind: "task" | "project";
+  kind: "task" | "project" | "holiday";
   title: string;
   project_id: string;
   project_name?: string | null;
@@ -20,6 +21,8 @@ export type CalendarEvent = {
   progress: number | null;
   client_name?: string | null;
   budget?: number | null;
+  holiday_type?: "festival" | "national";
+  emoji?: string;
 };
 
 type Profile = { id: string; name: string };
@@ -350,12 +353,43 @@ export default function CalendarPageClient() {
     };
   }, []);
 
+  // Indian festivals & national holidays — recompute around the visible window
+  // so the month grid, navigation, and the "Upcoming" list all stay populated.
+  const holidayEvents = useMemo<CalendarEvent[]>(() => {
+    const from = new Date(anchorDate.getFullYear(), anchorDate.getMonth() - 1, 1);
+    const to = new Date(anchorDate.getFullYear(), anchorDate.getMonth() + 13, 0);
+    return getIndianHolidaysInRange(startOfDayISO(from), startOfDayISO(to)).map((h) => ({
+      id: `hol_${h.date}_${h.name.replace(/\s+/g, "_")}`,
+      kind: "holiday" as const,
+      title: h.name,
+      project_id: "",
+      project_name: null,
+      assigned_to: null,
+      assigned_name: null,
+      priority: "low" as Priority,
+      due_date: h.date,
+      status: null,
+      progress: null,
+      holiday_type: h.holiday_type,
+      emoji: h.emoji,
+    }));
+  }, [anchorDate]);
+
+  const mergedEvents = useMemo(
+    () => [...events, ...holidayEvents].sort((a, b) => a.due_date.localeCompare(b.due_date)),
+    [events, holidayEvents]
+  );
+
   const filteredEvents = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return events
-      .filter((e) => (projectFilter === "all" ? true : e.project_id === projectFilter))
-      .filter((e) => (assigneeFilter === "all" ? true : (e.assigned_to || "") === assigneeFilter))
-      .filter((e) => (priorityFilter === "all" ? true : e.priority === priorityFilter))
+    return mergedEvents
+      .filter((e) => {
+        if (e.kind === "holiday") return true;
+        if (projectFilter !== "all" && e.project_id !== projectFilter) return false;
+        if (assigneeFilter !== "all" && (e.assigned_to || "") !== assigneeFilter) return false;
+        if (priorityFilter !== "all" && e.priority !== priorityFilter) return false;
+        return true;
+      })
       .filter((e) => {
         if (!q) return true;
         return (
@@ -365,7 +399,7 @@ export default function CalendarPageClient() {
           (e.client_name || "").toLowerCase().includes(q)
         );
       });
-  }, [events, projectFilter, assigneeFilter, priorityFilter, search]);
+  }, [mergedEvents, projectFilter, assigneeFilter, priorityFilter, search]);
 
   const normalizedAnchorISO = startOfDayISO(anchorDate);
 

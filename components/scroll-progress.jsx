@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useSpring } from "framer-motion"
 
-// Slim HUD-style scroll progress bar pinned to the very top of the viewport.
+// Slim scroll progress bar pinned to the very top of the viewport.
 export default function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, {
@@ -14,7 +14,7 @@ export default function ScrollProgress() {
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed left-0 right-0 top-0 z-[60] h-1 origin-left rounded-full bg-gradient-to-r from-[var(--neu-accent)] via-[var(--neu-accent-strong)] to-[var(--neu-gold)]"
+      className="fixed left-0 right-0 top-0 z-[60] h-0.5 origin-left bg-[var(--ed-accent)]"
     />
   )
 }

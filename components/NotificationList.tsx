@@ -13,7 +13,11 @@ export default function NotificationList({
   onMarkAsRead: (id: string) => void;
 }) {
   const pathname = usePathname();
-  const notificationsHref = pathname.startsWith("/member") ? "/member/notifications" : "/admin/notifications";
+  const notificationsHref = pathname.startsWith("/client")
+    ? "/client/notifications"
+    : pathname.startsWith("/member")
+    ? "/member/notifications"
+    : "/admin/notifications";
   if (notifications.length === 0) {
     return (
       <div className="empty-state">

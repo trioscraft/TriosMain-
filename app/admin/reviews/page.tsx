@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Search, MessageSquare, Trash2, Check, Eye, EyeOff, Star, Reply } from "lucide-react";
 import RoleGuard from "@/components/RoleGuard";
 import { supabase } from "@/lib/supabase";
@@ -37,19 +37,34 @@ export default function AdminReviewsPage() {
   const [replyText, setReplyText] = useState("");
   const [replying, setReplying] = useState(false);
 
-  useEffect(() => {
-    void loadReviews();
+  const loadReviews = useCallback(async () => {
+    setLoading(true);
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token || "";
+      const res = await fetch("/api/admin/reviews", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const json = await res.json();
+      if (res.ok && json?.reviews) {
+        setReviews(json.reviews as Review[]);
+      }
+    } catch {
+      /* ignore network errors; keep previous list */
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  async function loadReviews() {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("reviews")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error) setReviews(data || []);
-    setLoading(false);
-  }
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadReviews();
+  }, [loadReviews]);
 
   async function currentUser() {
     const {

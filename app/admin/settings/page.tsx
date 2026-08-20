@@ -5,6 +5,7 @@ import RoleGuard from "@/components/RoleGuard";
 import { PageHeader } from "@/components/admin/ui/Card";
 import { Input, Textarea, Select, Field } from "@/components/admin/ui/Field";
 import Button from "@/components/admin/ui/Button";
+import { Modal } from "@/components/admin/ui/Modal";
 import { supabase } from "@/lib/supabase";
 import {
   Settings,
@@ -28,6 +29,7 @@ import {
   MAINTENANCE_TYPE_OPTIONS,
   type AppSettings,
   type SettingsInput,
+  type MaintenanceHistory,
 } from "@/types/admin/settings";
 
 const TABS = [
@@ -60,6 +62,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   maintenance_type: "scheduled",
   maintenance_message: "",
   maintenance_ends_at: null,
+  maintenance_reopen_at: null,
+  maintenance_started_at: null,
   updated_at: null,
   updated_by: null,
 };
@@ -197,8 +201,22 @@ export default function SettingsPage() {
   const [pwStatus, setPwStatus] = useState<Status>(null);
 
   // maintenance timer UI
-  const [durationMin, setDurationMin] = useState(5);
   const [now, setNow] = useState(() => Date.now());
+  const [stopModalOpen, setStopModalOpen] = useState(false);
+  const [reopenMin, setReopenMin] = useState(5);
+
+  // maintenance history (last 30)
+  const [history, setHistory] = useState<MaintenanceHistory[]>([]);
+
+  const fetchHistory = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/maintenance-history", { cache: "no-store" });
+      const json = await res.json();
+      if (json?.history) setHistory(json.history as MaintenanceHistory[]);
+    } catch {
+      /* ignore — history is non-critical */
+    }
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -225,13 +243,14 @@ export default function SettingsPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
+    void fetchHistory();
     void (async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user?.email) setUserEmail(user.email);
     })();
-  }, [load]);
+  }, [load, fetchHistory]);
 
   useEffect(() => {
     if (!status) return;
@@ -249,14 +268,35 @@ export default function SettingsPage() {
     return () => clearInterval(id);
   }, []);
 
-  const isMaintenanceActive = Boolean(
+  const activeBlock = Boolean(
     settings.maintenance_mode &&
       (!settings.maintenance_ends_at ||
         new Date(settings.maintenance_ends_at).getTime() > now),
   );
 
-  const remainingMs = isMaintenanceActive && settings.maintenance_ends_at
-    ? Math.max(0, new Date(settings.maintenance_ends_at).getTime() - now)
+  const reopenAtMs = settings.maintenance_reopen_at
+    ? new Date(settings.maintenance_reopen_at).getTime()
+    : null;
+  const cooldownBlock = Boolean(
+    !settings.maintenance_mode && reopenAtMs != null && reopenAtMs > now,
+  );
+
+  const scopeNoun =
+    settings.maintenance_scope === "client"
+      ? "client portal"
+      : settings.maintenance_scope === "member"
+        ? "member workspace"
+        : "both portals";
+
+  const isMaintenanceActive = activeBlock || cooldownBlock;
+
+  const remainingMs = isMaintenanceActive
+    ? Math.max(
+        0,
+        (activeBlock && settings.maintenance_ends_at
+          ? new Date(settings.maintenance_ends_at).getTime()
+          : (reopenAtMs as number)) - now,
+      )
     : 0;
 
   function formatRemaining(ms: number) {
@@ -267,6 +307,21 @@ export default function SettingsPage() {
     const pad = (n: number) => String(n).padStart(2, "0");
     return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
   }
+
+  function formatDuration(ms: number) {
+    const total = Math.floor(ms / 1000);
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  }
+
+  const historyTypeLabel = (t: string) =>
+    MAINTENANCE_TYPE_OPTIONS.find((o) => o.value === t)?.label || "Maintenance";
+  const historyScopeLabel = (s: string) =>
+    s === "client" ? "Client portal" : s === "member" ? "Member workspace" : "Both portals";
 
   async function applyMaintenance(patch: Partial<AppSettings>) {
     setSaving(true);
@@ -288,6 +343,40 @@ export default function SettingsPage() {
       });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleStop() {
+    const startedAt = settings.maintenance_started_at || new Date().toISOString();
+    const endedAt = new Date().toISOString();
+    const reopenMinutes = reopenMin;
+    setStopModalOpen(false);
+    await applyMaintenance({
+      maintenance_mode: false,
+      maintenance_ends_at: null,
+      maintenance_reopen_at: new Date(Date.now() + reopenMinutes * 60000).toISOString(),
+    });
+    try {
+      const res = await fetch("/api/admin/maintenance-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          started_at: startedAt,
+          ended_at: endedAt,
+          scope: settings.maintenance_scope,
+          type: settings.maintenance_type,
+          message: settings.maintenance_message || null,
+          reopen_minutes: reopenMinutes,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok && json?.record) {
+        setHistory((h) => [json.record as MaintenanceHistory, ...h].slice(0, 30));
+      } else {
+        void fetchHistory();
+      }
+    } catch {
+      void fetchHistory();
     }
   }
 
@@ -624,21 +713,8 @@ export default function SettingsPage() {
             {activeTab === "system" && (
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <Row
-                  label="Maintenance mode"
-                  description="Take a portal offline. Choose which panel is affected — keep the other one running if only one has issues."
-                >
-                  <Toggle
-                    checked={settings.maintenance_mode}
-                    disabled={saving}
-                    onChange={(v) =>
-                      applyMaintenance({ maintenance_mode: v, maintenance_ends_at: null })
-                    }
-                  />
-                </Row>
-
-                <Row
                   label="Affected panel"
-                  description="Which portal should show the maintenance page?"
+                  description="Which portal should show the maintenance page? Keep the other one running if only one has issues."
                 >
                   <div
                     style={{
@@ -700,7 +776,7 @@ export default function SettingsPage() {
                   />
                 </Field>
 
-                {isMaintenanceActive ? (
+                {activeBlock ? (
                   <div
                     style={{
                       marginTop: 8,
@@ -727,38 +803,63 @@ export default function SettingsPage() {
                         ? " — Member workspace"
                         : " — Both portals"}
                     </div>
-                    {settings.maintenance_ends_at ? (
-                      <div style={{ marginTop: 12, display: "flex", alignItems: "baseline", gap: 10 }}>
-                        <span style={{ fontSize: 12.5, color: "var(--text-secondary)" }}>
-                          Live again in
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 26,
-                            fontWeight: 700,
-                            color: "var(--text-primary)",
-                            letterSpacing: "-0.02em",
-                          }}
-                        >
-                          {formatRemaining(remainingMs)}
-                        </span>
-                      </div>
-                    ) : (
-                      <div style={{ marginTop: 8, fontSize: 12.5, color: "var(--text-secondary)" }}>
-                        No scheduled end time — turn off manually below.
-                      </div>
-                    )}
                     <div style={{ marginTop: 14 }}>
                       <Button
                         variant="danger"
                         size="sm"
                         loading={saving}
-                        onClick={() =>
-                          applyMaintenance({ maintenance_mode: false, maintenance_ends_at: null })
-                        }
+                        onClick={() => setStopModalOpen(true)}
                       >
-                        Stop now
+                        Stop &amp; schedule reopen
+                      </Button>
+                    </div>
+                  </div>
+                ) : cooldownBlock ? (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      padding: "18px 20px",
+                      borderRadius: "var(--radius-lg)",
+                      background: "var(--green-dim)",
+                      border: "1px solid rgba(78,125,94,0.3)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        color: "var(--green)",
+                        fontSize: 13,
+                        fontWeight: 600,
+                      }}
+                    >
+                      <Check size={16} /> Reopening {scopeNoun}
+                    </div>
+                    <div style={{ marginTop: 12, display: "flex", alignItems: "baseline", gap: 10 }}>
+                      <span style={{ fontSize: 12.5, color: "var(--text-secondary)" }}>
+                        Portal opens in
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 26,
+                          fontWeight: 700,
+                          color: "var(--text-primary)",
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {formatRemaining(remainingMs)}
+                      </span>
+                    </div>
+                    <div style={{ marginTop: 14 }}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        loading={saving}
+                        onClick={() => applyMaintenance({ maintenance_reopen_at: null })}
+                      >
+                        Reopen now
                       </Button>
                     </div>
                   </div>
@@ -777,19 +878,9 @@ export default function SettingsPage() {
                     }}
                   >
                     <div style={{ flex: "1 1 200px", minWidth: 0 }}>
-                      <div className="label" style={{ marginBottom: 6 }}>
-                        Timed maintenance
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <Input
-                          type="number"
-                          min={1}
-                          max={1440}
-                          value={durationMin}
-                          onChange={(e) => setDurationMin(Math.max(1, Number(e.target.value) || 1))}
-                          style={{ width: 90 }}
-                        />
-                        <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>minutes</span>
+                      <div className="label" style={{ marginBottom: 6 }}>Not under maintenance</div>
+                      <div style={{ fontSize: 12.5, color: "var(--text-secondary)" }}>
+                        Start to take the selected panel offline.
                       </div>
                     </div>
                     <Button
@@ -799,9 +890,9 @@ export default function SettingsPage() {
                       onClick={() =>
                         applyMaintenance({
                           maintenance_mode: true,
-                          maintenance_ends_at: new Date(
-                            Date.now() + durationMin * 60000,
-                          ).toISOString(),
+                          maintenance_ends_at: null,
+                          maintenance_reopen_at: null,
+                          maintenance_started_at: new Date().toISOString(),
                         })
                       }
                     >
@@ -810,12 +901,192 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                {settings.maintenance_mode && !isMaintenanceActive && (
+                {!activeBlock && !cooldownBlock && settings.maintenance_mode && (
                   <div className="toast toast-error" style={{ marginTop: 8 }}>
                     <AlertTriangle size={16} />
-                    <span>Timed maintenance has ended. Turn it off to clear the status.</span>
+                    <span>Maintenance has ended. Start again or it will clear on next save.</span>
                   </div>
                 )}
+
+                <Modal
+                  open={stopModalOpen}
+                  onClose={() => setStopModalOpen(false)}
+                  title="Schedule portal reopen"
+                  footer={
+                    <>
+                      <Button variant="ghost" onClick={() => setStopModalOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="primary"
+                        loading={saving}
+                        onClick={() => void handleStop()}
+                      >
+                        Confirm &amp; stop
+                      </Button>
+                    </>
+                  }
+                >
+                  <p
+                    style={{
+                      fontSize: 14,
+                      color: "var(--text-secondary)",
+                      marginTop: -6,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    Maintenance will end now, but the {scopeNoun} will stay on the maintenance page and
+                    reopen automatically after the timer below.
+                  </p>
+                  <Field label="Reopen after (minutes)">
+                    <Input
+                      type="number"
+                      min={1}
+                      max={1440}
+                      value={reopenMin}
+                      onChange={(e) => setReopenMin(Math.max(1, Number(e.target.value) || 1))}
+                      style={{ width: 120 }}
+                    />
+                  </Field>
+                </Modal>
+
+                <div style={{ marginTop: 26 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <div className="label" style={{ margin: 0, fontSize: 13 }}>
+                      Maintenance history (last 30)
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => void fetchHistory()}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "var(--text-tertiary)",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Refresh
+                    </button>
+                  </div>
+
+                  {history.length === 0 ? (
+                    <div
+                      style={{
+                        fontSize: 12.5,
+                        color: "var(--text-tertiary)",
+                        padding: "14px 16px",
+                        border: "1px solid var(--border)",
+                        borderRadius: "var(--radius-lg)",
+                        background: "var(--glass-bg)",
+                      }}
+                    >
+                      No maintenance sessions recorded yet.
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {history.map((h) => {
+                        const start = new Date(h.started_at).getTime();
+                        const end = new Date(h.ended_at).getTime();
+                        const dur = Math.max(0, end - start);
+                        return (
+                          <div
+                            key={h.id}
+                            style={{
+                              border: "1px solid var(--border)",
+                              borderRadius: "var(--radius-lg)",
+                              background: "var(--glass-bg)",
+                              padding: "12px 14px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 10,
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <span
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    letterSpacing: "0.04em",
+                                    textTransform: "uppercase",
+                                    color: "var(--accent)",
+                                    background: "var(--accent-soft)",
+                                    border: "1px solid var(--border-accent)",
+                                    padding: "4px 9px",
+                                    borderRadius: 999,
+                                  }}
+                                >
+                                  {historyTypeLabel(h.type)}
+                                </span>
+                                <span style={{ fontSize: 12.5, color: "var(--text-secondary)" }}>
+                                  {historyScopeLabel(h.scope)}
+                                </span>
+                              </div>
+                              <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+                                {new Date(h.ended_at).toLocaleString()}
+                              </span>
+                            </div>
+                            <div
+                              style={{
+                                marginTop: 8,
+                                fontSize: 12.5,
+                                color: "var(--text-secondary)",
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "4px 16px",
+                              }}
+                            >
+                              <span>
+                                Started:{" "}
+                                <b style={{ color: "var(--text-primary)" }}>
+                                  {new Date(h.started_at).toLocaleTimeString()}
+                                </b>
+                              </span>
+                              <span>
+                                Duration:{" "}
+                                <b style={{ color: "var(--text-primary)" }}>
+                                  {formatDuration(dur)}
+                                </b>
+                              </span>
+                              <span>
+                                Reopen after:{" "}
+                                <b style={{ color: "var(--text-primary)" }}>
+                                  {h.reopen_minutes ?? 0}m
+                                </b>
+                              </span>
+                            </div>
+                            {h.message ? (
+                              <div
+                                style={{
+                                  marginTop: 6,
+                                  fontSize: 12.5,
+                                  color: "var(--text-tertiary)",
+                                }}
+                              >
+                                “{h.message}”
+                              </div>
+                            ) : null}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
                 <div
                   style={{

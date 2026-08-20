@@ -1,7 +1,7 @@
+import Link from "next/link"
 import { services } from "@/lib/data"
-import Hero from "@/components/hero"
-import ServiceCard from "@/components/service-card"
 import { Reveal } from "@/components/ui/reveal"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 
@@ -14,31 +14,91 @@ export const metadata = {
 export default function ServicesPage() {
   return (
     <>
-      <Hero
-        title="We build products"
-        subtitle="End-to-end digital services — from concept and design to deployment and scaling."
-        primaryCTA={{ label: "Talk to us", href: "/contact" }}
-        secondaryCTA={{ label: "Our work", href: "/projects" }}
-      />
-
-      <section className="section">
-        <div className="container-width">
-          <Reveal delay={0.05} className="text-center">
-            <span className="eyebrow">Capabilities</span>
-            <h2 className="heading-xl mt-4 text-fluid-2xl">Everything we do</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
-              We handle the full stack so you don&apos;t have to juggle multiple
-              agencies.
+      {/* ---------- Hero ---------- */}
+      <section className="ed-hero ed-hero-services">
+        <div className="ed-container">
+          <Reveal>
+            <span className="ed-kicker">Services</span>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="ed-hero-title">
+              We build products
+              <br />
+              <em>end to end.</em>
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="ed-hero-sub">
+              From concept and design to deployment and scaling — the full
+              stack, so you don&apos;t have to juggle multiple agencies.
             </p>
           </Reveal>
+          <Reveal delay={0.24}>
+            <div className="ed-hero-cta">
+              <Link href="/contact" className="ed-btn ed-btn-solid">
+                Talk to us <ArrowRight size={16} />
+              </Link>
+              <Link href="/projects" className="ed-btn ed-btn-line">
+                See our work
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+        <div className="ed-hero-rule" />
+      </section>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* ---------- Services ---------- */}
+      <section className="ed-section">
+        <div className="ed-container">
+          <Reveal>
+            <div className="ed-section-head">
+              <span className="ed-index">01</span>
+              <h2 className="ed-h2">Everything we do</h2>
+            </div>
+          </Reveal>
+
+          <div className="ed-services-list ed-services-list-with-thumbs">
             {services.map((service, i) => (
-              <Reveal key={service.id} delay={0.1 + i * 0.08}>
-                <ServiceCard service={service} />
+              <Reveal key={service.id} delay={i * 0.05}>
+                <div className="ed-service-row">
+                  <span className="ed-service-num">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="ed-service-thumb"
+                    loading="lazy"
+                  />
+                  <div className="ed-service-body">
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                    <ul className="ed-service-features">
+                      {service.features.map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <ArrowUpRight className="ed-service-arrow" size={20} />
+                </div>
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ---------- CTA ---------- */}
+      <section className="ed-cta">
+        <div className="ed-container">
+          <Reveal>
+            <h2 className="ed-cta-title">Not sure what you need?</h2>
+            <p className="ed-cta-sub">
+              Tell us the problem — we&apos;ll recommend the right approach.
+            </p>
+            <Link href="/contact" className="ed-btn ed-btn-invert">
+              Get in touch <ArrowRight size={16} />
+            </Link>
+          </Reveal>
         </div>
       </section>
     </>

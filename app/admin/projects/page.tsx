@@ -6,7 +6,7 @@ import { Plus, MoreVertical, Pencil, FolderKanban, IndianRupee } from "lucide-re
 import RoleGuard from "@/components/RoleGuard";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
-import { createNotificationForAdmins } from "@/lib/admin/notifications";
+import { createNotificationForAdmins, createNotificationForClient } from "@/lib/admin/notifications";
 import EditProjectModal, { ProjectData } from "@/components/EditProjectModal";
 import DeleteProjectButton from "@/app/admin/projects/[id]/DeleteProjectButton";
 import { PageHeader, Card } from "@/components/admin/ui/Card";
@@ -99,6 +99,15 @@ export default function ProjectsPage() {
       }
       await logActivity({ userId, userName, action: `created project ${name}`, projectId: projectData.id, projectName: name });
       await createNotificationForAdmins({ title: "New project created", message: `Project ${name} was created.`, type: "project", relatedId: `/admin/projects/${projectData.id}` });
+      if (clientId) {
+        await createNotificationForClient({
+          clientId,
+          title: "New project",
+          message: `Project ${name} was created for you.`,
+          type: "project",
+          relatedId: `/client/projects/${projectData.id}`,
+        });
+      }
     } catch (err) {
       console.error("Post-create steps failed:", err);
     }

@@ -18,7 +18,11 @@ export default function NotificationDropdown({
   onMarkAllRead: () => void;
 }) {
   const pathname = usePathname();
-  const notificationsHref = pathname.startsWith("/member") ? "/member/notifications" : "/admin/notifications";
+  const notificationsHref = pathname.startsWith("/client")
+    ? "/client/notifications"
+    : pathname.startsWith("/member")
+    ? "/member/notifications"
+    : "/admin/notifications";
   if (!open) return null;
 
   return (

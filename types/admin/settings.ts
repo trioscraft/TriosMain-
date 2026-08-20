@@ -19,8 +19,21 @@ export type AppSettings = {
   maintenance_type: "scheduled" | "emergency" | "updating";
   maintenance_message: string;
   maintenance_ends_at: string | null;
+  maintenance_reopen_at: string | null;
+  maintenance_started_at: string | null;
   updated_at: string | null;
   updated_by: string | null;
+};
+
+export type MaintenanceHistory = {
+  id: number;
+  started_at: string;
+  ended_at: string;
+  scope: "client" | "member" | "both";
+  type: "scheduled" | "emergency" | "updating";
+  message: string | null;
+  reopen_minutes: number | null;
+  created_at?: string;
 };
 
 export const MAINTENANCE_SCOPE_OPTIONS = [

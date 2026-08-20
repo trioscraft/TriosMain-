@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Receipt, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
@@ -16,7 +17,7 @@ type ExpenseListProps = {
   expenses: ExpenseWithProfile[];
   projectId: string;
   projectName: string;
-  onExpensesChange: () => void;
+  onExpensesChange?: () => void;
 };
 
 function formatTimeAgo(timestamp: string) {
@@ -41,6 +42,7 @@ export default function ExpenseList({
   const [editingExpense, setEditingExpense] = useState<ExpenseData | null>(null);
   const [deletingExpense, setDeletingExpense] = useState<ExpenseData | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
 
   async function handleDelete() {
     if (!deletingExpense) return;
@@ -87,7 +89,8 @@ export default function ExpenseList({
 
     setDeleting(false);
     setDeletingExpense(null);
-    onExpensesChange();
+    router.refresh();
+    onExpensesChange?.();
   }
 
   if (expenses.length === 0) {
@@ -212,7 +215,8 @@ export default function ExpenseList({
           onClose={() => setEditingExpense(null)}
           onSuccess={() => {
             setEditingExpense(null);
-            onExpensesChange();
+            router.refresh();
+            onExpensesChange?.();
           }}
         />
       )}

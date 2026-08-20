@@ -7,6 +7,7 @@ import {
   FolderKanban,
   ReceiptText,
   BarChart3,
+  Bell,
   MessageSquare,
   LogOut,
   Sparkles,
@@ -19,6 +20,7 @@ const clientNavigation: Array<{ href: string; icon: LucideIcon; label: string; m
   { href: "/client/projects", icon: FolderKanban, label: "Projects" },
   { href: "/client/invoices", icon: ReceiptText, label: "Invoices" },
   { href: "/client/reports", icon: BarChart3, label: "Reports" },
+  { href: "/client/notifications", icon: Bell, label: "Notifications" },
   { href: "/client/messages", icon: MessageSquare, label: "Messages" },
 ];
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Mail, Phone, MapPin, FileText, FolderKanban, IndianRupee, TrendingUp } from "lucide-react";
 import RoleGuard from "@/components/RoleGuard";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabaseAdmin";
 import { Card } from "@/components/admin/ui/Card";
 import { StatCard } from "@/components/admin/ui/StatCard";
 import Badge from "@/components/admin/ui/Badge";

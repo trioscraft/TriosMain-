@@ -14,15 +14,20 @@ async function getMaintenance(): Promise<MaintenanceState> {
   try {
     const { data, error } = await supabaseAdmin
       .from("settings")
-      .select("maintenance_mode, maintenance_scope, maintenance_ends_at")
+      .select("maintenance_mode, maintenance_scope, maintenance_ends_at, maintenance_reopen_at")
       .eq("id", 1)
       .maybeSingle();
     if (error || !data) return cache?.value ?? null;
 
     const mode = Boolean(data.maintenance_mode);
+    const reopenAt = data.maintenance_reopen_at
+      ? new Date(data.maintenance_reopen_at).getTime()
+      : null;
     const ended =
       data.maintenance_ends_at && new Date(data.maintenance_ends_at).getTime() <= now;
-    const active = mode && !ended;
+    // Block while actively in maintenance, OR during the post-stop "reopen"
+    // cooldown window (reopen_at still in the future).
+    const active = (mode || (reopenAt !== null && reopenAt > now)) && !ended;
     const scope = (data.maintenance_scope as "client" | "member" | "both") || "both";
 
     const value = { active, scope };

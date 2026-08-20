@@ -7,7 +7,7 @@ export default async function ReviewList() {
 
   if (!reviews || reviews.length === 0) {
     return (
-      <p className="text-center text-slate-600 dark:text-slate-400">
+      <p className="ed-empty text-center">
         No reviews yet. Be the first to share your experience!
       </p>
     )

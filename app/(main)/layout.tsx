@@ -10,7 +10,7 @@ export default function MarketingLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="main-site">
+    <div className="editorial-site">
       <TechBackground />
       <ScrollProgress />
       <Header />

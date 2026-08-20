@@ -2,6 +2,7 @@ import "./globals.css"
 import type { ReactNode } from "react"
 import { Inter, Sora } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import SessionGuard from "@/components/session-guard"
 import Script from "next/script"
 
 const inter = Inter({
@@ -74,7 +75,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }
         `}</style>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
+          <SessionGuard>{children}</SessionGuard>
         </ThemeProvider>
       </body>
     </html>

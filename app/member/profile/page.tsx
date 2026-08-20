@@ -10,7 +10,6 @@ type Profile = {
   name: string | null;
   email: string | null;
   role: string | null;
-  hourly_rate: number | null;
   created_at: string | null;
 };
 
@@ -22,7 +21,6 @@ export default function ProfilePage() {
   // Edit form
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
-  const [hourlyRate, setHourlyRate] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -39,14 +37,13 @@ export default function ProfilePage() {
 
       const { data } = await supabase
         .from("profiles")
-        .select("id, name, email, role, hourly_rate, created_at")
+        .select("id, name, email, role, created_at")
         .eq("email", user.email || "")
         .single();
 
       if (data) {
         setProfile(data as Profile);
         setName(data.name || "");
-        setHourlyRate(String(data.hourly_rate || ""));
       }
       setLoading(false);
     })();
@@ -64,7 +61,6 @@ export default function ProfilePage() {
       .from("profiles")
       .update({
         name: name.trim(),
-        hourly_rate: hourlyRate === "" ? null : Number(hourlyRate) || 0,
       })
       .eq("id", profile.id);
 
@@ -74,15 +70,7 @@ export default function ProfilePage() {
       return;
     }
 
-    setProfile((cur) =>
-      cur
-        ? {
-            ...cur,
-            name: name.trim(),
-            hourly_rate: hourlyRate === "" ? null : Number(hourlyRate) || 0,
-          }
-        : cur
-    );
+    setProfile((cur) => (cur ? { ...cur, name: name.trim() } : cur));
 
     await logActivity({
       userId,
@@ -120,7 +108,7 @@ export default function ProfilePage() {
             Profile
           </h1>
           <p style={{ color: "var(--text-secondary)", marginTop: 4, fontSize: 14 }}>
-            Your details, role, and billing rate.
+            Your details and role.
           </p>
         </div>
 
@@ -179,19 +167,6 @@ export default function ProfilePage() {
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Your name"
                     />
-                  </div>
-                  <div>
-                    <label className="label">Hourly rate (₹)</label>
-                    <input
-                      className="input"
-                      type="number"
-                      value={hourlyRate}
-                      onChange={(e) => setHourlyRate(e.target.value)}
-                      placeholder="e.g. 500"
-                    />
-                    <div className="field-error" style={{ marginTop: 6, color: "var(--text-tertiary)", fontSize: 12 }}>
-                      Used to estimate your earnings from logged time.
-                    </div>
                   </div>
                   <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
                     <button className="btn" onClick={() => setEditing(false)} style={{ flex: 1 }}>

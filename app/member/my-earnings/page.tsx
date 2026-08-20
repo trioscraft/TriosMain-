@@ -11,21 +11,15 @@ export default async function MyEarningsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const email = user?.email || "";
   const userId = user?.id || "";
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name, hourly_rate")
-    .eq("email", email)
-    .single();
 
   const { data: entries } = await supabase
     .from("time_entries")
     .select("total_hours, project_id")
     .eq("user_id", userId);
 
-  const hourlyRate = Number(profile?.hourly_rate || 0);
+  // Hourly rate was removed from the app — earnings estimates are disabled.
+  const hourlyRate = 0;
   const totalHours =
     entries?.reduce((sum, entry) => sum + Number(entry.total_hours || 0), 0) || 0;
   const estimatedEarnings = totalHours * hourlyRate;

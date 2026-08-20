@@ -17,6 +17,22 @@ const PRIORITY_COLORS: Record<Priority, { bg: string; border: string; text: stri
 
 const PROJECT_COLORS = { bg: "#fdeeda", border: "#c25b2f", text: "#a1481f" };
 
+const FESTIVAL_COLORS = { bg: "#fdf1dc", border: "#e8861e", text: "#b45309" };
+const NATIONAL_COLORS = { bg: "#e7ecff", border: "#4f6ef2", text: "#3b4fd8" };
+
+function colorsFor(ev: CalendarEvent) {
+  if (ev.kind === "holiday") return ev.holiday_type === "national" ? NATIONAL_COLORS : FESTIVAL_COLORS;
+  if (ev.kind === "project") return PROJECT_COLORS;
+  return PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+}
+
+// Physical calendars put festivals first in each day cell.
+function holidayFirst(a: CalendarEvent, b: CalendarEvent) {
+  if (a.kind === "holiday" && b.kind !== "holiday") return -1;
+  if (b.kind === "holiday" && a.kind !== "holiday") return 1;
+  return 0;
+}
+
 const VIEW_LABELS = { month: "Month", week: "Week", day: "Day" } as const;
 type ViewMode = keyof typeof VIEW_LABELS;
 
@@ -186,35 +202,34 @@ function MonthGrid({
               {cell.getDate()}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-              {cellEvents.slice(0, maxVisible).map((ev) => {
+              {[...cellEvents].sort(holidayFirst).slice(0, maxVisible).map((ev) => {
                 const isProject = ev.kind === "project";
-                const colors = isProject
-                  ? PROJECT_COLORS
-                  : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                const isHoliday = ev.kind === "holiday";
+                const colors = colorsFor(ev);
                 return (
                   <div
                     key={ev.id}
-                    draggable={!isProject}
+                    draggable={!isProject && !isHoliday}
                     onDragStart={(e) => {
-                      if (isProject) return;
+                      if (isProject || isHoliday) return;
                       e.dataTransfer.setData("taskId", ev.id);
                       e.dataTransfer.setData("fromDate", ev.due_date);
                       onDragStart(ev, e);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (!isProject) onTaskClick?.(ev.id);
+                      if (!isProject && !isHoliday) onTaskClick?.(ev.id);
                     }}
-                    title={isProject ? `Project due: ${ev.title}` : ev.title}
+                    title={isProject ? `Project due: ${ev.title}` : isHoliday ? `Festival: ${ev.title}` : ev.title}
                     style={{
                       padding: "2px 5px",
                       borderRadius: "4px",
                       fontSize: "10px",
-                      fontWeight: 500,
+                      fontWeight: isHoliday ? 700 : 500,
                       background: colors.bg,
                       borderLeft: `2px solid ${colors.border}`,
                       color: colors.text,
-                      cursor: isProject ? "default" : "grab",
+                      cursor: isProject || isHoliday ? "default" : "grab",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
@@ -224,6 +239,7 @@ function MonthGrid({
                     }}
                   >
                     {isProject && <span style={{ fontWeight: 700, opacity: 0.9 }}>📅</span>}
+                    {isHoliday && <span style={{ fontWeight: 700, opacity: 0.9 }}>{ev.emoji || "🎊"}</span>}
                     <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {ev.title}
                     </span>
@@ -366,39 +382,39 @@ function WeekGrid({
                     gap: "2px",
                   }}
                 >
-                  {cellEvents.map((ev) => {
+                  {[...cellEvents].sort(holidayFirst).map((ev) => {
                     const isProject = ev.kind === "project";
-                    const colors = isProject
-                      ? PROJECT_COLORS
-                      : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                    const isHoliday = ev.kind === "holiday";
+                    const colors = colorsFor(ev);
                     return (
                       <div
                         key={ev.id}
-                        draggable={!isProject}
+                        draggable={!isProject && !isHoliday}
                         onDragStart={(e) => {
-                          if (isProject) return;
+                          if (isProject || isHoliday) return;
                           e.dataTransfer.setData("taskId", ev.id);
                           e.dataTransfer.setData("fromDate", ev.due_date);
                           onDragStart(ev, e);
                         }}
                         onClick={() => {
-                          if (!isProject) onTaskClick?.(ev.id);
+                          if (!isProject && !isHoliday) onTaskClick?.(ev.id);
                         }}
-                        title={isProject ? `Project due: ${ev.title}` : ev.title}
+                        title={isProject ? `Project due: ${ev.title}` : isHoliday ? `Festival: ${ev.title}` : ev.title}
                         style={{
                           padding: "3px 5px",
                           borderRadius: "4px",
                           fontSize: "10px",
+                          fontWeight: isHoliday ? 700 : 500,
                           background: colors.bg,
                           borderLeft: `2px solid ${colors.border}`,
                           color: colors.text,
-                          cursor: isProject ? "default" : "grab",
+                          cursor: isProject || isHoliday ? "default" : "grab",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {isProject ? `📅 ${ev.title}` : ev.title}
+                        {isProject ? `📅 ${ev.title}` : isHoliday ? `${ev.emoji || "🎊"} ${ev.title}` : ev.title}
                       </div>
                     );
                   })}
@@ -451,7 +467,7 @@ function DayView({
         </div>
 
         {hours.map((hour) => {
-          const hourEvents = dayEvents.slice(0, 5);
+          const hourEvents = [...dayEvents].sort(holidayFirst).slice(0, 5);
           return (
             <div
               key={hour}
@@ -496,34 +512,39 @@ function DayView({
               >
                 {hour === 9 && hourEvents.map((ev) => {
                   const isProject = ev.kind === "project";
-                  const colors = isProject
-                    ? PROJECT_COLORS
-                    : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                  const isHoliday = ev.kind === "holiday";
+                  const colors = colorsFor(ev);
                   return (
                     <div
                       key={ev.id}
-                      draggable={!isProject}
+                      draggable={!isProject && !isHoliday}
                       onDragStart={(e) => {
-                        if (isProject) return;
+                        if (isProject || isHoliday) return;
                         e.dataTransfer.setData("taskId", ev.id);
                         e.dataTransfer.setData("fromDate", ev.due_date);
                         onDragStart(ev, e);
                       }}
                       onClick={() => {
-                        if (!isProject) onTaskClick?.(ev.id);
+                        if (!isProject && !isHoliday) onTaskClick?.(ev.id);
                       }}
                       style={{
                         padding: "6px 10px",
                         borderRadius: "6px",
                         fontSize: "12px",
+                        fontWeight: isHoliday ? 700 : 500,
                         background: colors.bg,
                         borderLeft: `3px solid ${colors.border}`,
                         color: colors.text,
-                        cursor: isProject ? "default" : "grab",
+                        cursor: isProject || isHoliday ? "default" : "grab",
                         boxShadow: "0 1px 3px rgba(70,55,40,0.12)",
                       }}
                     >
-                      <div style={{ fontWeight: 600 }}>{ev.title}</div>
+                      <div style={{ fontWeight: 600 }}>{isHoliday ? `${ev.emoji || "🎊"} ${ev.title}` : ev.title}</div>
+                      {isHoliday && (
+                        <div style={{ fontSize: "10px", opacity: 0.7 }}>
+                          {ev.holiday_type === "national" ? "🇮🇳 National holiday" : "🪔 Indian festival"}
+                        </div>
+                      )}
                       {isProject && (
                         <>
                           <div style={{ fontSize: "10px", opacity: 0.7 }}>
@@ -729,7 +750,7 @@ export function CalendarView({
         </select>
 
         <div style={{ marginLeft: "auto", fontSize: "12px", color: "var(--text-tertiary)" }}>
-          {loading ? "Loading..." : `${events.length} task${events.length !== 1 ? "s" : ""}`}
+          {loading ? "Loading..." : `${events.length} event${events.length !== 1 ? "s" : ""}`}
         </div>
       </div>
 
@@ -812,6 +833,14 @@ export function CalendarView({
             <span style={{ textTransform: "capitalize" }}>{p}</span>
           </div>
         ))}
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "2px", background: FESTIVAL_COLORS.border }} />
+          <span>Festival</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "2px", background: NATIONAL_COLORS.border }} />
+          <span>National</span>
+        </div>
       </div>
 
       <style>{`
@@ -874,17 +903,16 @@ export function CalendarView({
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {upcomingEvents.map((ev) => {
                   const isProject = ev.kind === "project";
-                  const colors = isProject
-                    ? PROJECT_COLORS
-                    : PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.low;
+                  const isHoliday = ev.kind === "holiday";
+                  const colors = colorsFor(ev);
                   return (
                     <button
                       key={ev.id}
                       onClick={() => handleUpcomingClick(ev.due_date)}
-                      title={isProject ? `Project due: ${ev.title}` : ev.title}
+                      title={isProject ? `Project due: ${ev.title}` : isHoliday ? `Festival: ${ev.title}` : ev.title}
                       style={{
                         textAlign: "left",
-                        background: "rgba(255,255,255,0.75)",
+                        background: isHoliday ? "rgba(255,248,235,0.95)" : "rgba(255,255,255,0.75)",
                         border: `1px solid ${colors.border}`,
                         borderLeft: `3px solid ${colors.border}`,
                         borderRadius: "4px",
@@ -901,9 +929,14 @@ export function CalendarView({
                       <div style={{ fontWeight: 700 }}>
                         {formatDisplay(isoToDate(ev.due_date))}
                       </div>
-                      <div style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {isProject ? `📅 ${ev.title}` : ev.title}
+                      <div style={{ fontWeight: isHoliday ? 700 : 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {isProject ? `📅 ${ev.title}` : isHoliday ? `${ev.emoji || "🎊"} ${ev.title}` : ev.title}
                       </div>
+                      {isHoliday && (
+                        <div style={{ fontSize: "10px", opacity: 0.75 }}>
+                          {ev.holiday_type === "national" ? "🇮🇳 National holiday" : "Indian festival"}
+                        </div>
+                      )}
                       {ev.client_name && (
                         <div style={{ fontSize: "10px", opacity: 0.75 }}>🏢 {ev.client_name}</div>
                       )}

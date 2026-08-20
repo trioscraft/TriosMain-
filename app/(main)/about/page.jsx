@@ -1,8 +1,8 @@
-import Hero from "@/components/hero"
+import Link from "next/link"
 import TeamSection from "@/components/team-section"
 import TechMarquee from "@/components/tech-marquee"
 import { Reveal } from "@/components/ui/reveal"
-import { Award, Heart, Zap } from "lucide-react"
+import { ArrowRight, Zap, Award, Heart } from "lucide-react"
 
 const aboutStack = [
   "Next.js",
@@ -16,6 +16,12 @@ const aboutStack = [
   "PostgreSQL",
 ]
 
+const values = [
+  { icon: Zap, title: "Speed", text: "MVPs in weeks, not months." },
+  { icon: Award, title: "Quality", text: "Tested, reviewed, and ship-shape." },
+  { icon: Heart, title: "Care", text: "We treat your product like our own." },
+]
+
 export const dynamic = "force-dynamic"
 
 export const metadata = {
@@ -27,97 +33,129 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Hero
-        title="We're the trio solving"
-        subtitle="We're three computer science graduates who believe great software comes from small teams that care deeply."
-        primaryCTA={{ label: "Work with us", href: "/contact" }}
-        secondaryCTA={{ label: "See our work", href: "/projects" }}
-      />
+      {/* ---------- Hero ---------- */}
+      <section className="ed-hero ed-hero-about">
+        <div className="ed-container">
+          <Reveal>
+            <span className="ed-kicker">About</span>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="ed-hero-title">
+              We&apos;re the trio
+              <br />
+              <em>solving it.</em>
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="ed-hero-sub">
+              Three computer science graduates who believe great software comes
+              from small teams that care deeply.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <div className="ed-hero-cta">
+              <Link href="/contact" className="ed-btn ed-btn-solid">
+                Work with us <ArrowRight size={16} />
+              </Link>
+              <Link href="/projects" className="ed-btn ed-btn-line">
+                See our work
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+        <div className="ed-hero-rule" />
+      </section>
 
-      {/* Philosophy */}
-      <section className="section">
-        <div className="container-width">
-          <Reveal delay={0.05} className="mx-auto max-w-3xl text-center">
-            <span className="eyebrow">Our approach</span>
-            <h2 className="heading-xl mt-4 text-fluid-2xl">How we work</h2>
-            <p className="mt-5 text-slate-600 dark:text-slate-400">
+      {/* ---------- Values ---------- */}
+      <section className="ed-section">
+        <div className="ed-container">
+          <Reveal>
+            <div className="ed-section-head">
+              <span className="ed-index">01</span>
+              <h2 className="ed-h2">How we work</h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <p className="ed-empty max-w-2xl">
               We keep teams small so every decision matters. We move fast,
               measure impact, and care about the details that make products
               delightful. We partner with you — not just deliver to you.
             </p>
-
-            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
-              <Reveal delay={0.1}>
-                <div className="luxe-card text-center">
-                  <Zap className="mx-auto mb-4 h-8 w-8 text-primary-500" />
-                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
-                    Speed
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                    MVPs in weeks, not months.
-                  </p>
-                </div>
-              </Reveal>
-              <Reveal delay={0.18}>
-                <div className="luxe-card text-center">
-                  <Award className="mx-auto mb-4 h-8 w-8 text-luxe-400" />
-                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
-                    Quality
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                    Tested, reviewed, and ship-shape.
-                  </p>
-                </div>
-              </Reveal>
-              <Reveal delay={0.26}>
-                <div className="luxe-card text-center">
-                  <Heart className="mx-auto mb-4 h-8 w-8 text-secondary-400" />
-                  <h3 className="font-display font-semibold text-slate-900 dark:text-white">
-                    Care
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                    We treat your product like our own.
-                  </p>
-                </div>
-              </Reveal>
-            </div>
           </Reveal>
+
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
+            {values.map((value, i) => (
+              <Reveal key={value.title} delay={0.1 + i * 0.08}>
+                <div className="ed-value">
+                  <value.icon className="ed-value-icon" size={22} />
+                  <h3 className="ed-h3">{value.title}</h3>
+                  <p className="ed-value-text">{value.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Tech stack */}
-      <section className="section">
-        <div className="container-width">
-          <Reveal delay={0.05} className="mx-auto max-w-4xl text-center">
-            <span className="eyebrow">Stack</span>
-            <h2 className="heading-xl mt-4 text-fluid-2xl">Tools we love</h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-400">
+      {/* ---------- Stack ---------- */}
+      <section className="ed-section ed-section-alt">
+        <div className="ed-container">
+          <Reveal>
+            <div className="ed-section-head">
+              <span className="ed-index">02</span>
+              <h2 className="ed-h2">Tools we love</h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <p className="ed-empty mb-8">
               We pick the right tool for the job — not the shiniest one.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-slate-600 dark:text-slate-300">
-              <span>Next.js</span>
-              <span>React</span>
-              <span className="text-slate-300">·</span>
-              <span>React Native</span>
-              <span>Flutter</span>
-              <span className="text-slate-300">·</span>
-              <span>TypeScript</span>
-              <span className="text-slate-300">·</span>
-              <span>Tailwind CSS</span>
-              <span>AWS</span>
-              <span className="text-slate-300">·</span>
-              <span>Docker</span>
-              <span>PostgreSQL</span>
-            </div>
-            <div className="mt-10">
-              <TechMarquee items={aboutStack} />
-            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <TechMarquee items={aboutStack} />
           </Reveal>
         </div>
       </section>
 
-      {/* Team */}
-      <TeamSection />
+      {/* ---------- Team ---------- */}
+      <section className="ed-section">
+        <div className="ed-container">
+          <Reveal>
+            <div className="ed-section-head">
+              <span className="ed-index">03</span>
+              <h2 className="ed-h2">The trio</h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <p className="ed-empty mb-8 max-w-2xl">
+              Three computer science graduates who met in college and decided to
+              build the kind of software we&apos;d love to use ourselves. One
+              codebase, one bug at a time.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <TeamSection />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- CTA ---------- */}
+      <section className="ed-cta">
+        <div className="ed-container">
+          <Reveal>
+            <h2 className="ed-cta-title">Like what you hear?</h2>
+            <p className="ed-cta-sub">Let&apos;s build something together.</p>
+            <Link href="/contact" className="ed-btn ed-btn-invert">
+              Get in touch <ArrowRight size={16} />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </>
   )
 }

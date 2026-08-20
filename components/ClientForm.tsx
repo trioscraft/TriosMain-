@@ -103,6 +103,7 @@ export default function ClientForm({
   const [address, setAddress] = useState(initialData?.address || "");
   const [notes, setNotes] = useState(initialData?.notes || "");
   const [status, setStatus] = useState(initialData?.status || "active");
+  const [needsLogin, setNeedsLogin] = useState(true);
 
   const [loginEmail, setLoginEmail] = useState(initialData?.login_email || "");
   const [loginPassword, setLoginPassword] = useState(initialData?.login_password || "");
@@ -133,7 +134,7 @@ export default function ClientForm({
       notes: notes.trim(),
       status,
     };
-    if (isCreate) {
+    if (isCreate && needsLogin) {
       values.login_email = loginEmail.trim();
       values.login_password = loginPassword;
     }
@@ -145,52 +146,62 @@ export default function ClientForm({
     if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
   }
 
-  const twoCol: React.CSSProperties = {
-    display: "grid",
-    gap: "16px",
-    gridTemplateColumns: "1fr 1fr",
-  };
-
   return (
-    <div style={{ display: "grid", gap: "18px" }}>
-      <SectionCard title="Company Details" hint="Basic information about the client business.">
-        <div>
-          <label className="label">Company Name *</label>
-          <input
-            className="input"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            autoFocus
-          />
-        </div>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: isCreate ? "1fr 1fr" : "1fr",
+        gap: 20,
+        alignItems: "start",
+        background: "var(--bg-card)",
+      }}
+    >
+      <SectionCard title="Client Details" hint="Basic information about the client.">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 16,
+          }}
+        >
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label className="label">Client Name *</label>
+            <input
+              className="input"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              autoFocus
+              style={{ width: "100%" }}
+            />
+          </div>
 
-        <div style={twoCol}>
           <div>
             <label className="label">Contact Name</label>
             <input
               className="input"
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
+              style={{ width: "100%" }}
             />
           </div>
           <div>
-            <label className="label">Company Email</label>
+            <label className="label">Client Email</label>
             <input
               className="input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{ width: "100%" }}
             />
           </div>
-        </div>
 
-        <div style={twoCol}>
           <div>
             <label className="label">Phone</label>
             <input
               className="input"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              style={{ width: "100%" }}
             />
           </div>
           <div>
@@ -199,94 +210,138 @@ export default function ClientForm({
               className="input"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
+              style={{ width: "100%" }}
             >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
           </div>
-        </div>
 
-        <div>
-          <label className="label">Address</label>
-          <textarea
-            className="input"
-            rows={2}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            style={{ minHeight: "70px" }}
-          />
-        </div>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label className="label">Address</label>
+            <textarea
+              className="input"
+              rows={2}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              style={{ minHeight: "70px", width: "100%" }}
+            />
+          </div>
 
-        <div>
-          <label className="label">Notes</label>
-          <textarea
-            className="input"
-            rows={3}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            style={{ minHeight: "80px" }}
-          />
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label className="label">Notes</label>
+            <textarea
+              className="input"
+              rows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              style={{ minHeight: "80px", width: "100%" }}
+            />
+          </div>
         </div>
       </SectionCard>
 
       {isCreate ? (
         <SectionCard
-          title="Client Portal Login"
-          hint="These are the credentials the client uses to sign in and track their project."
+          title="Client Portal Access"
+          hint="Decide whether this client gets a login to track their project."
           accent
         >
           <div>
-            <label className="label">Login Email *</label>
-            <input
-              className="input"
-              type="email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              placeholder="client@company.com"
-            />
-          </div>
-
-          <div>
-            <label className="label">Login Password *</label>
-            <div style={{ position: "relative" }}>
-              <input
-                className="input"
-                type={showPassword ? "text" : "password"}
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="Min 6 characters"
-                style={{ paddingRight: "180px" }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  right: 8,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "flex",
-                  gap: "8px",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((s) => !s)}
-                  style={linkBtn}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-                <button type="button" onClick={() => setLoginPassword(makePassword())} style={linkBtn}>
-                  Generate
-                </button>
-                <button type="button" onClick={copyCreds} style={linkBtn}>
-                  Copy
-                </button>
-              </div>
+            <label className="label">Need Client Portal Login?</label>
+            <div style={{ display: "inline-flex", gap: 8, marginTop: 6 }}>
+              {[
+                { value: true, label: "Yes" },
+                { value: false, label: "No" },
+              ].map((opt) => {
+                const active = needsLogin === opt.value;
+                return (
+                  <button
+                    key={opt.label}
+                    type="button"
+                    onClick={() => setNeedsLogin(opt.value)}
+                    style={{
+                      padding: "8px 20px",
+                      borderRadius: "var(--radius-md)",
+                      border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
+                      background: active ? "var(--accent-soft)" : "transparent",
+                      color: active ? "var(--accent)" : "var(--text-secondary)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {needsLogin ? (
+            <div style={{ display: "grid", gap: 16, marginTop: 16 }}>
+              <div>
+                <label className="label">Login Email *</label>
+                <input
+                  className="input"
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="client@email.com"
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div>
+                <label className="label">Login Password *</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    className="input"
+                    type={showPassword ? "text" : "password"}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    style={{ paddingRight: "180px", width: "100%" }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      display: "flex",
+                      gap: "8px",
+                    }}
+                  >
+                    <button type="button" onClick={() => setShowPassword((s) => !s)} style={linkBtn}>
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                    <button type="button" onClick={() => setLoginPassword(makePassword())} style={linkBtn}>
+                      Generate
+                    </button>
+                    <button type="button" onClick={copyCreds} style={linkBtn}>
+                      Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p
+              style={{
+                color: "var(--text-tertiary)",
+                fontSize: 12.5,
+                marginTop: 14,
+                lineHeight: 1.5,
+              }}
+            >
+              No portal login will be created. You can save the client details on their own.
+            </p>
+          )}
         </SectionCard>
       ) : null}
 
-      <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+      <div style={{ display: "flex", gap: 12, gridColumn: "1 / -1" }}>
         {onCancel ? (
           <button type="button" className="btn" onClick={onCancel} disabled={submitting} style={{ flex: 1 }}>
             Cancel
@@ -300,12 +355,13 @@ export default function ClientForm({
           disabled={
             submitting ||
             !companyName.trim() ||
-            (isCreate && (!loginEmail.trim() || !loginPassword))
+            (isCreate && needsLogin && (!loginEmail.trim() || !loginPassword))
           }
           style={{
             flex: 1,
             opacity:
-              !companyName.trim() || (isCreate && (!loginEmail.trim() || !loginPassword))
+              !companyName.trim() ||
+              (isCreate && needsLogin && (!loginEmail.trim() || !loginPassword))
                 ? 0.5
                 : 1,
           }}

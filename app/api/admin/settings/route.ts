@@ -24,6 +24,8 @@ const WRITABLE_COLUMNS = [
   "maintenance_type",
   "maintenance_message",
   "maintenance_ends_at",
+  "maintenance_reopen_at",
+  "maintenance_started_at",
 ];
 
 const DEFAULTS: Record<string, unknown> = {
@@ -47,6 +49,8 @@ const DEFAULTS: Record<string, unknown> = {
   maintenance_type: "scheduled",
   maintenance_message: "",
   maintenance_ends_at: null,
+  maintenance_reopen_at: null,
+  maintenance_started_at: null,
 };
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;

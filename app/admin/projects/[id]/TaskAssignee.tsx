@@ -95,7 +95,7 @@ export default function TaskAssignee({
         title: "Task assigned",
         message: `You were assigned to task ${taskTitle} in project ${projectName}.`,
         type: "task",
-        relatedId: `/admin/projects/${projectId}`,
+        relatedId: `/admin/projects/${projectId}/kanban`,
       });
     }
   }

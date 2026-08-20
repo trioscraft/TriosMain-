@@ -1,7 +1,7 @@
-import Hero from "@/components/hero"
+import Link from "next/link"
 import ContactForm from "@/components/contact-form"
 import { Reveal } from "@/components/ui/reveal"
-import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 
@@ -21,46 +21,70 @@ const contactInfo = [
 export default function ContactPage() {
   return (
     <>
-      <Hero
-        title="Let's talk"
-        subtitle="Have a project in mind or just want to say hello? Drop us a line."
-        primaryCTA={{ label: "Email us", href: "mailto:hello@trioscraft.com" }}
-        secondaryCTA={{ label: "Reviews", href: "/reviews" }}
-      />
+      {/* ---------- Hero ---------- */}
+      <section className="ed-hero ed-hero-contact">
+        <div className="ed-container">
+          <Reveal>
+            <span className="ed-kicker">Contact</span>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="ed-hero-title">
+              Let&apos;s talk.
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="ed-hero-sub">
+              Have a project in mind or just want to say hello? Drop us a line.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <div className="ed-hero-cta">
+              <a href="mailto:hello@trioscraft.com" className="ed-btn ed-btn-solid">
+                Email us <ArrowRight size={16} />
+              </a>
+              <Link href="/reviews" className="ed-btn ed-btn-line">
+                Read reviews
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+        <div className="ed-hero-rule" />
+      </section>
 
-      <section className="section">
-        <div className="container-width">
+      {/* ---------- Contact ---------- */}
+      <section className="ed-section">
+        <div className="ed-container">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <Reveal delay={0.05} className="space-y-4">
-              <span className="eyebrow">Get in touch</span>
-              <h2 className="heading-xl mt-4 text-fluid-xl">Reach out</h2>
-              <p className="text-slate-600 dark:text-slate-400">
-                We&apos;d love to hear about your project. Fill in the form and
-                we&apos;ll get back within 24-48 hours.
-              </p>
+            <div>
+              <Reveal>
+                <div className="ed-section-head">
+                  <span className="ed-index">01</span>
+                  <h2 className="ed-h2">Reach out</h2>
+                </div>
+              </Reveal>
 
-              <div className="mt-8 space-y-4">
+              <Reveal delay={0.05}>
+                <p className="ed-empty mb-8">
+                  We&apos;d love to hear about your project. Fill in the form
+                  and we&apos;ll get back within 24–48 hours.
+                </p>
+              </Reveal>
+
+              <div>
                 {contactInfo.map((info, i) => (
                   <Reveal key={info.title} delay={0.1 + i * 0.05}>
-                    <div className="neu-card neu-card-hover flex items-center gap-4 p-4 transition-transform hover:translate-x-1">
-                      <span className="neu-icon h-10 w-10">
-                        <info.icon className="h-5 w-5 text-[var(--neu-gold)]" />
+                    <div className="ed-contact-row">
+                      <span className="ed-contact-icon">
+                        <info.icon size={18} />
                       </span>
                       <div>
-                        <p className="text-sm font-medium text-[var(--neu-text-2)]">
-                          {info.title}
-                        </p>
+                        <p className="ed-contact-label">{info.title}</p>
                         {info.href ? (
-                          <a
-                            href={info.href}
-                            className="text-[var(--neu-text)] hover:text-[var(--neu-accent)]"
-                          >
-                            {info.detail}
-                          </a>
-                        ) : (
-                          <p className="text-[var(--neu-text)]">
-                            {info.detail}
+                          <p className="ed-contact-value">
+                            <a href={info.href}>{info.detail}</a>
                           </p>
+                        ) : (
+                          <p className="ed-contact-value">{info.detail}</p>
                         )}
                       </div>
                     </div>
@@ -69,7 +93,7 @@ export default function ContactPage() {
               </div>
 
               <Reveal delay={0.2}>
-                <div className="neu-card mt-6 h-64 w-full overflow-hidden">
+                <div className="ed-map">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3135.387129898855!2d-122.45188188422606!3d37.78699057518318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1r8!3m3!1m2!1s0x80858064ab2bc13f%3A0xb40c21b3878c9937!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1!6m1!1sen"
                     width="100%"
@@ -82,11 +106,13 @@ export default function ContactPage() {
                   />
                 </div>
               </Reveal>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.1} className="neu-card p-6 sm:p-8">
-              <h2 className="heading-xl mb-4 text-fluid-xl">Send a message</h2>
-              <ContactForm />
+            <Reveal delay={0.1}>
+              <div className="ed-form-card">
+                <h2 className="ed-h2 mb-6">Send a message</h2>
+                <ContactForm />
+              </div>
             </Reveal>
           </div>
         </div>

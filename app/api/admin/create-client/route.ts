@@ -59,38 +59,35 @@ export async function POST(request: NextRequest) {
 
   if (!companyName) {
     return NextResponse.json(
-      { error: "Company name is required." },
-      { status: 400 }
-    );
-  }
-  if (!loginEmail || !loginPassword) {
-    return NextResponse.json(
-      { error: "Client login email and password are required." },
-      { status: 400 }
-    );
-  }
-  if (loginPassword.length < 6) {
-    return NextResponse.json(
-      { error: "Client password must be at least 6 characters." },
+      { error: "Client name is required." },
       { status: 400 }
     );
   }
 
-  // 1. Create the client portal login (auth user + identities).
-  const { data: newUser, error: createErr } =
-    await supabaseAdmin.auth.admin.createUser({
-      email: loginEmail,
-      password: loginPassword,
-      email_confirm: true,
-      user_metadata: { name: (body.contact_name || companyName).trim() },
-    });
-  if (createErr || !newUser.user) {
-    return NextResponse.json(
-      { error: createErr?.message || "Failed to create client login." },
-      { status: 400 }
-    );
+  // 1. Optionally create the client portal login.
+  let uid: string | null = null;
+  if (loginEmail && loginPassword) {
+    if (loginPassword.length < 6) {
+      return NextResponse.json(
+        { error: "Client password must be at least 6 characters." },
+        { status: 400 }
+      );
+    }
+    const { data: newUser, error: createErr } =
+      await supabaseAdmin.auth.admin.createUser({
+        email: loginEmail,
+        password: loginPassword,
+        email_confirm: true,
+        user_metadata: { name: (body.contact_name || companyName).trim() },
+      });
+    if (createErr || !newUser.user) {
+      return NextResponse.json(
+        { error: createErr?.message || "Failed to create client login." },
+        { status: 400 }
+      );
+    }
+    uid = newUser.user.id;
   }
-  const uid = newUser.user.id;
 
   // 2. Create the client company record.
   const { data: client, error: clientErr } = await supabaseAdmin
@@ -115,34 +112,36 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 3. Link the login to the company and mark it as a client.
-  const { error: cuErr } = await supabaseAdmin.from("client_users").insert([
-    {
-      id: uid,
-      client_id: client.id,
-      email: loginEmail,
-      name: (body.contact_name || companyName).trim(),
-      role: "client",
-    },
-  ]);
-  const { error: pErr } = await supabaseAdmin
-    .from("profiles")
-    .upsert(
-      [
-        {
-          id: uid,
-          email: loginEmail,
-          name: (body.contact_name || companyName).trim(),
-          role: "client",
-        },
-      ],
-      { onConflict: "id" }
-    );
-  if (cuErr || pErr) {
-    return NextResponse.json(
-      { error: cuErr?.message || pErr?.message || "Failed to link client." },
-      { status: 400 }
-    );
+  // 3. Link the login to the company only when a portal login was created.
+  if (uid) {
+    const { error: cuErr } = await supabaseAdmin.from("client_users").insert([
+      {
+        id: uid,
+        client_id: client.id,
+        email: loginEmail,
+        name: (body.contact_name || companyName).trim(),
+        role: "client",
+      },
+    ]);
+    const { error: pErr } = await supabaseAdmin
+      .from("profiles")
+      .upsert(
+        [
+          {
+            id: uid,
+            email: loginEmail,
+            name: (body.contact_name || companyName).trim(),
+            role: "client",
+          },
+        ],
+        { onConflict: "id" }
+      );
+    if (cuErr || pErr) {
+      return NextResponse.json(
+        { error: cuErr?.message || pErr?.message || "Failed to link client." },
+        { status: 400 }
+      );
+    }
   }
 
   return NextResponse.json({ ok: true, id: client.id });

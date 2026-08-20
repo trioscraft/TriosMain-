@@ -17,7 +17,7 @@ export default function RatingInput({ value = 5, onChange, label = "Your rating"
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+      <label className="ed-field-label">
         {label} <span className="text-red-500">*</span>
       </label>
       <div className="flex items-center gap-1" role="radiogroup">

@@ -1,4 +1,5 @@
 import { projects } from "@/lib/data";
+import { supabaseAdmin, serviceRoleConfigured } from "@/lib/supabaseAdmin";
 
 export type PortfolioProject = {
   id: string | number;
@@ -39,4 +40,27 @@ export async function getAllPortfolioProjects(): Promise<PortfolioProject[]> {
  */
 export async function getPublishedPortfolioProjects(): Promise<PortfolioProject[]> {
   return projects as PortfolioProject[];
+}
+
+export type PublicStats = {
+  projects: number;
+  clients: number;
+};
+
+/**
+ * Live counts for the homepage stats strip. Uses the service-role client so
+ * RLS (which hides rows from the anon role) doesn't return 0. Falls back to
+ * 0s if the service-role key isn't configured.
+ */
+export async function getPublicStats(): Promise<PublicStats> {
+  if (!serviceRoleConfigured) {
+    return { projects: 0, clients: 0 };
+  }
+
+  const [{ count: projectCount }, { count: clientCount }] = await Promise.all([
+    supabaseAdmin.from("projects").select("*", { count: "exact", head: true }),
+    supabaseAdmin.from("clients").select("*", { count: "exact", head: true }),
+  ]);
+
+  return { projects: projectCount ?? 0, clients: clientCount ?? 0 };
 }

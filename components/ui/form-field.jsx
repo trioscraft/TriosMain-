@@ -5,7 +5,7 @@ export function FormField({ label, htmlFor, required, children, error }) {
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={htmlFor}
-        className="text-sm font-medium neu-text-secondary"
+        className="ed-field-label"
       >
         {label}
         {required && <span className="text-red-500">*</span>}
@@ -16,5 +16,5 @@ export function FormField({ label, htmlFor, required, children, error }) {
   )
 }
 
-export const inputVariants = "neu-input"
-export const textareaVariants = "neu-textarea resize-y"
+export const inputVariants = "ed-input"
+export const textareaVariants = "ed-textarea resize-y"

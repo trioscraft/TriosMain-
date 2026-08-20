@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
 
-const remotePatterns = []
+const remotePatterns = [
+  { protocol: "https", hostname: "images.unsplash.com" },
+]
 if (supabaseUrl) {
   try {
     const { hostname } = new URL(supabaseUrl)

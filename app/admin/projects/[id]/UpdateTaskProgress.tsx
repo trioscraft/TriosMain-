@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
-import { createNotification } from "@/lib/admin/notifications";
+import { createNotificationForAdmins } from "@/lib/admin/notifications";
 
 export default function UpdateTaskProgress({
   taskId,
@@ -61,15 +61,12 @@ export default function UpdateTaskProgress({
         projectName,
       });
 
-      if (userId) {
-        await createNotification({
-          userId,
-          title: "Task completed",
-          message: `Task ${taskTitle} in project ${projectName} was completed.`,
-          type: "task",
-          relatedId: `/admin/projects/${projectId}`,
-        });
-      }
+      await createNotificationForAdmins({
+        title: "Task completed",
+        message: `Task ${taskTitle} in project ${projectName} was completed.`,
+        type: "task",
+        relatedId: `/admin/projects/${projectId}`,
+      });
     }
 
     // Get all tasks for this project

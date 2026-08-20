@@ -18,33 +18,36 @@ const social = [
   { href: "mailto:hello@trioscraft.com", label: "Email", icon: Mail },
 ]
 
+const services = [
+  "Web Applications",
+  "Mobile Apps",
+  "Software Development",
+  "UI/UX Design",
+  "DevOps & Cloud",
+]
+
 export default function Footer() {
   return (
-    <footer className="relative mt-12">
-      <div className="container-width section">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+    <footer className="ed-footer">
+      <div className="ed-footer-inner">
+        <div className="ed-footer-grid">
           <Reveal delay={0}>
-            <div className="neu-card p-6 space-y-4">
-              <div className="flex items-center space-x-2">
-                <span className="font-display text-2xl font-extrabold tracking-tight text-fade">
-                  TRIOS CRAFT
-                </span>
-              </div>
-              <p className="max-w-xs text-sm neu-text-secondary">
+            <div>
+              <span className="ed-footer-brand">TRIOS CRAFT</span>
+              <p className="ed-footer-about">
                 Three CS graduates crafting digital experiences that are fast,
                 beautiful, and built to last.
               </p>
-              <div className="flex items-center gap-3 pt-2">
+              <div className="ed-footer-social">
                 {social.map((s) => (
                   <a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="neu-icon h-9 w-9 hover:neu-text-accent"
                     aria-label={s.label}
                   >
-                    <s.icon size={18} />
+                    <s.icon size={16} />
                   </a>
                 ))}
               </div>
@@ -52,17 +55,12 @@ export default function Footer() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="neu-card p-6 space-y-3">
-              <h3 className="text-sm font-semibold neu-text-primary">
-                Pages
-              </h3>
-              <ul className="space-y-2">
+            <div>
+              <h3 className="ed-footer-heading">Pages</h3>
+              <ul className="ed-footer-list">
                 {links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="link-underline text-sm neu-text-secondary"
-                    >
+                    <Link href={link.href} className="ed-footer-link">
                       {link.label}
                     </Link>
                   </li>
@@ -72,38 +70,43 @@ export default function Footer() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="neu-card p-6 space-y-3">
-              <h3 className="text-sm font-semibold neu-text-primary">
-                Services
-              </h3>
-              <ul className="space-y-2 text-sm neu-text-secondary">
-                <li>Web Applications</li>
-                <li>Mobile Apps</li>
-                <li>Software Development</li>
-                <li>UI/UX Design</li>
-                <li>DevOps & Cloud</li>
+            <div>
+              <h3 className="ed-footer-heading">Services</h3>
+              <ul className="ed-footer-list">
+                {services.map((service) => (
+                  <li key={service}>{service}</li>
+                ))}
               </ul>
             </div>
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="neu-card p-6 space-y-3">
-              <h3 className="text-sm font-semibold neu-text-primary">
-                Say hello
-              </h3>
-              <ul className="space-y-2 text-sm neu-text-secondary">
-                <li>hello@trioscraft.com</li>
-                <li>+1 (555) 123-4567</li>
+            <div>
+              <h3 className="ed-footer-heading">Say hello</h3>
+              <ul className="ed-footer-list">
+                <li>
+                  <a href="mailto:hello@trioscraft.com" className="ed-footer-link">
+                    hello@trioscraft.com
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+15551234567" className="ed-footer-link">
+                    +1 (555) 123-4567
+                  </a>
+                </li>
                 <li>San Francisco, CA</li>
               </ul>
             </div>
           </Reveal>
         </div>
 
-        <Reveal delay={0.4} className="mt-10 text-center text-sm neu-text-muted">
-          <p>
-            &copy; {new Date().getFullYear()} Trios Craft. All rights reserved.
-          </p>
+        <Reveal delay={0.4}>
+          <div className="ed-footer-bottom">
+            <p>
+              &copy; {new Date().getFullYear()} Trios Craft. All rights reserved.
+            </p>
+            <p>Built with care by three engineers.</p>
+          </div>
         </Reveal>
       </div>
     </footer>

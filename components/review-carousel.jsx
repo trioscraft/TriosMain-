@@ -20,7 +20,7 @@ export default function ReviewCarousel({ reviews }) {
 
   if (!reviews || reviews.length === 0) {
     return (
-      <p className="text-center text-slate-600 dark:text-slate-400">
+      <p className="ed-empty text-center">
         No reviews yet. Be the first to share your experience!
       </p>
     )
@@ -51,7 +51,7 @@ export default function ReviewCarousel({ reviews }) {
             onClick={() => scroll("prev")}
             whileHover={{ scale: 1.1, x: -2 }}
             whileTap={{ scale: 0.9 }}
-            className="neu-icon absolute -left-4 top-1/2 -translate-y-1/2 h-11 w-11 text-[var(--neu-text-2)]"
+            className="ed-carousel-btn -left-4"
             aria-label="Previous review"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -61,7 +61,7 @@ export default function ReviewCarousel({ reviews }) {
             onClick={() => scroll("next")}
             whileHover={{ scale: 1.1, x: 2 }}
             whileTap={{ scale: 0.9 }}
-            className="neu-icon absolute -right-4 top-1/2 -translate-y-1/2 h-11 w-11 text-[var(--neu-text-2)]"
+            className="ed-carousel-btn -right-4"
             aria-label="Next review"
           >
             <ChevronRight className="h-5 w-5" />

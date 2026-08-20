@@ -51,6 +51,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   maintenance_type: "scheduled",
   maintenance_message: "",
   maintenance_ends_at: null,
+  maintenance_reopen_at: null,
+  maintenance_started_at: null,
   updated_at: null,
   updated_by: null,
 };
@@ -103,31 +105,41 @@ export default function MaintenancePage() {
   const meta = PANEL_META[panel];
   const scope = settings.maintenance_scope || "both";
   const scopeMatches = scope === panel || scope === "both";
-  const activeForPanel =
-    Boolean(settings.maintenance_mode) &&
-    scopeMatches &&
-    (!settings.maintenance_ends_at ||
-      new Date(settings.maintenance_ends_at).getTime() > now);
 
   const endsAt = settings.maintenance_ends_at
     ? new Date(settings.maintenance_ends_at).getTime()
     : null;
-  const remaining = activeForPanel && endsAt ? Math.max(0, endsAt - now) : 0;
+  const reopenAt = settings.maintenance_reopen_at
+    ? new Date(settings.maintenance_reopen_at).getTime()
+    : null;
+
+  const activeNow =
+    Boolean(settings.maintenance_mode) && scopeMatches && (!endsAt || endsAt > now);
+  const cooldownNow = !settings.maintenance_mode && scopeMatches && reopenAt != null && reopenAt > now;
+  const underMaintenance = activeNow || cooldownNow;
+
+  const reopenRemaining = cooldownNow && reopenAt ? Math.max(0, reopenAt - now) : 0;
+  const remaining = activeNow && endsAt ? Math.max(0, endsAt - now) : reopenRemaining;
   const expired = endsAt != null && endsAt <= now;
 
   // When the timer ends, redirect back into the portal.
   useEffect(() => {
-    if (settings.maintenance_mode && endsAt && endsAt <= now && scopeMatches) {
+    if (
+      scopeMatches &&
+      ((settings.maintenance_mode && endsAt && endsAt <= now) ||
+        (reopenAt != null && reopenAt <= now))
+    ) {
       const t = setTimeout(() => {
         window.location.href = meta.home;
       }, 2500);
       return () => clearTimeout(t);
     }
-  }, [settings.maintenance_mode, endsAt, now, scopeMatches, meta.home]);
+  }, [settings.maintenance_mode, endsAt, reopenAt, now, scopeMatches, meta.home]);
 
   const typeLabel = TYPE_LABEL[settings.maintenance_type] || "Maintenance";
   const customMessage = settings.maintenance_message?.trim();
   const defaultMessage = `We're performing ${typeLabel.toLowerCase()} on the ${meta.noun} right now. Thank you for your patience — we'll be back shortly.`;
+  const doneMessage = `Maintenance is complete. The ${meta.noun} will reopen automatically — see the timer below. Thanks for your patience.`;
 
   return (
     <main
@@ -158,7 +170,7 @@ export default function MaintenancePage() {
           <div style={{ color: "var(--text-tertiary)", padding: 20 }}>
             <Clock size={22} className="spin" style={{ display: "inline-block" }} />
           </div>
-        ) : !activeForPanel ? (
+        ) : !underMaintenance ? (
           <>
             <div
               style={{
@@ -207,6 +219,104 @@ export default function MaintenancePage() {
             >
               Enter {meta.title} <ArrowRight size={16} />
             </a>
+          </>
+        ) : cooldownNow ? (
+          <>
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                margin: "0 auto 18px",
+                borderRadius: 18,
+                display: "grid",
+                placeItems: "center",
+                background: "var(--green-dim)",
+                color: "var(--green)",
+                boxShadow: "0 8px 22px -6px var(--green-glow)",
+              }}
+            >
+              <CheckCircle2 size={30} />
+            </div>
+
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "var(--green)",
+                background: "var(--green-dim)",
+                border: "1px solid rgba(78,125,94,0.28)",
+                padding: "6px 12px",
+                borderRadius: 999,
+              }}
+            >
+              <CheckCircle2 size={13} /> Maintenance complete
+            </span>
+
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 26,
+                margin: "16px 0 0",
+                letterSpacing: "-0.02em",
+                color: "var(--text-primary)",
+              }}
+            >
+              {meta.title} reopens shortly
+            </h1>
+
+            <p
+              style={{
+                marginTop: 12,
+                color: "var(--text-secondary)",
+                fontSize: 14.5,
+                lineHeight: 1.6,
+              }}
+            >
+              {doneMessage}
+            </p>
+
+            <div
+              style={{
+                marginTop: 26,
+                padding: "18px",
+                borderRadius: "var(--radius-lg)",
+                background: "var(--glass-bg)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "var(--text-tertiary)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                Portal opens in
+              </div>
+              <div
+                style={{
+                  marginTop: 6,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 34,
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {formatRemaining(remaining)}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 22, fontSize: 12.5, color: "var(--text-tertiary)" }}>
+              {settings.company_name || settings.sender_name || "Trios Craft"} · Admins can access
+              the control panel.
+            </div>
           </>
         ) : (
           <>

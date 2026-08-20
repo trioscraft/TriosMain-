@@ -20,7 +20,7 @@ export default function EditClientModal({ open, client, onClose, onSaved }: Edit
 
   async function handleSave(values: ClientFormValues) {
     if (!values.company_name.trim()) {
-      alert("Company name is required.");
+      alert("Client name is required.");
       return;
     }
 

@@ -1,6 +1,6 @@
 import RoleGuard from "@/components/RoleGuard";
 import KanbanBoard from "@/components/admin/kanban/KanbanBoard";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin as supabase } from "@/lib/supabaseAdmin";
 
 export default async function ProjectKanbanPage({
   params,

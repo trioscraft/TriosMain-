@@ -49,7 +49,7 @@ export default function NotificationsPage() {
       }
 
       channelRef.current = supabase
-        .channel("notifications-page")
+        .channel(`notifications-page-${id}-${Date.now()}`)
         .on(
           "postgres_changes",
           {

@@ -227,6 +227,12 @@ export default function AdminPortfolioPage() {
                       )}
                     </div>
                   )}
+                  {(project.gallery?.length > 0 || project.videos?.length > 0) && (
+                    <div style={{ display: "flex", gap: 14, fontSize: 12.5, color: "var(--text-tertiary)", marginTop: 4 }}>
+                      {project.gallery?.length > 0 && <span>🖼 {project.gallery.length} image{project.gallery.length > 1 ? "s" : ""}</span>}
+                      {project.videos?.length > 0 && <span>🎬 {project.videos.length} video{project.videos.length > 1 ? "s" : ""}</span>}
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap", alignItems: "center" }}>

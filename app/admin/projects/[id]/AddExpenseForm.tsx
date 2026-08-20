@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
@@ -16,7 +17,8 @@ const EXPENSE_CATEGORIES = [
   { value: "miscellaneous", label: "Miscellaneous" },
 ];
 
-export default function AddExpenseForm({ projectId, projectName, onSuccess }: { projectId: string; projectName: string; onSuccess: () => void }) {
+export default function AddExpenseForm({ projectId, projectName, onSuccess }: { projectId: string; projectName: string; onSuccess?: () => void }) {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("miscellaneous");
@@ -55,7 +57,8 @@ export default function AddExpenseForm({ projectId, projectName, onSuccess }: { 
     setNotes("");
     setOpen(false);
     setLoading(false);
-    onSuccess();
+    router.refresh();
+    onSuccess?.();
   }
 
   if (!open) {

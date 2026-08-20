@@ -8,7 +8,9 @@ ALTER TABLE public.settings
   ADD COLUMN IF NOT EXISTS maintenance_scope text NOT NULL DEFAULT 'both',
   ADD COLUMN IF NOT EXISTS maintenance_type text NOT NULL DEFAULT 'scheduled',
   ADD COLUMN IF NOT EXISTS maintenance_message text NOT NULL DEFAULT '',
-  ADD COLUMN IF NOT EXISTS maintenance_ends_at timestamptz;
+  ADD COLUMN IF NOT EXISTS maintenance_ends_at timestamptz,
+  ADD COLUMN IF NOT EXISTS maintenance_reopen_at timestamptz,
+  ADD COLUMN IF NOT EXISTS maintenance_started_at timestamptz;
 
 -- Keep scope/type within allowed values.
 ALTER TABLE public.settings

@@ -40,7 +40,7 @@ export default function NotificationBell() {
           channelRef.current = null;
         }
 
-        channelRef.current = supabase.channel(`notifications-${id}`);
+        channelRef.current = supabase.channel(`notifications-${id}-${Date.now()}`);
 
         channelRef.current.on(
           "postgres_changes",

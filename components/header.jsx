@@ -27,33 +27,24 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const headerClass = scrolled
-    ? "glass-surface"
-    : "bg-transparent"
-
-  const linkClass = (active) =>
-    active
-      ? "neu-text-accent font-semibold"
-      : "neu-text-secondary hover:neu-text-accent"
-
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className={`sticky top-0 z-40 w-full transition-all duration-300 ${headerClass}`}
+      className={`ed-header ${scrolled ? "ed-header-scrolled" : ""}`}
     >
-      <div className="container-width flex h-16 items-center justify-between">
+      <div className="ed-header-inner">
         <motion.div
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.05 }}
         >
-          <Link href="/" className="font-display text-xl font-extrabold tracking-tight text-fade">
+          <Link href="/" className="ed-logo">
             TRIOS CRAFT
           </Link>
         </motion.div>
 
-        <nav className="hidden md:flex items-center gap-1.5">
+        <nav className="ed-nav">
           {navLinks.map((link, i) => {
             const active = pathname === link.href
             return (
@@ -65,11 +56,7 @@ export default function Header() {
               >
                 <Link
                   href={link.href}
-                  className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                    active
-                      ? "neu-raised-sm !shadow-[inset_3px_3px_7px_var(--neu-shadow-dark),inset_-3px_-3px_7px_var(--neu-shadow-light)]"
-                      : linkClass(active)
-                  }`}
+                  className={`ed-nav-link ${active ? "ed-nav-link-active" : ""}`}
                 >
                   {link.label}
                 </Link>
@@ -78,10 +65,10 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="ed-header-actions">
           <Link
             href="/admin/login"
-            className="neu-btn hidden md:inline-flex"
+            className="ed-btn ed-btn-line ed-btn-sm hidden md:inline-flex"
           >
             Login
           </Link>
@@ -90,7 +77,7 @@ export default function Header() {
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={() => setMenuOpen(!menuOpen)}
-              className="neu-icon h-9 w-9"
+              className="ed-burger"
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
             >
@@ -104,17 +91,17 @@ export default function Header() {
                 transition={{ duration: 0.2 }}
               >
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-current"
+                  className="block h-0.5 w-5 bg-current"
                   variants={{ open: { rotate: 45, y: 6 }, closed: { rotate: 0, y: 0 } }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-current"
+                  className="block h-0.5 w-5 bg-current"
                   variants={{ open: { opacity: 0 }, closed: { opacity: 1 } }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
-                  className="block h-0.5 w-5 rounded bg-current"
+                  className="block h-0.5 w-5 bg-current"
                   variants={{ open: { rotate: -45, y: -6 }, closed: { rotate: 0, y: 0 } }}
                   transition={{ duration: 0.2 }}
                 />
@@ -133,9 +120,9 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="md:hidden glass-surface"
+            className="ed-mobile-menu md:hidden"
           >
-            <div className="container-width flex flex-col gap-2 py-4">
+            <div className="ed-container flex flex-col gap-1 py-4">
               {navLinks.map((link) => {
                 const active = pathname === link.href
                 return (
@@ -143,11 +130,7 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all ${
-                      active
-                        ? "neu-pressed-sm"
-                        : "neu-raised-sm"
-                    }`}
+                    className={`ed-nav-link ${active ? "ed-nav-link-active" : ""}`}
                   >
                     {link.label}
                   </Link>
@@ -156,7 +139,7 @@ export default function Header() {
               <Link
                 href="/admin/login"
                 onClick={() => setMenuOpen(false)}
-                className="neu-btn neu-btn-primary mt-1 w-full"
+                className="ed-btn ed-btn-solid mt-2 w-full"
               >
                 Login
               </Link>

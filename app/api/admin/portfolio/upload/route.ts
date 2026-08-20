@@ -48,8 +48,23 @@ export async function POST(request: NextRequest) {
 
   const arrayBuffer = await file.arrayBuffer();
 
+  const bucketName = "portfolio-images";
+
+  // Ensure the bucket exists. The service-role key can create buckets, so this
+  // makes uploads work even if the SQL migration was never applied.
+  const { error: bucketErr } = await supabaseAdmin.storage.createBucket(bucketName, {
+    public: true,
+  });
+  if (bucketErr && !/already exists|duplicate/i.test(bucketErr.message)) {
+    console.error("Bucket ensure failed:", bucketErr);
+    return NextResponse.json(
+      { error: `Could not create storage bucket '${bucketName}'. ${bucketErr.message}` },
+      { status: 500 }
+    );
+  }
+
   const { error: uploadErr } = await supabaseAdmin.storage
-    .from("portfolio-images")
+    .from(bucketName)
     .upload(path, arrayBuffer, {
       contentType: file.type || "application/octet-stream",
       upsert: false,
@@ -59,15 +74,14 @@ export async function POST(request: NextRequest) {
     console.error("Portfolio upload failed:", uploadErr);
     return NextResponse.json(
       {
-        error:
-          "Upload failed. Make sure the 'portfolio-images' bucket exists in Supabase (Storage), then try again.",
+        error: `Upload failed. ${uploadErr.message}`,
       },
       { status: 500 }
     );
   }
 
   const { data: urlData } = supabaseAdmin.storage
-    .from("portfolio-images")
+    .from(bucketName)
     .getPublicUrl(path);
 
   return NextResponse.json({ ok: true, url: urlData.publicUrl });

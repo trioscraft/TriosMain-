@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { logActivity } from "@/lib/activity";
-import { createNotification } from "@/lib/admin/notifications";
+import { createNotificationForAdmins } from "@/lib/admin/notifications";
 
 import type { KanbanStatus } from "@/lib/admin/kanban";
 import { normalizeStatus } from "@/lib/admin/kanban";
@@ -82,7 +83,9 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { taskId, newStatus } = body as { taskId: string; newStatus: KanbanStatus };
 
-  const { data: task, error: taskError } = await supabase
+  // Server-only route — use the service-role client so moves persist
+  // regardless of RLS, and so admin notifications can be written.
+  const { data: task, error: taskError } = await supabaseAdmin
     .from("tasks")
     .select("id,title,status,progress,project_id,assigned_to")
     .eq("id", taskId)
@@ -95,7 +98,7 @@ export async function POST(req: Request) {
   const status = normalizeStatus(newStatus);
   const nextProgress = status === "completed" ? 100 : Number(task.progress || 0);
 
-  const { error: updateError } = await supabase
+  const { error: updateError } = await supabaseAdmin
     .from("tasks")
     .update({ status, progress: nextProgress })
     .eq("id", taskId);
@@ -105,7 +108,7 @@ export async function POST(req: Request) {
   }
 
   // recompute project progress
-  const { data: projectTasks, error: tasksError } = await supabase
+  const { data: projectTasks, error: tasksError } = await supabaseAdmin
     .from("tasks")
     .select("progress")
     .eq("project_id", task.project_id);
@@ -116,7 +119,7 @@ export async function POST(req: Request) {
 
   const { progress, status: projectStatus } = computeProjectProgress(projectTasks || []);
 
-  const { error: projectError } = await supabase
+  const { error: projectError } = await supabaseAdmin
     .from("projects")
     .update({ progress, status: projectStatus })
     .eq("id", task.project_id);
@@ -149,11 +152,11 @@ export async function POST(req: Request) {
     clientName: undefined,
   });
 
-  if (userId) {
-    await createNotification({
-      userId,
-      title: "Task updated",
-      message: `Task ${task.title} moved to ${status}.`,
+  // Only alert admins on meaningful milestones (completion), not every drag.
+  if (status === "completed") {
+    await createNotificationForAdmins({
+      title: "Task completed",
+      message: `Task ${task.title || "Untitled task"} in the project was completed.`,
       type: "task",
       relatedId: `/admin/projects/${task.project_id}`,
     });
